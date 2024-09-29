@@ -1,5 +1,6 @@
-[gd_scene load_steps=6 format=4 uid="uid://ch5xo586e1oca"]
+[gd_scene load_steps=7 format=4 uid="uid://ch5xo586e1oca"]
 
+[ext_resource type="Script" path="res://combat_scene.gd" id="1_5m3e4"]
 [ext_resource type="TileSet" uid="uid://ctmfxmh1mw5a0" path="res://test_tileset.tres" id="1_15dw0"]
 [ext_resource type="Script" path="res://grid_system.gd" id="1_ae7sf"]
 [ext_resource type="Script" path="res://unit_test.gd" id="2_fcn8v"]
@@ -9,6 +10,7 @@
 size = Vector2(64, 64)
 
 [node name="combat-scene" type="Node2D"]
+script = ExtResource("1_5m3e4")
 
 [node name="grid-system" type="Node2D" parent="."]
 script = ExtResource("1_ae7sf")
