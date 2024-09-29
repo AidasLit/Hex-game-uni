@@ -17,14 +17,22 @@ var _visited_cells : Array[Vector2i]
 var _queue_cells : Array[Vector2i]
 
 @onready var base_layer: TileMapLayer = $"base-layer"
+@onready var transparent_layer: TileMapLayer = $"transparent-layer"
+
 var astargrid = AStar2D.new()
 var cells : Dictionary
+
+var prev_hovered_cell : Vector2i
+var hovered_cell : Vector2i
 
 func _ready() -> void:
 	cells.clear()
 	_setup_astar()
 	
 	print(cells)
+
+func _process(delta: float) -> void:
+	_update_hovered_cell()
 
 func _setup_astar():
 	var start_cell = Vector2i(0, 0)
@@ -50,6 +58,16 @@ func _create_cell(id : int, location : Vector2i):
 	_visited_cells.append(location)
 	astargrid.add_point(id, location)
 	cells[location] = id
+
+func _update_hovered_cell():
+	hovered_cell = transparent_layer.local_to_map(get_viewport().get_mouse_position())
+	
+	if hovered_cell != prev_hovered_cell:
+		transparent_layer.erase_cell(prev_hovered_cell)
+	
+	transparent_layer.set_cell(hovered_cell, 0, Vector2i(0, 1))
+	
+	prev_hovered_cell = hovered_cell
 
 # can this cell be traveled to
 func navigation_check(target_cell):

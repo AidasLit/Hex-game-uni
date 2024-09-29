@@ -5,6 +5,7 @@ extends CharacterBody2D
 
 var current_cell : Vector2i
 
+
 func _ready() -> void:
 	goto_cell(Vector2i(0, 0))
 
