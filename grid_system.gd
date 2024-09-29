@@ -1,5 +1,9 @@
 extends Node2D
-class_name grid_navigation_system
+class_name GridNavigationSystem
+
+### grid_system should only concern the GRID
+### other nodes can access the available methods
+### but here there needs to be no logic for things other than the grid itself
 
 ### astar needs to store cells as integer ids
 ### meaning we have to extract the location from id when needed and vice versa
@@ -22,9 +26,6 @@ var _queue_cells : Array[Vector2i]
 var astargrid = AStar2D.new()
 var cells : Dictionary
 
-var prev_hovered_cell : Vector2i
-var hovered_cell : Vector2i
-
 func _ready() -> void:
 	cells.clear()
 	_setup_astar()
@@ -32,7 +33,7 @@ func _ready() -> void:
 	print(cells)
 
 func _process(delta: float) -> void:
-	_update_hovered_cell()
+	pass
 
 func _setup_astar():
 	var start_cell = Vector2i(0, 0)
@@ -59,32 +60,28 @@ func _create_cell(id : int, location : Vector2i):
 	astargrid.add_point(id, location)
 	cells[location] = id
 
-func _update_hovered_cell():
-	hovered_cell = transparent_layer.local_to_map(get_viewport().get_mouse_position())
-	
-	if hovered_cell != prev_hovered_cell:
-		transparent_layer.erase_cell(prev_hovered_cell)
-	
-	transparent_layer.set_cell(hovered_cell, 0, Vector2i(0, 1))
-	
-	prev_hovered_cell = hovered_cell
-
 # can this cell be traveled to
 func navigation_check(target_cell):
 	var walkable : bool = false
 	walkable = base_layer.get_cell_tile_data(target_cell).get_custom_data("walkable")
 	return walkable
 
-func get_navigation_path(from_cell : Vector2i, target_cell : Vector2i) -> Array[Vector2i]:
+func get_navigation_path(from_cell : Vector2i, target_cell : Vector2i) -> Array[Vector2]:
 	# return empty path is the destination is invalid
 	if not cells.has(target_cell):
 		#print("invalid target")
 		return []
 	
 	var path = astargrid.get_id_path(cells[from_cell], cells[target_cell])
-	var index_path : Array[Vector2i] = []
+	var position_path : Array[Vector2] = []
 	
-	for step in path:
-		index_path.append(Vector2i(astargrid.get_point_position(step)))
+	for step : int in path:
+		position_path.append(map_to_local(astargrid.get_point_position(step)))
 	
-	return index_path
+	return position_path
+
+func local_to_map(location : Vector2):
+	return base_layer.local_to_map(location)
+
+func map_to_local(map_location : Vector2i):
+	return base_layer.map_to_local(map_location)

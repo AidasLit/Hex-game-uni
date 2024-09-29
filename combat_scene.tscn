@@ -1,16 +1,14 @@
-[gd_scene load_steps=7 format=4 uid="uid://ch5xo586e1oca"]
+[gd_scene load_steps=6 format=4 uid="uid://ch5xo586e1oca"]
 
 [ext_resource type="Script" path="res://combat_scene.gd" id="1_5m3e4"]
 [ext_resource type="TileSet" uid="uid://ctmfxmh1mw5a0" path="res://test_tileset.tres" id="1_15dw0"]
 [ext_resource type="Script" path="res://grid_system.gd" id="1_ae7sf"]
-[ext_resource type="Script" path="res://unit_test.gd" id="2_fcn8v"]
-[ext_resource type="Texture2D" uid="uid://dhqmfd7nw15k4" path="res://icon.svg" id="2_nabnp"]
+[ext_resource type="PackedScene" uid="uid://cf7cjrxmf24e4" path="res://test_unit_solider.tscn" id="4_342nx"]
+[ext_resource type="Script" path="res://transparent_layer.gd" id="4_yaaix"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_nibyf"]
-size = Vector2(64, 64)
-
-[node name="combat-scene" type="Node2D"]
+[node name="combat-scene" type="Node2D" node_paths=PackedStringArray("grid_system")]
 script = ExtResource("1_5m3e4")
+grid_system = NodePath("grid-system")
 
 [node name="grid-system" type="Node2D" parent="."]
 script = ExtResource("1_ae7sf")
@@ -21,17 +19,10 @@ tile_set = ExtResource("1_15dw0")
 
 [node name="transparent-layer" type="TileMapLayer" parent="grid-system"]
 tile_set = ExtResource("1_15dw0")
+script = ExtResource("4_yaaix")
 
-[node name="unit-test" type="CharacterBody2D" parent="." node_paths=PackedStringArray("tilemap_layer", "grid_system")]
-position = Vector2(124, 351)
-script = ExtResource("2_fcn8v")
-tilemap_layer = NodePath("../grid-system/base-layer")
-grid_system = NodePath("../grid-system")
-metadata/_edit_group_ = true
+[node name="units" type="Node2D" parent="."]
 
-[node name="Sprite2D" type="Sprite2D" parent="unit-test"]
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_nabnp")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="unit-test"]
-shape = SubResource("RectangleShape2D_nibyf")
+[node name="solider" parent="units" node_paths=PackedStringArray("tilemap_layer", "grid_system") instance=ExtResource("4_342nx")]
+tilemap_layer = NodePath("../../grid-system/base-layer")
+grid_system = NodePath("../../grid-system")
