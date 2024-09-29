@@ -6,7 +6,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nibyf"]
 size = Vector2(64, 64)
 
-[node name="unit-test" type="CharacterBody2D"]
+[node name="unit-test" type="CharacterBody2D" groups=["unit"]]
 script = ExtResource("1_pw12l")
 metadata/_edit_group_ = true
 

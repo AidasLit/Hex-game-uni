@@ -9,9 +9,13 @@
 [node name="combat-scene" type="Node2D" node_paths=PackedStringArray("grid_system")]
 script = ExtResource("1_5m3e4")
 grid_system = NodePath("grid-system")
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
 
 [node name="grid-system" type="Node2D" parent="."]
 script = ExtResource("1_ae7sf")
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
 
 [node name="base-layer" type="TileMapLayer" parent="grid-system"]
 tile_map_data = PackedByteArray("AAAAAAEAAQAAAAAAAAABAAIAAQAAAAAAAAACAAEAAQABAAEAAAAAAAAAAQAAAAAAAAABAAAAAQABAAEAAAABAP//AQAAAAAAAAACAAAAAQABAAEAAAADAAAAAQABAAEAAAAEAAAAAQABAAAAAAAFAAAAAQACAAAAAAAGAAAAAQABAAEAAAAHAAAAAQABAAEAAAAIAAAAAQAAAAAAAAAHAP//AQAAAAAAAAAFAP//AQACAAAAAAADAP//AQABAAAAAAD/////AQAAAAAAAAD//wAAAQAAAAAAAAD//wEAAQAAAAAAAAD//wIAAQAAAAAAAAD//wMAAQAAAAAAAAD//wQAAQACAAAAAAAAAAIAAQAAAAAAAAAAAAMAAQAAAAAAAAAAAAQAAQACAAAAAAABAAEAAQAAAAAAAAABAAMAAQACAAAAAAABAAQAAQAAAAAAAAACAAIAAQAAAAAAAAACAAMAAQAAAAAAAAACAAQAAQACAAAAAAADAAEAAQABAAEAAAADAAIAAQAAAAAAAAADAAMAAQACAAAAAAADAAQAAQAAAAAAAAAEAAEAAQABAAEAAAAEAAIAAQAAAAAAAAAEAAMAAQAAAAEAAAAEAAQAAQAAAAAAAAAFAAEAAQACAAAAAAAFAAIAAQACAAAAAAAFAAMAAQAAAAAAAAAFAAQAAQABAAEAAAAGAAEAAQACAAAAAAAGAAIAAQAAAAAAAAAGAAMAAQAAAAAAAAAGAAQAAQABAAEAAAAHAAEAAQACAAAAAAAHAAIAAQAAAAAAAAAHAAMAAQAAAAAAAAAHAAQAAQACAAAAAAAIAAEAAQAAAAAAAAAIAAIAAQAAAAEAAAAIAAMAAQAAAAAAAAAIAAQAAQACAAAAAAAJAAEAAQAAAAAAAAAJAAIAAQACAAAAAAAJAAMAAQACAAAAAAAJAAQAAQABAAEAAAAKAAIAAQAAAAAAAAAKAAMAAQAAAAAAAAALAAEAAQAAAAAAAAALAAIAAQAAAAAAAAALAAMAAQAAAAAAAAALAAQAAQABAAEAAAAKAAQAAQABAAEAAAAJAAAAAQABAAEAAAAKAAEAAQABAAEAAAAJAP//AQABAAEAAAA=")
@@ -22,7 +26,23 @@ tile_set = ExtResource("1_15dw0")
 script = ExtResource("4_yaaix")
 
 [node name="units" type="Node2D" parent="."]
+metadata/_edit_lock_ = true
+metadata/_edit_group_ = true
 
 [node name="solider" parent="units" node_paths=PackedStringArray("tilemap_layer", "grid_system") instance=ExtResource("4_342nx")]
+modulate = Color(0, 0, 1, 1)
+position = Vector2(157, 378)
+tilemap_layer = NodePath("../../grid-system/base-layer")
+grid_system = NodePath("../../grid-system")
+
+[node name="solider2" parent="units" node_paths=PackedStringArray("tilemap_layer", "grid_system") instance=ExtResource("4_342nx")]
+modulate = Color(1, 0, 0, 1)
+position = Vector2(744, 385)
+tilemap_layer = NodePath("../../grid-system/base-layer")
+grid_system = NodePath("../../grid-system")
+
+[node name="solider3" parent="units" node_paths=PackedStringArray("tilemap_layer", "grid_system") instance=ExtResource("4_342nx")]
+modulate = Color(0, 1, 0, 1)
+position = Vector2(450, 577)
 tilemap_layer = NodePath("../../grid-system/base-layer")
 grid_system = NodePath("../../grid-system")

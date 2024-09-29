@@ -4,6 +4,8 @@ class_name PlayableUnit
 @export var tilemap_layer: TileMapLayer
 @export var grid_system: GridNavigationSystem
 
+var unit_owner : Globals.UnitOwner
+
 func _ready() -> void:
 	pass
 

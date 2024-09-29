@@ -5,6 +5,8 @@ extends Node2D
 
 @export var grid_system: GridNavigationSystem
 
+var action_queue : Array[PlayableUnit]
+
 var active_unit : PlayableUnit
 
 # Called when the node enters the scene tree for the first time.
@@ -22,6 +24,9 @@ func _input(event: InputEvent) -> void:
 			
 			if not path.is_empty():
 				active_unit.travel_path(path)
+			
+			action_queue.push_back(active_unit)
+			active_unit = action_queue.pop_front()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -29,5 +34,9 @@ func _process(delta: float) -> void:
 		get_tree().quit()
 
 func _setup_units():
-	active_unit = $units/solider
-	active_unit.goto_location(grid_system.map_to_local(Vector2i(0, 0)))
+	for unit : PlayableUnit in get_tree().get_nodes_in_group("unit"):
+		unit.unit_owner = Globals.UnitOwner.Player
+		action_queue.push_back(unit)
+	
+	active_unit = action_queue.pop_front()
+	#active_unit.goto_location(grid_system.map_to_local(Vector2i(0, 0)))

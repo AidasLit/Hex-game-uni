@@ -29,8 +29,6 @@ var cells : Dictionary
 func _ready() -> void:
 	cells.clear()
 	_setup_astar()
-	
-	print(cells)
 
 func _process(delta: float) -> void:
 	pass
