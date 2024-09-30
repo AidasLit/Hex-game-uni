@@ -31,8 +31,13 @@ func _process(delta: float) -> void:
 	print(active_unit.my_name)
 
 func _setup_units() -> void:
+	var i = 0
 	for unit : PlayableUnit in get_tree().get_nodes_in_group("unit"):
+		var start_location = grid_system._map_to_local(Vector2i(grid_system.astargrid.get_point_position(i)))
 		unit.unit_owner = Globals.UnitOwner.Player
+		unit.goto_location(start_location)
+		grid_system.set_unit_on_tile(start_location, true)
+		i += 1
 		action_queue.push_back(unit)
 	
 	active_unit = action_queue.pop_front()
