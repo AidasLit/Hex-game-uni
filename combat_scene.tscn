@@ -4,7 +4,7 @@
 [ext_resource type="TileSet" uid="uid://ctmfxmh1mw5a0" path="res://test_tileset.tres" id="1_15dw0"]
 [ext_resource type="Script" path="res://grid_system.gd" id="1_ae7sf"]
 [ext_resource type="PackedScene" uid="uid://cf7cjrxmf24e4" path="res://test_unit_solider.tscn" id="4_342nx"]
-[ext_resource type="Script" path="res://transparent_layer.gd" id="4_yaaix"]
+[ext_resource type="Script" path="res://hover_layer.gd" id="4_xy2se"]
 
 [node name="combat-scene" type="Node2D" node_paths=PackedStringArray("grid_system")]
 script = ExtResource("1_5m3e4")
@@ -21,9 +21,12 @@ metadata/_edit_lock_ = true
 tile_map_data = PackedByteArray("AAAAAAEAAQAAAAAAAAABAAIAAQAAAAAAAAACAAEAAQABAAEAAAAAAAAAAQAAAAAAAAABAAAAAQABAAEAAAABAP//AQAAAAAAAAACAAAAAQABAAEAAAADAAAAAQABAAEAAAAEAAAAAQABAAAAAAAFAAAAAQACAAAAAAAGAAAAAQABAAEAAAAHAAAAAQABAAEAAAAIAAAAAQAAAAAAAAAHAP//AQAAAAAAAAAFAP//AQACAAAAAAADAP//AQABAAAAAAD/////AQAAAAAAAAD//wAAAQAAAAAAAAD//wEAAQAAAAAAAAD//wIAAQAAAAAAAAD//wMAAQAAAAAAAAD//wQAAQACAAAAAAAAAAIAAQAAAAAAAAAAAAMAAQAAAAAAAAAAAAQAAQACAAAAAAABAAEAAQAAAAAAAAABAAMAAQACAAAAAAABAAQAAQAAAAAAAAACAAIAAQAAAAAAAAACAAMAAQAAAAAAAAACAAQAAQACAAAAAAADAAEAAQABAAEAAAADAAIAAQAAAAAAAAADAAMAAQACAAAAAAADAAQAAQAAAAAAAAAEAAEAAQABAAEAAAAEAAIAAQAAAAAAAAAEAAMAAQAAAAEAAAAEAAQAAQAAAAAAAAAFAAEAAQACAAAAAAAFAAIAAQACAAAAAAAFAAMAAQAAAAAAAAAFAAQAAQABAAEAAAAGAAEAAQACAAAAAAAGAAIAAQAAAAAAAAAGAAMAAQAAAAAAAAAGAAQAAQABAAEAAAAHAAEAAQACAAAAAAAHAAIAAQAAAAAAAAAHAAMAAQAAAAAAAAAHAAQAAQACAAAAAAAIAAEAAQAAAAAAAAAIAAIAAQAAAAEAAAAIAAMAAQAAAAAAAAAIAAQAAQACAAAAAAAJAAEAAQAAAAAAAAAJAAIAAQACAAAAAAAJAAMAAQACAAAAAAAJAAQAAQABAAEAAAAKAAIAAQAAAAAAAAAKAAMAAQAAAAAAAAALAAEAAQAAAAAAAAALAAIAAQAAAAAAAAALAAMAAQAAAAAAAAALAAQAAQABAAEAAAAKAAQAAQABAAEAAAAJAAAAAQABAAEAAAAKAAEAAQABAAEAAAAJAP//AQABAAEAAAA=")
 tile_set = ExtResource("1_15dw0")
 
-[node name="transparent-layer" type="TileMapLayer" parent="grid-system"]
+[node name="hover-layer" type="TileMapLayer" parent="grid-system"]
 tile_set = ExtResource("1_15dw0")
-script = ExtResource("4_yaaix")
+script = ExtResource("4_xy2se")
+
+[node name="availability-layer" type="TileMapLayer" parent="grid-system"]
+tile_set = ExtResource("1_15dw0")
 
 [node name="units" type="Node2D" parent="."]
 metadata/_edit_lock_ = true
@@ -34,15 +37,18 @@ modulate = Color(0, 0, 1, 1)
 position = Vector2(157, 378)
 tilemap_layer = NodePath("../../grid-system/base-layer")
 grid_system = NodePath("../../grid-system")
+my_name = "blue"
 
 [node name="solider2" parent="units" node_paths=PackedStringArray("tilemap_layer", "grid_system") instance=ExtResource("4_342nx")]
 modulate = Color(1, 0, 0, 1)
 position = Vector2(744, 385)
 tilemap_layer = NodePath("../../grid-system/base-layer")
 grid_system = NodePath("../../grid-system")
+my_name = "red"
 
 [node name="solider3" parent="units" node_paths=PackedStringArray("tilemap_layer", "grid_system") instance=ExtResource("4_342nx")]
 modulate = Color(0, 1, 0, 1)
 position = Vector2(450, 577)
 tilemap_layer = NodePath("../../grid-system/base-layer")
 grid_system = NodePath("../../grid-system")
+my_name = "green"

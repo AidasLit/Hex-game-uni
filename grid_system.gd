@@ -21,7 +21,8 @@ var _visited_cells : Array[Vector2i]
 var _queue_cells : Array[Vector2i]
 
 @onready var base_layer: TileMapLayer = $"base-layer"
-@onready var transparent_layer: TileMapLayer = $"transparent-layer"
+@onready var hover_layer: TileMapLayer = $"hover-layer"
+@onready var availability_layer: TileMapLayer = $"availability-layer"
 
 var astargrid = AStar2D.new()
 var cells : Dictionary
@@ -59,27 +60,37 @@ func _create_cell(id : int, location : Vector2i):
 	cells[location] = id
 
 # can this cell be traveled to
-func navigation_check(target_cell):
+func navigation_check(target_cell : Vector2i):
 	var walkable : bool = false
 	walkable = base_layer.get_cell_tile_data(target_cell).get_custom_data("walkable")
 	return walkable
 
-func get_navigation_path(from_cell : Vector2i, target_cell : Vector2i) -> Array[Vector2]:
+func get_navigation_path(from : Vector2, to : Vector2) -> Array[Vector2]:
+	var from_cell = _local_to_map(from)
+	var target_cell = _local_to_map(to)
+	
 	# return empty path is the destination is invalid
 	if not cells.has(target_cell):
 		#print("invalid target")
+		return []
+	
+	if not navigation_check(target_cell):
 		return []
 	
 	var path = astargrid.get_id_path(cells[from_cell], cells[target_cell])
 	var position_path : Array[Vector2] = []
 	
 	for step : int in path:
-		position_path.append(map_to_local(astargrid.get_point_position(step)))
+		position_path.append(_map_to_local(astargrid.get_point_position(step)))
 	
 	return position_path
 
-func local_to_map(location : Vector2):
+func _local_to_map(location : Vector2) -> Vector2i:
 	return base_layer.local_to_map(location)
 
-func map_to_local(map_location : Vector2i):
+func _map_to_local(map_location : Vector2i) -> Vector2:
 	return base_layer.map_to_local(map_location)
+
+func set_unit_on_tile(location : Vector2, is_unit : bool) -> void:
+	astargrid.set_point_disabled(cells.get(_local_to_map(location)), is_unit)
+	base_layer.get_cell_tile_data(_local_to_map(location)).set_custom_data("is_unit", is_unit)
