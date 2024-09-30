@@ -18,6 +18,6 @@ func _update_hovered_cell():
 	
 	if hovered_cell != prev_hovered_cell:
 		self.erase_cell(prev_hovered_cell)
-		self.set_cell(hovered_cell, 0, Vector2i(0, 1))
+		self.set_cell(hovered_cell, 0, Globals.transparent_tile_coords["white"])
 	
 	prev_hovered_cell = hovered_cell

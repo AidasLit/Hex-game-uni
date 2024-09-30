@@ -5,6 +5,7 @@ class_name PlayableUnit
 @export var grid_system: GridNavigationSystem
 # temporary variable for debugging
 @export var my_name: String
+@export var movement_range: int
 
 signal done_moving
 
