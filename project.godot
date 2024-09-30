@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="uni-hex-game"
-run/main_scene="res://combat_scene.tscn"
+run/main_scene="res://main_scenes/combat_scene.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -22,6 +22,14 @@ Globals="*res://globals.gd"
 [debug]
 
 gdscript/warnings/untyped_declaration=1
+
+[file_customization]
+
+folder_colors={
+"res://assets/": "yellow",
+"res://main_scenes/": "pink",
+"res://units/": "green"
+}
 
 [global_group]
 
