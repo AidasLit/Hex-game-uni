@@ -9,11 +9,15 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 
-func draw_availability(list : Array[Vector2i]) -> void:
+func draw_availability(list : Array[Vector2i], last_layer : Array[Vector2i] = []) -> void:
 	clear()
 	
 	for tile : Vector2i in list:
 		set_cell(tile, 0, Globals.transparent_tile_coords["green"])
+	
+	if last_layer:
+		for tile : Vector2i in last_layer:
+			set_cell(tile, 0, Globals.transparent_tile_coords["orange"])
 
 func is_available(cell : Vector2i) -> bool:
 	var data = get_cell_tile_data(cell)

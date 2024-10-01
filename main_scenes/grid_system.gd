@@ -110,15 +110,22 @@ func set_availability(unit : PlayableUnit):
 	var available_tiles : Array[Vector2i] = []
 	
 	var current_level : Array[int] = [cells.get(_local_to_map(unit.global_position))]
+	var last_level : Array[Vector2i] = []
+	
 	for i in unit.movement_range:
 		current_level = _cycle_neighbors(available_points, current_level)
+		
+		if i == unit.movement_range - 1:
+			for point in current_level:
+				var tile = Vector2i(astargrid.get_point_position(point))
+				last_level.append(tile)
 	
 	for point : int in available_points:
 		var tile = Vector2i(astargrid.get_point_position(point))
 		available_tiles.append(tile)
 	
-	availability_layer.draw_availability(available_tiles)
-	availability_layer.set_cell(_local_to_map(unit.global_position), 0, Globals.transparent_tile_coords["blue"])
+	availability_layer.draw_availability(available_tiles, last_level)
+	availability_layer.set_cell(_local_to_map(unit.global_position), 0, Globals.transparent_tile_coords["pink"])
 
 func _cycle_neighbors(available_points : Array[int], current_level : Array[int]) -> Array[int]:
 	var neighbors : Array[int] = []
