@@ -34,26 +34,20 @@ script = ExtResource("5_c2c01")
 metadata/_edit_lock_ = true
 metadata/_edit_group_ = true
 
-[node name="solider" parent="units" node_paths=PackedStringArray("tilemap_layer", "grid_system") instance=ExtResource("5_7rlxc")]
+[node name="solider" parent="units" instance=ExtResource("5_7rlxc")]
 modulate = Color(0, 0, 1, 1)
 position = Vector2(157, 378)
-tilemap_layer = NodePath("../../grid-system/base-layer")
-grid_system = NodePath("../../grid-system")
 my_name = "blue"
-movement_range = 2
+max_range = 3
 
-[node name="solider2" parent="units" node_paths=PackedStringArray("tilemap_layer", "grid_system") instance=ExtResource("5_7rlxc")]
+[node name="solider2" parent="units" instance=ExtResource("5_7rlxc")]
 modulate = Color(1, 0, 0, 1)
 position = Vector2(744, 385)
-tilemap_layer = NodePath("../../grid-system/base-layer")
-grid_system = NodePath("../../grid-system")
 my_name = "red"
-movement_range = 2
+max_range = 3
 
-[node name="solider3" parent="units" node_paths=PackedStringArray("tilemap_layer", "grid_system") instance=ExtResource("5_7rlxc")]
+[node name="solider3" parent="units" instance=ExtResource("5_7rlxc")]
 modulate = Color(0, 1, 0, 1)
 position = Vector2(450, 577)
-tilemap_layer = NodePath("../../grid-system/base-layer")
-grid_system = NodePath("../../grid-system")
 my_name = "green"
-movement_range = 2
+max_range = 3

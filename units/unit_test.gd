@@ -1,18 +1,17 @@
 extends CharacterBody2D
 class_name PlayableUnit
 
-@export var tilemap_layer: TileMapLayer
-@export var grid_system: GridNavigationSystem
 # temporary variable for debugging
 @export var my_name: String
-@export var movement_range: int
+@export var max_range: int
 
 signal done_moving
 
+var movement_range : int
 var unit_owner : Globals.UnitOwner
 
 func _ready() -> void:
-	pass
+	turn_reset()
 
 func travel_path(path : Array[Vector2]):
 	for next_step : Vector2 in path:
@@ -31,3 +30,6 @@ func goto_location(target : Vector2):
 	await tween.finished
 	
 	done_moving.emit()
+
+func turn_reset() -> void:
+	movement_range = max_range

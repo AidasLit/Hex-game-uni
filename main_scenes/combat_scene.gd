@@ -52,6 +52,7 @@ func move_to_position(move_to : Vector2) -> void:
 	
 	action_lock = true
 	var path = grid_system.get_navigation_path(active_unit.global_position, move_to)
+	path.pop_front()
 	
 	grid_system.set_unit_on_tile(active_unit.global_position, false)
 	active_unit.travel_path(path)
@@ -59,12 +60,21 @@ func move_to_position(move_to : Vector2) -> void:
 	await active_unit.done_moving
 	grid_system.set_unit_on_tile(active_unit.global_position, true)
 	
-	turn_done()
+	if path.size() < active_unit.movement_range:
+		active_unit.movement_range -= path.size()
+		turn_done(true)
+	else:
+		turn_done(false)
 	
 	action_lock = false
 
-func turn_done() -> void:
-	action_queue.push_back(active_unit)
-	active_unit = action_queue.pop_front()
+func turn_done(to_continue : bool) -> void:
+	if to_continue:
+		pass
+	else:
+		active_unit.turn_reset()
+		
+		action_queue.push_back(active_unit)
+		active_unit = action_queue.pop_front()
 	
 	grid_system.set_availability(active_unit)
