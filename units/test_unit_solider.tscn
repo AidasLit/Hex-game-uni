@@ -26,7 +26,7 @@ shape = SubResource("RectangleShape2D_nibyf")
 [node name="HealthComponent" parent="." instance=ExtResource("3_aytyn")]
 max_hp = 10
 
-[node name="Sprite3D" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("4_xmxup")]
+[node name="HealthBar" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("4_xmxup")]
 position = Vector2(0, -45)
 scale = Vector2(0.326733, 0.454545)
 texture = SubResource("ViewportTexture_vpbp7")

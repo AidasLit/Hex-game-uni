@@ -21,7 +21,8 @@ func hp_changed(value : int):
 	health_bar.value = value
 
 func die():
-	var tween = get_tree().create_tween()
-	tween.tween_property(self, "transparency", 1, 0.5)
-	await tween.finished
+	#var tween = get_tree().create_tween()
+	#tween.tween_property(self, "modulate.a", 0, 0.5)
+	#await tween.finished
+	self.visible = false
 	queue_free()

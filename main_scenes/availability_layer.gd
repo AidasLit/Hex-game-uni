@@ -9,9 +9,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 
-func draw_availability(list : Array[Vector2i], last_layer : Array[Vector2i] = []) -> void:
-	clear()
-	
+func draw_movability(list : Array[Vector2i], last_layer : Array[Vector2i] = []) -> void:
 	for tile : Vector2i in list:
 		set_cell(tile, 0, Globals.transparent_tile_coords["green"])
 	
@@ -19,12 +17,24 @@ func draw_availability(list : Array[Vector2i], last_layer : Array[Vector2i] = []
 		for tile : Vector2i in last_layer:
 			set_cell(tile, 0, Globals.transparent_tile_coords["orange"])
 
-func is_available(cell : Vector2i) -> bool:
+func draw_attackability(list : Array[Vector2i]) -> void:
+	for tile : Vector2i in list:
+		set_cell(tile, 0, Globals.transparent_tile_coords["red"])
+
+func is_movable(cell : Vector2i) -> bool:
 	var data = get_cell_tile_data(cell)
 	if data:
 		match get_cell_atlas_coords(cell):
 			Globals.transparent_tile_coords["green"]:
 				return true
 			Globals.transparent_tile_coords["orange"]:
+				return true
+	return false
+
+func is_attackable(cell : Vector2i) -> bool:
+	var data = get_cell_tile_data(cell)
+	if data:
+		match get_cell_atlas_coords(cell):
+			Globals.transparent_tile_coords["red"]:
 				return true
 	return false

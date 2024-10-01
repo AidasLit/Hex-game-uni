@@ -5,15 +5,21 @@ class_name PlayableUnit
 
 # temporary variable for debugging
 @export var my_name: String = "blank"
-@export var max_hp: int = 10
 @export var max_range: int = 3
+@export var max_hp: int = 10
+#@export var attack_range: int = 1
+@export var damage: int = 2
 
 signal done_moving
+signal attack_finished
+signal kill_me(unit_ref)
 
+var tilemap_position : Vector2i
 var movement_range : int
 var unit_owner : Globals.UnitOwner
 
 func _ready() -> void:
+	health_component.zero_hp.connect(_on_zero_hp)
 	health_component.max_hp = max_hp
 	turn_reset()
 
@@ -37,5 +43,19 @@ func goto_location(target : Vector2):
 	
 	done_moving.emit()
 
+func nudge_attack(target : Vector2):
+	var return_pos = global_position
+	var direction = (target - global_position).normalized()
+	
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "global_position", return_pos + direction * 50, 0.1)
+	tween.tween_property(self, "global_position", return_pos, 0.2)
+	await tween.finished
+	
+	attack_finished.emit()
+
 func turn_reset() -> void:
 	movement_range = max_range
+
+func _on_zero_hp() -> void:
+	kill_me.emit(self)
