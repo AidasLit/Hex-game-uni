@@ -37,7 +37,7 @@ func _setup_units() -> void:
 		action_queue.push_back(unit)
 		
 		grid_system.set_unit_on_tile(start_location, true)
-		i += RNG.randi_range(0, grid_system.astargrid.get_point_count()/3)
+		i += RNG.randi_range(1, grid_system.astargrid.get_point_count()/3 - 1)
 	
 	active_unit = action_queue.pop_front()
 	await active_unit.done_moving

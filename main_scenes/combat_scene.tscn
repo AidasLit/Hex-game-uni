@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://main_scenes/combat_scene.gd" id="1_4yhsa"]
 [ext_resource type="Script" path="res://main_scenes/grid_system.gd" id="2_wow2h"]
-[ext_resource type="TileSet" uid="uid://ctmfxmh1mw5a0" path="res://test_tileset.tres" id="3_odvqy"]
+[ext_resource type="TileSet" uid="uid://ctmfxmh1mw5a0" path="res://resources/test_tileset.tres" id="3_odvqy"]
 [ext_resource type="Script" path="res://main_scenes/hover_layer.gd" id="4_ycdx0"]
 [ext_resource type="PackedScene" uid="uid://cf7cjrxmf24e4" path="res://units/test_unit_solider.tscn" id="5_7rlxc"]
 [ext_resource type="Script" path="res://main_scenes/availability_layer.gd" id="5_c2c01"]
@@ -35,16 +35,13 @@ metadata/_edit_lock_ = true
 metadata/_edit_group_ = true
 
 [node name="solider" parent="units" instance=ExtResource("5_7rlxc")]
-modulate = Color(0, 0, 1, 1)
 my_name = "blue"
 max_range = 3
 
 [node name="solider2" parent="units" instance=ExtResource("5_7rlxc")]
-modulate = Color(1, 0, 0, 1)
 my_name = "red"
 max_range = 3
 
 [node name="solider3" parent="units" instance=ExtResource("5_7rlxc")]
-modulate = Color(0, 1, 0, 1)
 my_name = "green"
 max_range = 8

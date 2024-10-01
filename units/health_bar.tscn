@@ -1,0 +1,42 @@
+[gd_scene load_steps=5 format=3 uid="uid://2gfsktjk5lyh"]
+
+[ext_resource type="Script" path="res://units/health_bar.gd" id="1_66kgx"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_seuxd"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_soiar"]
+bg_color = Color(0, 0, 0, 0.392157)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t55o0"]
+bg_color = Color(0.901961, 0.298039, 0.203922, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+
+[node name="Sprite3D" type="Sprite2D"]
+texture = SubResource("ViewportTexture_seuxd")
+script = ExtResource("1_66kgx")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+disable_3d = true
+transparent_bg = true
+size = Vector2i(202, 22)
+
+[node name="HealthBar" type="ProgressBar" parent="SubViewport"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_soiar")
+theme_override_styles/fill = SubResource("StyleBoxFlat_t55o0")
+value = 100.0
+show_percentage = false
