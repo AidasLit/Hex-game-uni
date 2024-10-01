@@ -23,8 +23,7 @@ texture = ExtResource("2_g1sa5")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_nibyf")
 
-[node name="HealthComponent" parent="." node_paths=PackedStringArray("parent") instance=ExtResource("3_aytyn")]
-parent = NodePath("..")
+[node name="HealthComponent" parent="." instance=ExtResource("3_aytyn")]
 max_hp = 10
 
 [node name="Sprite3D" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("4_xmxup")]

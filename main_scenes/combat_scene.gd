@@ -32,7 +32,7 @@ func _setup_units() -> void:
 	for unit : PlayableUnit in get_tree().get_nodes_in_group("unit"):
 		var start_location = grid_system._map_to_local(Vector2i(grid_system.astargrid.get_point_position(i)))
 		
-		unit.unit_owner = Globals.UnitOwner.Player
+		unit.unit_owner = Globals.UnitOwner.Rogue
 		unit.goto_location(start_location)
 		action_queue.push_back(unit)
 		

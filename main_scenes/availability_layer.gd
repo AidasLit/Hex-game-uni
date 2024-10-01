@@ -22,6 +22,9 @@ func draw_availability(list : Array[Vector2i], last_layer : Array[Vector2i] = []
 func is_available(cell : Vector2i) -> bool:
 	var data = get_cell_tile_data(cell)
 	if data:
-		if data.texture_origin == Globals.transparent_tile_coords["green"]:
-			return true
+		match get_cell_atlas_coords(cell):
+			Globals.transparent_tile_coords["green"]:
+				return true
+			Globals.transparent_tile_coords["orange"]:
+				return true
 	return false

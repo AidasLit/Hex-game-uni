@@ -1,9 +1,12 @@
 extends CharacterBody2D
 class_name PlayableUnit
 
+@onready var health_component: HealthComponent = $HealthComponent
+
 # temporary variable for debugging
-@export var my_name: String
-@export var max_range: int
+@export var my_name: String = "blank"
+@export var max_hp: int = 10
+@export var max_range: int = 3
 
 signal done_moving
 
@@ -11,6 +14,7 @@ var movement_range : int
 var unit_owner : Globals.UnitOwner
 
 func _ready() -> void:
+	health_component.max_hp = max_hp
 	turn_reset()
 
 func travel_path(path : Array[Vector2]):

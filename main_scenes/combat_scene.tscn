@@ -35,13 +35,7 @@ metadata/_edit_lock_ = true
 metadata/_edit_group_ = true
 
 [node name="solider" parent="units" instance=ExtResource("5_7rlxc")]
-my_name = "blue"
-max_range = 3
 
 [node name="solider2" parent="units" instance=ExtResource("5_7rlxc")]
-my_name = "red"
-max_range = 3
 
 [node name="solider3" parent="units" instance=ExtResource("5_7rlxc")]
-my_name = "green"
-max_range = 8

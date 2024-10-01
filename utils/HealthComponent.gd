@@ -1,7 +1,6 @@
 extends Node
 class_name HealthComponent
 
-@export var parent : CharacterBody2D
 @export var max_hp : int
 
 signal zero_hp
