@@ -47,7 +47,7 @@ func _setup_units() -> void:
 		unit.kill_me.connect(kill_unit)
 		action_queue.push_back(unit)
 		
-		grid_system.set_unit_on_tile(start_location, true)
+		grid_system.set_unit_on_tile(unit.tilemap_position, true)
 		i += RNG.randi_range(1, grid_system.astargrid.get_point_count()/3 - 1)
 	
 	active_unit = action_queue.pop_front()
@@ -61,15 +61,16 @@ func move_to_position(move_to : Vector2) -> void:
 		#action_lock = false
 		#return
 	
-	var path = grid_system.get_navigation_path(active_unit.global_position, move_to)
+	var path = grid_system.get_navigation_path(active_unit.tilemap_position, grid_system._local_to_map(move_to))
 	path.pop_front()
 	
-	grid_system.set_unit_on_tile(active_unit.global_position, false)
-	active_unit.travel_path(path)
-	active_unit.tilemap_position = grid_system._local_to_map(path.back())
+	grid_system.set_unit_on_tile(active_unit.tilemap_position, false)
+	active_unit.travel_path(grid_system.path_to_global_path(path))
+	print(path)
+	active_unit.tilemap_position = path.back()
 	
 	await active_unit.done_moving
-	grid_system.set_unit_on_tile(active_unit.global_position, true)
+	grid_system.set_unit_on_tile(active_unit.tilemap_position, true)
 	
 	if path.size() < active_unit.movement_range:
 		active_unit.movement_range -= path.size()
@@ -105,7 +106,7 @@ func turn_done(to_continue : bool) -> void:
 	grid_system.set_availability(active_unit)
 
 func kill_unit(unit_to_kill):
-	grid_system.set_unit_on_tile(unit_to_kill.global_position, false)
+	grid_system.set_unit_on_tile(unit_to_kill.tilemap_position, false)
 	grid_system.set_availability(active_unit)
 	
 	action_queue.erase(unit_to_kill)

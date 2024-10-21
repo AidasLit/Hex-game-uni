@@ -66,7 +66,7 @@ func _local_to_map(location : Vector2) -> Vector2i:
 func _map_to_local(map_location : Vector2i) -> Vector2:
 	return base_layer.map_to_local(map_location)
 
-func _nav_setup_check(target_cell : Vector2i):
+func _nav_setup_check(target_cell : Vector2i) -> bool:
 	var cell_data = base_layer.get_cell_tile_data(target_cell)
 	if cell_data.get_custom_data("walkable"):
 		return true
@@ -74,7 +74,7 @@ func _nav_setup_check(target_cell : Vector2i):
 	return false
 
 # can this cell be traveled to
-func navigation_check(target_cell : Vector2i):
+func navigation_check(target_cell : Vector2i) -> bool:
 	var cell_data = base_layer.get_cell_tile_data(target_cell)
 	if cell_data.get_custom_data("walkable"):
 		if not astargrid.is_point_disabled(cells.get(target_cell)):
@@ -82,35 +82,41 @@ func navigation_check(target_cell : Vector2i):
 	
 	return false
 
-func get_navigation_path(from : Vector2, to : Vector2) -> Array[Vector2]:
-	var from_cell = _local_to_map(from)
-	var target_cell = _local_to_map(to)
+func get_navigation_path(from : Vector2i, to : Vector2i) -> Array[Vector2i]:
+	#var from_cell = _local_to_map(from)
+	#var target_cell = _local_to_map(to)
 	
 	# return empty path is the destination is invalid
-	if not cells.has(target_cell):
+	if not cells.has(to):
 		#print("invalid target")
 		return []
 	
-	if not navigation_check(target_cell):
+	if not navigation_check(to):
 		return []
 	
-	var path = astargrid.get_id_path(cells[from_cell], cells[target_cell])
-	var position_path : Array[Vector2] = []
+	var path = astargrid.get_id_path(cells[from], cells[to])
+	var position_path : Array[Vector2i] = []
 	
 	for step : int in path:
-		position_path.append(_map_to_local(astargrid.get_point_position(step)))
+		position_path.append(Vector2i(astargrid.get_point_position(step)))
 	
 	return position_path
 
-# TODO this needs a rework
-func set_unit_on_tile(location : Vector2, is_unit : bool) -> void:
-	astargrid.set_point_disabled(cells.get(_local_to_map(location)), is_unit)
+func path_to_global_path(path : Array[Vector2i]) -> Array[Vector2]:
+	var global_path : Array[Vector2] = []
+	for step in path:
+		global_path.append(_map_to_local(step))
+	return global_path
 
-func set_attackability(unit : PlayableUnit):
+# TODO this needs a rework
+func set_unit_on_tile(location : Vector2i, is_unit : bool) -> void:
+	astargrid.set_point_disabled(cells.get(location), is_unit)
+
+func set_attackability(unit : PlayableUnit) -> void:
 	var available_points : Array[int] = []
 	var available_tiles : Array[Vector2i] = []
 	
-	var unit_tile_id : int = cells.get(_local_to_map(unit.global_position))
+	var unit_tile_id : int = cells.get(unit.tilemap_position)
 	
 	for neighbor : int in astargrid.get_point_connections(unit_tile_id):
 		if astargrid.is_point_disabled(neighbor):
@@ -123,11 +129,11 @@ func set_attackability(unit : PlayableUnit):
 	
 	availability_layer.draw_attackability(available_tiles)
 
-func set_availability(unit : PlayableUnit):
+func set_availability(unit : PlayableUnit) -> void:
 	var available_points : Array[int] = []
 	var available_tiles : Array[Vector2i] = []
 	
-	var current_level : Array[int] = [cells.get(_local_to_map(unit.global_position))]
+	var current_level : Array[int] = [cells.get(unit.tilemap_position)]
 	var last_level : Array[Vector2i] = []
 	
 	for i in unit.movement_range:
@@ -145,7 +151,7 @@ func set_availability(unit : PlayableUnit):
 	availability_layer.clear()
 	availability_layer.draw_movability(available_tiles, last_level)
 	set_attackability(unit)
-	availability_layer.set_cell(_local_to_map(unit.global_position), 0, Globals.transparent_tile_coords["pink"])
+	availability_layer.set_cell(unit.tilemap_position, 0, Globals.transparent_tile_coords["pink"])
 
 func _cycle_neighbors(available_points : Array[int], current_level : Array[int]) -> Array[int]:
 	var neighbors : Array[int] = []
