@@ -9,7 +9,10 @@ to add all changed files to staging
 >git add -A
 
 to commit changes
->got commit -m "message"
+>git commit -m "message"
 
 to push commits to remote
->got push
+>git push
+
+to download latest branch and start editing it (different from git fetch, look up the difference)
+>git pull
