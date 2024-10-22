@@ -10,35 +10,42 @@
 		{
 			"uuid": "10be363a-8041-4580-8de1-4fd0ef036022",
 			"title": "Todo",
-			"tasks": []
+			"tasks": [
+				"cc63dad5-25fe-49f1-8723-430683b72003",
+				"505dea5e-6d38-4930-b732-305f81cc1a95",
+				"0e98e3fe-f2b5-4168-bb61-bd8922b2904f"
+			]
 		},
 		{
 			"uuid": "b603aae4-b4a4-4bdc-9f0e-540a4af58bb7",
 			"title": "Doing",
-			"tasks": [
-				"c57f2e68-4574-46fc-800b-04f9fc72452c"
-			]
+			"tasks": []
 		},
 		{
 			"uuid": "394279d7-12d0-45de-b2bf-7833bd408617",
 			"title": "Done",
-			"tasks": [
-				"37547d41-ca83-4648-94ba-ca034d2e31bb"
-			]
+			"tasks": []
 		}
 	],
 	"tasks": [
 		{
-			"uuid": "c57f2e68-4574-46fc-800b-04f9fc72452c",
-			"title": "Create unit manager script",
+			"uuid": "cc63dad5-25fe-49f1-8723-430683b72003",
+			"title": "Add scene manager autoload",
 			"description": "",
 			"category": "ac5a72dd-6b2c-4cf0-ae1d-42e1a521a70d",
 			"steps": []
 		},
 		{
-			"uuid": "37547d41-ca83-4648-94ba-ca034d2e31bb",
-			"title": "Refactor grid-system",
-			"description": "Make it take in grid coordinates rather than globals",
+			"uuid": "505dea5e-6d38-4930-b732-305f81cc1a95",
+			"title": "Add persistant data for unit inventory",
+			"description": "",
+			"category": "ac5a72dd-6b2c-4cf0-ae1d-42e1a521a70d",
+			"steps": []
+		},
+		{
+			"uuid": "0e98e3fe-f2b5-4168-bb61-bd8922b2904f",
+			"title": "Rework unit scene to support multiple types",
+			"description": "",
 			"category": "ac5a72dd-6b2c-4cf0-ae1d-42e1a521a70d",
 			"steps": []
 		}

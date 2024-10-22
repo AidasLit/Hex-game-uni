@@ -21,20 +21,16 @@ func draw_attackability(list : Array[Vector2i]) -> void:
 	for tile : Vector2i in list:
 		set_cell(tile, 0, Globals.transparent_tile_coords["red"])
 
-func is_movable(cell : Vector2i) -> bool:
+func is_actionable(cell : Vector2i) -> Globals.ActionType:
 	var data = get_cell_tile_data(cell)
+	
 	if data:
 		match get_cell_atlas_coords(cell):
 			Globals.transparent_tile_coords["green"]:
-				return true
+				return Globals.ActionType.Movement
 			Globals.transparent_tile_coords["orange"]:
-				return true
-	return false
-
-func is_attackable(cell : Vector2i) -> bool:
-	var data = get_cell_tile_data(cell)
-	if data:
-		match get_cell_atlas_coords(cell):
+				return Globals.ActionType.Movement
 			Globals.transparent_tile_coords["red"]:
-				return true
-	return false
+				return Globals.ActionType.Attack
+	
+	return Globals.ActionType.None

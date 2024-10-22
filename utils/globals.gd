@@ -16,3 +16,9 @@ const transparent_tile_coords : Dictionary = {
 	"brown": Vector2i(2, 1),
 	"orange": Vector2i(3, 1)
 }
+
+enum ActionType {
+	None,
+	Movement,
+	Attack
+}

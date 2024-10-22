@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=4 uid="uid://ch5xo586e1oca"]
+[gd_scene load_steps=8 format=4 uid="uid://ch5xo586e1oca"]
 
 [ext_resource type="Script" path="res://main_scenes/combat_scene.gd" id="1_4yhsa"]
 [ext_resource type="Script" path="res://main_scenes/grid_system.gd" id="2_wow2h"]
@@ -6,15 +6,18 @@
 [ext_resource type="Script" path="res://main_scenes/hover_layer.gd" id="4_ycdx0"]
 [ext_resource type="PackedScene" uid="uid://cf7cjrxmf24e4" path="res://units/test_unit_solider.tscn" id="5_7rlxc"]
 [ext_resource type="Script" path="res://main_scenes/availability_layer.gd" id="5_c2c01"]
+[ext_resource type="Script" path="res://main_scenes/unit_manager.gd" id="6_ib36x"]
 
-[node name="combat-scene" type="Node2D" node_paths=PackedStringArray("grid_system")]
+[node name="combat-scene" type="Node2D" node_paths=PackedStringArray("grid_system", "unit_manager")]
 script = ExtResource("1_4yhsa")
 grid_system = NodePath("grid-system")
+unit_manager = NodePath("unit-manager")
 metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
 
-[node name="grid-system" type="Node2D" parent="."]
+[node name="grid-system" type="Node2D" parent="." node_paths=PackedStringArray("unit_manager")]
 script = ExtResource("2_wow2h")
+unit_manager = NodePath("../unit-manager")
 metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
 
@@ -30,12 +33,15 @@ script = ExtResource("4_ycdx0")
 tile_set = ExtResource("3_odvqy")
 script = ExtResource("5_c2c01")
 
-[node name="units" type="Node2D" parent="."]
+[node name="unit-manager" type="Node2D" parent="." node_paths=PackedStringArray("grid_system", "play_loop")]
+script = ExtResource("6_ib36x")
+grid_system = NodePath("../grid-system")
+play_loop = NodePath("..")
 metadata/_edit_lock_ = true
 metadata/_edit_group_ = true
 
-[node name="solider" parent="units" instance=ExtResource("5_7rlxc")]
+[node name="solider" parent="unit-manager" instance=ExtResource("5_7rlxc")]
 
-[node name="solider2" parent="units" instance=ExtResource("5_7rlxc")]
+[node name="solider2" parent="unit-manager" instance=ExtResource("5_7rlxc")]
 
-[node name="solider3" parent="units" instance=ExtResource("5_7rlxc")]
+[node name="solider3" parent="unit-manager" instance=ExtResource("5_7rlxc")]

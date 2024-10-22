@@ -20,6 +20,8 @@ class_name GridNavigationSystem
 var _visited_cells : Array[Vector2i]
 var _queue_cells : Array[Vector2i]
 
+@export var unit_manager : UnitManager
+
 @onready var base_layer: TileMapLayer = $"base-layer"
 @onready var hover_layer: TileMapLayer = $"hover-layer"
 @onready var availability_layer: TileMapLayer = $"availability-layer"
@@ -109,8 +111,8 @@ func path_to_global_path(path : Array[Vector2i]) -> Array[Vector2]:
 	return global_path
 
 # TODO this needs a rework
-func set_unit_on_tile(location : Vector2i, is_unit : bool) -> void:
-	astargrid.set_point_disabled(cells.get(location), is_unit)
+func set_tile_disabled(tile_pos : Vector2i, disable : bool) -> void:
+	astargrid.set_point_disabled(cells.get(tile_pos), disable)
 
 func set_attackability(unit : PlayableUnit) -> void:
 	var available_points : Array[int] = []
@@ -119,10 +121,15 @@ func set_attackability(unit : PlayableUnit) -> void:
 	var unit_tile_id : int = cells.get(unit.tilemap_position)
 	
 	for neighbor : int in astargrid.get_point_connections(unit_tile_id):
-		if astargrid.is_point_disabled(neighbor):
-			if !available_points.has(neighbor):
-				available_points.append(neighbor)
+		var temp_pos = Vector2i(astargrid.get_point_position(neighbor))
+		
+		if unit_manager.map_of_units.has(temp_pos):
+			if unit_manager.map_of_units[temp_pos].unit_owner == Globals.UnitOwner.Rogue or\
+				unit_manager.map_of_units[temp_pos].unit_owner != unit.unit_owner:
+				if !available_points.has(neighbor):
+					available_points.append(neighbor)
 	
+	#points -> tiles translation
 	for point : int in available_points:
 		var tile = Vector2i(astargrid.get_point_position(point))
 		available_tiles.append(tile)
