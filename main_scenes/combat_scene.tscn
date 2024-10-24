@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://main_scenes/grid_system.gd" id="2_wow2h"]
 [ext_resource type="TileSet" uid="uid://ctmfxmh1mw5a0" path="res://resources/test_tileset.tres" id="3_odvqy"]
 [ext_resource type="Script" path="res://main_scenes/hover_layer.gd" id="4_ycdx0"]
-[ext_resource type="PackedScene" uid="uid://cf7cjrxmf24e4" path="res://units/test_unit_solider.tscn" id="5_7rlxc"]
+[ext_resource type="PackedScene" uid="uid://cf7cjrxmf24e4" path="res://units/playable_unit.tscn" id="5_7rlxc"]
 [ext_resource type="Script" path="res://main_scenes/availability_layer.gd" id="5_c2c01"]
 [ext_resource type="Script" path="res://main_scenes/unit_manager.gd" id="6_ib36x"]
 

@@ -52,7 +52,7 @@ func attack(attack_to : Vector2i) -> void:
 	
 	var unit = unit_manager.map_of_units[attack_to]
 	
-	unit.health_component.receive_damage(active_unit.damage)
+	unit.health_component.receive_damage(active_unit.unit_res.damage)
 	active_unit.nudge_attack(unit.global_position)
 	await active_unit.attack_finished
 	

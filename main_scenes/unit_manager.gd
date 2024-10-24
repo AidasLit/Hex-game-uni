@@ -19,7 +19,10 @@ func _ready() -> void:
 func setup_units() -> void:
 	var RNG = RandomNumberGenerator.new()
 	var i = RNG.randi_range(0, grid_system.astargrid.get_point_count()/3)
+	
 	for unit : PlayableUnit in get_tree().get_nodes_in_group("unit"):
+		unit.unit_res = load("res://units/unit_type_resources/solider.tres")
+		
 		var start_location = grid_system._map_to_local(Vector2i(grid_system.astargrid.get_point_position(i)))
 		
 		if i % 3 == 1:
@@ -31,6 +34,7 @@ func setup_units() -> void:
 		else:
 			unit.unit_owner = Globals.UnitOwner.Rogue
 			unit.modulate = Color(0, 0, 1)
+		
 		unit.goto_location(start_location)
 		unit.tilemap_position = Vector2i(grid_system.astargrid.get_point_position(i))
 		map_of_units[unit.tilemap_position] = unit

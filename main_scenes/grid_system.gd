@@ -143,6 +143,9 @@ func set_availability(unit : PlayableUnit) -> void:
 	var current_level : Array[int] = [cells.get(unit.tilemap_position)]
 	var last_level : Array[Vector2i] = []
 	
+	# TODO implement something like
+	# available_points = unit.movement.get_available_points(astar, base_layer)
+	
 	for i in unit.movement_range:
 		current_level = _cycle_neighbors(available_points, current_level)
 		

@@ -1,27 +1,34 @@
 extends CharacterBody2D
 class_name PlayableUnit
 
-@onready var health_component: HealthComponent = $HealthComponent
+### All logic that is shared by all units
+### Individual logic goes into resources
 
-# temporary variable for debugging
-@export var my_name: String = "blank"
+@onready var health_component: HealthComponent = $HealthComponent
+@onready var base_texture: Sprite2D = $Sprite2D
+
 @export var max_range: int = 3
-@export var max_hp: int = 10
-#@export var attack_range: int = 1
-@export var damage: int = 2
+
+var unit_res: PlayableUnitRes
 
 signal done_moving
 signal attack_finished
 signal kill_me(unit_ref)
 
 var tilemap_position : Vector2i
+# TODO move the movement logic to the resource
 var movement_range : int
 var unit_owner : Globals.UnitOwner
 
 func _ready() -> void:
 	health_component.zero_hp.connect(_on_zero_hp)
-	health_component.max_hp = max_hp
 	turn_reset()
+
+# setup for resource stuff, has to be called by the unit manager
+func setup() -> void:
+	unit_res.setup(self)
+	base_texture.texture = unit_res.sprite
+	health_component.max_hp = unit_res.health
 
 func travel_path(path : Array[Vector2]):
 	for next_step : Vector2 in path:
