@@ -3,5 +3,5 @@ class_name UnitMovement
 
 static var unit : PlayableUnit
 
-static func get_available_points(astar : AStar2D, base_layer : TileMapLayer) -> Array[int]:
+static func get_available_tiles(grid_system : GridNavigationSystem) -> Array[Array]:
 	return []

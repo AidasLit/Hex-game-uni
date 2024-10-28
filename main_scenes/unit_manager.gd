@@ -22,6 +22,7 @@ func setup_units() -> void:
 	
 	for unit : PlayableUnit in get_tree().get_nodes_in_group("unit"):
 		unit.unit_res = load("res://units/unit_type_resources/solider.tres")
+		unit.setup()
 		
 		var start_location = grid_system._map_to_local(Vector2i(grid_system.astargrid.get_point_position(i)))
 		

@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="PlayableUnitRes" load_steps=3 format=3 uid="uid://b7klmo3ha3lx3"]
+[gd_resource type="Resource" script_class="PlayableUnitRes" load_steps=4 format=3 uid="uid://b7klmo3ha3lx3"]
 
 [ext_resource type="Script" path="res://utils/resources/playable_unit_res.gd" id="1_40l8p"]
+[ext_resource type="Script" path="res://units/movement_scripts/basic_movement.gd" id="1_ydoxl"]
 [ext_resource type="Texture2D" uid="uid://dhqmfd7nw15k4" path="res://icon.svg" id="2_lncnn"]
 
 [resource]
@@ -10,3 +11,5 @@ sprite = ExtResource("2_lncnn")
 name = "solider"
 max_hp = 10
 damage = 2
+movement_range = 3
+_movement = ExtResource("1_ydoxl")

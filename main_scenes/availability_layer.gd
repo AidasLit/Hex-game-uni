@@ -9,13 +9,16 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 
-func draw_movability(list : Array[Vector2i], last_layer : Array[Vector2i] = []) -> void:
-	for tile : Vector2i in list:
-		set_cell(tile, 0, Globals.transparent_tile_coords["green"])
-	
-	if last_layer:
-		for tile : Vector2i in last_layer:
-			set_cell(tile, 0, Globals.transparent_tile_coords["orange"])
+func draw_movability(list : Array[Array]) -> void:
+	for layer in list.size():
+		#if layer == list.size() - 1:
+			#for tile in list[layer]:
+				#set_cell(tile, 0, Globals.transparent_tile_coords["orange"])
+		#else:
+			#for tile in list[layer]:
+				#set_cell(tile, 0, Globals.transparent_tile_coords["green"])
+		for tile in list[layer]:
+			set_cell(tile, 0, Globals.transparent_tile_coords["green"])
 
 func draw_attackability(list : Array[Vector2i]) -> void:
 	for tile : Vector2i in list:
