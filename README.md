@@ -16,3 +16,6 @@ to push commits to remote
 
 to download latest branch and start editing it (different from git fetch, look up the difference)
 >git pull
+
+to branch off into a branch "nameless"
+>git push --set-upstream origin nameless
