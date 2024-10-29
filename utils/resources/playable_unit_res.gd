@@ -13,11 +13,7 @@ class_name PlayableUnitRes
 var movement
 var attack
 
-var unit : PlayableUnit
-
 func setup(unit):
-	resource_local_to_scene = true
-	
 	movement = _movement.new()
 	movement.unit = unit
 

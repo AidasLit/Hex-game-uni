@@ -11,14 +11,12 @@ func _process(delta: float) -> void:
 
 func draw_movability(list : Array[Array]) -> void:
 	for layer in list.size():
-		#if layer == list.size() - 1:
-			#for tile in list[layer]:
-				#set_cell(tile, 0, Globals.transparent_tile_coords["orange"])
-		#else:
-			#for tile in list[layer]:
-				#set_cell(tile, 0, Globals.transparent_tile_coords["green"])
-		for tile in list[layer]:
-			set_cell(tile, 0, Globals.transparent_tile_coords["green"])
+		if layer == list.size() - 1:
+			for tile in list[layer]:
+				set_cell(tile, 0, Globals.transparent_tile_coords["orange"])
+		else:
+			for tile in list[layer]:
+				set_cell(tile, 0, Globals.transparent_tile_coords["green"])
 
 func draw_attackability(list : Array[Vector2i]) -> void:
 	for tile : Vector2i in list:
