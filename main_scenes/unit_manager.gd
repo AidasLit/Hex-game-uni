@@ -20,8 +20,11 @@ func setup_units() -> void:
 	var RNG = RandomNumberGenerator.new()
 	var i = RNG.randi_range(0, grid_system.astargrid.get_point_count()/3)
 	
+	var solider_res = load("res://units/unit_type_resources/solider.tres")
+	
 	for unit : PlayableUnit in get_tree().get_nodes_in_group("unit"):
-		unit.unit_res = load("res://units/unit_type_resources/solider.tres")
+		unit.unit_res = solider_res.duplicate()
+		unit.setup()
 		
 		var start_location = grid_system._map_to_local(Vector2i(grid_system.astargrid.get_point_position(i)))
 		

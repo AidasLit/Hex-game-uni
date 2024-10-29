@@ -7,10 +7,9 @@ class_name PlayableUnit
 @onready var health_component: HealthComponent = $HealthComponent
 @onready var base_texture: Sprite2D = $Sprite2D
 
-@export var max_range: int = 3
+@export var unit_res: PlayableUnitRes
 
-var unit_res: PlayableUnitRes
-
+signal setup_done
 signal done_moving
 signal attack_finished
 signal kill_me(unit_ref)
@@ -22,13 +21,14 @@ var unit_owner : Globals.UnitOwner
 
 func _ready() -> void:
 	health_component.zero_hp.connect(_on_zero_hp)
-	turn_reset()
 
 # setup for resource stuff, has to be called by the unit manager
 func setup() -> void:
 	unit_res.setup(self)
 	base_texture.texture = unit_res.sprite
-	health_component.max_hp = unit_res.health
+	health_component.max_hp = unit_res.max_hp
+	
+	turn_reset()
 
 func travel_path(path : Array[Vector2]):
 	for next_step : Vector2 in path:
@@ -62,7 +62,7 @@ func nudge_attack(target : Vector2):
 	attack_finished.emit()
 
 func turn_reset() -> void:
-	movement_range = max_range
+	movement_range = unit_res.movement_range
 
 func _on_zero_hp() -> void:
 	kill_me.emit(self)

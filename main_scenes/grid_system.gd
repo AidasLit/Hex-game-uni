@@ -137,38 +137,9 @@ func set_attackability(unit : PlayableUnit) -> void:
 	availability_layer.draw_attackability(available_tiles)
 
 func set_availability(unit : PlayableUnit) -> void:
-	var available_points : Array[int] = []
-	var available_tiles : Array[Vector2i] = []
-	
-	var current_level : Array[int] = [cells.get(unit.tilemap_position)]
-	var last_level : Array[Vector2i] = []
-	
-	# TODO implement something like
-	# available_points = unit.movement.get_available_points(astar, base_layer)
-	
-	for i in unit.movement_range:
-		current_level = _cycle_neighbors(available_points, current_level)
-		
-		if i == unit.movement_range - 1:
-			for point in current_level:
-				var tile = Vector2i(astargrid.get_point_position(point))
-				last_level.append(tile)
-	
-	for point : int in available_points:
-		var tile = Vector2i(astargrid.get_point_position(point))
-		available_tiles.append(tile)
-	
+	var available_tiles = unit.unit_res.movement.get_available_tiles(self)
+
 	availability_layer.clear()
-	availability_layer.draw_movability(available_tiles, last_level)
+	availability_layer.draw_movability(available_tiles)
 	set_attackability(unit)
 	availability_layer.set_cell(unit.tilemap_position, 0, Globals.transparent_tile_coords["pink"])
-
-func _cycle_neighbors(available_points : Array[int], current_level : Array[int]) -> Array[int]:
-	var neighbors : Array[int] = []
-	for point : int in current_level:
-		for neighbor : int in astargrid.get_point_connections(point):
-			if navigation_check(Vector2i(astargrid.get_point_position(neighbor))):
-				if !available_points.has(neighbor):
-					available_points.append(neighbor)
-					neighbors.append(neighbor)
-	return neighbors
