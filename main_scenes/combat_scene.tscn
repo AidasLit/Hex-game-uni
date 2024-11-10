@@ -4,9 +4,9 @@
 [ext_resource type="Script" path="res://main_scenes/grid_system.gd" id="2_wow2h"]
 [ext_resource type="TileSet" uid="uid://ctmfxmh1mw5a0" path="res://resources/test_tileset.tres" id="3_odvqy"]
 [ext_resource type="Script" path="res://main_scenes/hover_layer.gd" id="4_ycdx0"]
-[ext_resource type="PackedScene" uid="uid://cf7cjrxmf24e4" path="res://units/playable_unit.tscn" id="5_7rlxc"]
 [ext_resource type="Script" path="res://main_scenes/availability_layer.gd" id="5_c2c01"]
 [ext_resource type="Script" path="res://main_scenes/unit_manager.gd" id="6_ib36x"]
+[ext_resource type="Script" path="res://main_scenes/hud.gd" id="7_dhsgw"]
 
 [node name="combat-scene" type="Node2D" node_paths=PackedStringArray("grid_system", "unit_manager")]
 script = ExtResource("1_4yhsa")
@@ -33,15 +33,36 @@ script = ExtResource("4_ycdx0")
 tile_set = ExtResource("3_odvqy")
 script = ExtResource("5_c2c01")
 
-[node name="unit-manager" type="Node2D" parent="." node_paths=PackedStringArray("grid_system", "play_loop")]
+[node name="unit-manager" type="Node2D" parent="." node_paths=PackedStringArray("play_loop", "grid_system", "hud")]
 script = ExtResource("6_ib36x")
-grid_system = NodePath("../grid-system")
 play_loop = NodePath("..")
+grid_system = NodePath("../grid-system")
+hud = NodePath("../HUD")
 metadata/_edit_lock_ = true
 metadata/_edit_group_ = true
 
-[node name="solider" parent="unit-manager" instance=ExtResource("5_7rlxc")]
+[node name="HUD" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1152.0
+offset_bottom = 642.0
+script = ExtResource("7_dhsgw")
+metadata/_edit_lock_ = true
 
-[node name="solider2" parent="unit-manager" instance=ExtResource("5_7rlxc")]
+[node name="MarginContainer" type="MarginContainer" parent="HUD"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.833
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 0.213989
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="solider3" parent="unit-manager" instance=ExtResource("5_7rlxc")]
+[node name="HBoxContainer" type="HBoxContainer" parent="HUD/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10

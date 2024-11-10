@@ -22,3 +22,7 @@ enum ActionType {
 	Movement,
 	Attack
 }
+
+const unit_types : Array[PlayableUnitRes]= [
+	preload("res://units/unit_type_resources/solider.tres")
+]
