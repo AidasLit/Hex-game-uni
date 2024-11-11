@@ -6,7 +6,7 @@ var units : Array[int] = []
 func _ready() -> void:
 	units.append(0)
 	units.append(0)
+	units.append(1)
 	units.append(0)
 	units.append(0)
-	units.append(0)
-	units.append(0)
+	units.append(1)

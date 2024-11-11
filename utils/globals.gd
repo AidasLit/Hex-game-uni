@@ -23,6 +23,8 @@ enum ActionType {
 	Attack
 }
 
-const unit_types : Array[PlayableUnitRes]= [
-	preload("res://units/unit_type_resources/solider.tres")
+### preload doesnt work here, cyclical dependancy (I have no clue wtf is wrong with it)
+var unit_types : Array[PlayableUnitRes]= [
+	load("res://units/unit_type_resources/solider.tres"),
+	load("res://units/unit_type_resources/hunter.tres")
 ]

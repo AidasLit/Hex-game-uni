@@ -21,7 +21,8 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not action_lock:
 		if event is InputEventMouseButton and event.get_button_index() == MOUSE_BUTTON_LEFT:
-			var target_pos = grid_system._local_to_map(event.position)
+			
+			var target_pos = grid_system._local_to_map(get_viewport().get_mouse_position())
 			
 			match grid_system.availability_layer.is_actionable(target_pos):
 				Globals.ActionType.Movement:
