@@ -12,7 +12,8 @@
 			"title": "Todo",
 			"tasks": [
 				"cc63dad5-25fe-49f1-8723-430683b72003",
-				"b8a63c16-854f-43af-a60f-ac182089df7f"
+				"b8a63c16-854f-43af-a60f-ac182089df7f",
+				"feee6d62-d733-495f-8a8f-c4bd223fa020"
 			]
 		},
 		{
@@ -55,6 +56,13 @@
 		{
 			"uuid": "b8a63c16-854f-43af-a60f-ac182089df7f",
 			"title": "Add game state",
+			"description": "",
+			"category": "ac5a72dd-6b2c-4cf0-ae1d-42e1a521a70d",
+			"steps": []
+		},
+		{
+			"uuid": "feee6d62-d733-495f-8a8f-c4bd223fa020",
+			"title": "Rework grid system to support disjointed pieces of land.",
 			"description": "",
 			"category": "ac5a72dd-6b2c-4cf0-ae1d-42e1a521a70d",
 			"steps": []
