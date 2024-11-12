@@ -66,6 +66,9 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
+[node name="Panel" type="Panel" parent="HUD/MarginContainer"]
+layout_mode = 2
+
 [node name="ScrollContainer" type="ScrollContainer" parent="HUD/MarginContainer"]
 layout_mode = 2
 
@@ -80,15 +83,15 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -8.0
-offset_bottom = 8.0
+offset_left = -189.0
+offset_bottom = 83.0
 grow_horizontal = 0
 text = "Begin"
 
 [node name="owner-choice" type="OptionButton" parent="HUD"]
 layout_mode = 0
-offset_right = 145.0
-offset_bottom = 45.0
+offset_right = 173.0
+offset_bottom = 55.0
 selected = 0
 item_count = 3
 popup/item_0/text = "Player"

@@ -12,6 +12,7 @@ const playable_unit_scene = preload("res://units/playable_unit.tscn")
 
 signal action_done
 signal setup_done
+signal unit_placed(successful : bool)
 
 var map_of_units : Dictionary
 
@@ -30,14 +31,28 @@ func setup_units() -> void:
 	
 	setup_done.emit()
 
-func place_unit(unit_id : int, at_position : Vector2, unit_owner : Globals.UnitOwner):
+func try_place_unit(unit_id : int, at_position : Vector2, unit_owner : Globals.UnitOwner):
 	var target_cell = grid_system._local_to_map(at_position)
+	
 	if !grid_system.base_layer.get_cell_tile_data(target_cell).get_custom_data("walkable"):
+		unit_placed.emit(false)
+		return
+	
+	if grid_system.astargrid.is_point_disabled(grid_system.cells.get(target_cell)):
+		unit_placed.emit(false)
 		return
 	
 	
 	var unit = playable_unit_scene.instantiate()
 	self.add_child(unit)
+	
+	match unit_owner:
+		Globals.UnitOwner.Player:
+			unit.modulate = Color(0, 1, 0)
+		Globals.UnitOwner.Enemy:
+			unit.modulate = Color(1, 0, 0)
+		Globals.UnitOwner.Rogue:
+			unit.modulate = Color(0, 0, 1)
 	
 	unit.unit_res = Globals.unit_types[unit_id].duplicate()
 	unit.setup()
@@ -50,6 +65,12 @@ func place_unit(unit_id : int, at_position : Vector2, unit_owner : Globals.UnitO
 	grid_system.set_tile_disabled(unit.tilemap_position, true)
 	
 	unit.global_position = grid_system._map_to_local(unit.tilemap_position)
+	
+	### TODO for some reason signal doesnt get caught the first time it's used
+	### unless it's being called in a deferred mode. lookup more of
+	### https://www.reddit.com/r/godot/comments/p6jm0s/are_signals_called_inline_or_are_they_deferred_in/
+	#unit_placed.emit(true)
+	(func(): unit_placed.emit(true)).call_deferred()
 
 func kill_unit(unit : PlayableUnit):
 	#remove old positions
