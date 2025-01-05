@@ -4,6 +4,11 @@
 			"uuid": "ac5a72dd-6b2c-4cf0-ae1d-42e1a521a70d",
 			"title": "Task",
 			"color": "70bafa"
+		},
+		{
+			"uuid": "104489a2-6aeb-400c-a3ed-39e497c62c36",
+			"title": "urgent",
+			"color": "ce1212"
 		}
 	],
 	"stages": [
@@ -12,7 +17,6 @@
 			"title": "Todo",
 			"tasks": [
 				"cc63dad5-25fe-49f1-8723-430683b72003",
-				"b8a63c16-854f-43af-a60f-ac182089df7f",
 				"feee6d62-d733-495f-8a8f-c4bd223fa020"
 			]
 		},
@@ -20,7 +24,10 @@
 			"uuid": "b603aae4-b4a4-4bdc-9f0e-540a4af58bb7",
 			"title": "Doing",
 			"tasks": [
-				"505dea5e-6d38-4930-b732-305f81cc1a95"
+				"505dea5e-6d38-4930-b732-305f81cc1a95",
+				"b8a63c16-854f-43af-a60f-ac182089df7f",
+				"e98b4c5a-e063-4fc7-ae03-8de3d9405578",
+				"354273ab-bdde-4ee1-bdf2-15f799a4a11d"
 			]
 		},
 		{
@@ -57,7 +64,7 @@
 			"uuid": "b8a63c16-854f-43af-a60f-ac182089df7f",
 			"title": "Add game state",
 			"description": "",
-			"category": "ac5a72dd-6b2c-4cf0-ae1d-42e1a521a70d",
+			"category": "104489a2-6aeb-400c-a3ed-39e497c62c36",
 			"steps": []
 		},
 		{
@@ -65,6 +72,20 @@
 			"title": "Rework grid system to support disjointed pieces of land.",
 			"description": "",
 			"category": "ac5a72dd-6b2c-4cf0-ae1d-42e1a521a70d",
+			"steps": []
+		},
+		{
+			"uuid": "e98b4c5a-e063-4fc7-ae03-8de3d9405578",
+			"title": "Pause menu",
+			"description": "",
+			"category": "104489a2-6aeb-400c-a3ed-39e497c62c36",
+			"steps": []
+		},
+		{
+			"uuid": "354273ab-bdde-4ee1-bdf2-15f799a4a11d",
+			"title": "Unit textures",
+			"description": "",
+			"category": "104489a2-6aeb-400c-a3ed-39e497c62c36",
 			"steps": []
 		}
 	],
