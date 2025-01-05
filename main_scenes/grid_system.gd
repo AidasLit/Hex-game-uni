@@ -21,6 +21,9 @@ var _visited_cells : Array[Vector2i]
 var _queue_cells : Array[Vector2i]
 
 @export var unit_manager : UnitManager
+@export var gen_noise : NoiseTexture2D
+@export var gen_grad : GradientTexture2D
+@export var camera: Camera2D
 
 @onready var base_layer: TileMapLayer = $"base-layer"
 @onready var hover_layer: TileMapLayer = $"hover-layer"
@@ -29,20 +32,69 @@ var _queue_cells : Array[Vector2i]
 var astargrid = AStar2D.new()
 # Dictionary - Key: Vector2i, Value : int
 var cells : Dictionary
+var _start_cell = Vector2i(0, 0)
 
 func _ready() -> void:
+	_generate_map()
+	
 	cells.clear()
+	
 	_setup_astar()
 
 func _process(delta: float) -> void:
 	pass
 
+func _generate_map():
+	var gradient : Image = gen_grad.get_image()
+	
+	var dimensions = gradient.get_size()
+	var final_image = gradient.duplicate()
+	
+	gen_noise.noise.seed = randi()
+	var noise : Image = gen_noise.noise.get_image(dimensions.x, dimensions.y)
+	
+	base_layer.clear()
+	for x in range(0, dimensions.x):
+		for y in range(0, dimensions.y):
+			var noise_value = noise.get_pixel(x, y).v * gradient.get_pixel(x, y).v
+			
+			var temp_coords = Vector2i(x - dimensions.x/2, y - dimensions.y/2)
+			base_layer.set_cell(temp_coords, 1, _get_gen_tile(noise_value))
+			
+			_BFS(Vector2i(x, y))
+	
+	camera.limit_left = _map_to_local(Vector2i(0 - dimensions.x/2, 0 - dimensions.y/2)).x
+	camera.limit_top = _map_to_local(Vector2i(0 - dimensions.x/2, 0 - dimensions.y/2)).y
+	camera.limit_right = _map_to_local(Vector2i(dimensions.x/2 - 1, dimensions.y/2 - 1)).x
+	camera.limit_bottom = _map_to_local(Vector2i(dimensions.x/2 - 1, dimensions.y/2 - 1)).y
+
+func _get_gen_tile(noise_value : float):
+	if noise_value <= 0:
+		return Globals.solids_tile_coords["sea"]
+	elif noise_value <= 0.1:
+		return Globals.solids_tile_coords["shore"]
+	elif noise_value <= 0.15:
+		return Globals.solids_tile_coords["sand"]
+	elif noise_value <= 0.4:
+		return Globals.solids_tile_coords["grass"]
+	elif noise_value <= 0.6:
+		return Globals.solids_tile_coords["cliff"]
+	elif noise_value <= 0.8:
+		return Globals.solids_tile_coords["mountain"]
+	else:
+		return Globals.solids_tile_coords["snow"]
+
 func _setup_astar():
-	var start_cell = Vector2i(0, 0)
+	_detect_start(_start_cell)
+	_create_cell(0, _start_cell)
 	
-	_create_cell(0, start_cell)
-	
-	_BFS(start_cell)
+	_BFS(_start_cell)
+
+func _detect_start(current_cell : Vector2i):
+	if _nav_setup_check(current_cell):
+		_start_cell = current_cell
+	else:
+		_detect_start(Vector2i(current_cell.x, current_cell.y - 1))
 
 func _BFS(current_cell : Vector2i):
 	for neighbor : Vector2i in base_layer.get_surrounding_cells(current_cell):

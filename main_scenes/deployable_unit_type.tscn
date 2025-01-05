@@ -1,0 +1,42 @@
+[gd_scene load_steps=5 format=3 uid="uid://crag1nwde1bya"]
+
+[ext_resource type="Texture2D" uid="uid://dhqmfd7nw15k4" path="res://icon.svg" id="1_64edw"]
+[ext_resource type="ButtonGroup" uid="uid://fyut5s68leih" path="res://main_scenes/deployable_unit_type_button_group.tres" id="1_vcnrk"]
+[ext_resource type="Script" path="res://main_scenes/deployable_unit_type.gd" id="2_dvwqt"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e46ox"]
+
+[node name="DeployableUnitType" type="Button"]
+custom_minimum_size = Vector2(128, 128)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/pressed = SubResource("StyleBoxFlat_e46ox")
+toggle_mode = true
+button_group = ExtResource("1_vcnrk")
+icon = ExtResource("1_64edw")
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("2_dvwqt")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="Label" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+text = "1"
+horizontal_alignment = 2
+vertical_alignment = 2

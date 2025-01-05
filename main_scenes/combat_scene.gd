@@ -3,6 +3,8 @@ extends Node2D
 ### Controls game state/flow
 ### This is the core controller for the combat gameplay
 
+@export var camera : Camera2D
+
 @export var grid_system: GridNavigationSystem
 @export var unit_manager: UnitManager
 
@@ -21,7 +23,8 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not action_lock:
 		if event is InputEventMouseButton and event.get_button_index() == MOUSE_BUTTON_LEFT:
-			var target_pos = grid_system._local_to_map(event.position)
+			
+			var target_pos = grid_system._local_to_map(camera.get_global_mouse_position())
 			
 			match grid_system.availability_layer.is_actionable(target_pos):
 				Globals.ActionType.Movement:

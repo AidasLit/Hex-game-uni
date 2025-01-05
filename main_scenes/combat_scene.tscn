@@ -1,47 +1,109 @@
-[gd_scene load_steps=8 format=4 uid="uid://ch5xo586e1oca"]
+[gd_scene load_steps=11 format=4 uid="uid://ch5xo586e1oca"]
 
 [ext_resource type="Script" path="res://main_scenes/combat_scene.gd" id="1_4yhsa"]
+[ext_resource type="Script" path="res://main_scenes/camera_controls.gd" id="2_2fxi3"]
 [ext_resource type="Script" path="res://main_scenes/grid_system.gd" id="2_wow2h"]
+[ext_resource type="Texture2D" uid="uid://0my07toxtc4h" path="res://resources/world_gen_noise.tres" id="3_3mphq"]
 [ext_resource type="TileSet" uid="uid://ctmfxmh1mw5a0" path="res://resources/test_tileset.tres" id="3_odvqy"]
+[ext_resource type="Texture2D" uid="uid://dcolkm0gqnd11" path="res://resources/world_gen_gradient.tres" id="4_7rqkd"]
 [ext_resource type="Script" path="res://main_scenes/hover_layer.gd" id="4_ycdx0"]
-[ext_resource type="PackedScene" uid="uid://cf7cjrxmf24e4" path="res://units/playable_unit.tscn" id="5_7rlxc"]
 [ext_resource type="Script" path="res://main_scenes/availability_layer.gd" id="5_c2c01"]
 [ext_resource type="Script" path="res://main_scenes/unit_manager.gd" id="6_ib36x"]
+[ext_resource type="Script" path="res://main_scenes/hud.gd" id="7_dhsgw"]
 
-[node name="combat-scene" type="Node2D" node_paths=PackedStringArray("grid_system", "unit_manager")]
+[node name="combat-scene" type="Node2D" node_paths=PackedStringArray("camera", "grid_system", "unit_manager")]
 script = ExtResource("1_4yhsa")
+camera = NodePath("Camera2D")
 grid_system = NodePath("grid-system")
 unit_manager = NodePath("unit-manager")
 metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
 
-[node name="grid-system" type="Node2D" parent="." node_paths=PackedStringArray("unit_manager")]
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.4, 0.4)
+limit_smoothed = true
+position_smoothing_enabled = true
+position_smoothing_speed = 20.0
+script = ExtResource("2_2fxi3")
+
+[node name="grid-system" type="Node2D" parent="." node_paths=PackedStringArray("unit_manager", "camera")]
 script = ExtResource("2_wow2h")
 unit_manager = NodePath("../unit-manager")
+gen_noise = ExtResource("3_3mphq")
+gen_grad = ExtResource("4_7rqkd")
+camera = NodePath("../Camera2D")
 metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
 
 [node name="base-layer" type="TileMapLayer" parent="grid-system"]
-tile_map_data = PackedByteArray("AAAAAAEAAQAAAAAAAAABAAIAAQAAAAAAAAACAAEAAQABAAEAAAAAAAAAAQAAAAAAAAABAAAAAQABAAEAAAABAP//AQAAAAAAAAACAAAAAQABAAEAAAADAAAAAQABAAEAAAAEAAAAAQABAAAAAAAFAAAAAQACAAAAAAAGAAAAAQABAAEAAAAHAAAAAQABAAEAAAAIAAAAAQAAAAAAAAAHAP//AQAAAAAAAAAFAP//AQACAAAAAAADAP//AQABAAAAAAAAAAIAAQAAAAAAAAAAAAMAAQAAAAAAAAAAAAQAAQACAAAAAAABAAEAAQAAAAAAAAABAAMAAQACAAAAAAABAAQAAQAAAAAAAAACAAIAAQAAAAAAAAACAAMAAQAAAAAAAAACAAQAAQACAAAAAAADAAEAAQABAAEAAAADAAIAAQAAAAAAAAADAAMAAQACAAAAAAADAAQAAQAAAAAAAAAEAAEAAQABAAEAAAAEAAIAAQAAAAAAAAAEAAMAAQAAAAEAAAAEAAQAAQAAAAAAAAAFAAEAAQACAAAAAAAFAAIAAQACAAAAAAAFAAMAAQAAAAAAAAAFAAQAAQABAAEAAAAGAAEAAQACAAAAAAAGAAIAAQAAAAAAAAAGAAMAAQAAAAAAAAAGAAQAAQABAAEAAAAHAAEAAQACAAAAAAAHAAIAAQAAAAAAAAAHAAMAAQAAAAAAAAAHAAQAAQACAAAAAAAIAAEAAQAAAAAAAAAIAAIAAQAAAAEAAAAIAAMAAQAAAAAAAAAIAAQAAQACAAAAAAAJAAEAAQAAAAAAAAAJAAIAAQACAAAAAAAJAAMAAQACAAAAAAAJAAQAAQABAAEAAAAKAAIAAQAAAAAAAAAKAAMAAQAAAAAAAAALAAEAAQAAAAAAAAALAAIAAQAAAAAAAAALAAMAAQAAAAAAAAALAAQAAQABAAEAAAAKAAQAAQABAAEAAAAJAAAAAQABAAEAAAAKAAEAAQABAAEAAAAJAP//AQABAAEAAAA=")
+tile_map_data = PackedByteArray("AAAAAAEAAQAAAAAAAAABAAIAAQAAAAAAAAACAAEAAQABAAEAAAAAAAAAAQAAAAAAAAABAAAAAQABAAEAAAABAP//AQAAAAAAAAACAAAAAQABAAEAAAADAAAAAQABAAEAAAAEAAAAAQACAAAAAAAFAAAAAQACAAAAAAAGAAAAAQABAAEAAAAHAAAAAQABAAEAAAAIAAAAAQAAAAAAAAAHAP//AQAAAAAAAAAFAP//AQACAAAAAAADAP//AQABAAEAAAAAAAIAAQAAAAAAAAAAAAMAAQAAAAAAAAAAAAQAAQACAAAAAAABAAEAAQAAAAAAAAABAAMAAQACAAAAAAABAAQAAQABAAEAAAACAAIAAQAAAAAAAAACAAMAAQAAAAAAAAACAAQAAQACAAAAAAADAAEAAQABAAEAAAADAAIAAQAAAAAAAAADAAMAAQACAAAAAAADAAQAAQAAAAAAAAAEAAEAAQABAAEAAAAEAAIAAQAAAAAAAAAEAAMAAQAAAAEAAAAEAAQAAQAAAAAAAAAFAAEAAQACAAAAAAAFAAIAAQAAAAEAAAAFAAMAAQAAAAAAAAAFAAQAAQABAAEAAAAGAAEAAQACAAAAAAAGAAIAAQAAAAAAAAAGAAMAAQAAAAAAAAAGAAQAAQABAAEAAAAHAAEAAQACAAAAAAAHAAIAAQAAAAAAAAAHAAMAAQAAAAAAAAAHAAQAAQACAAAAAAAIAAEAAQAAAAAAAAAIAAIAAQAAAAEAAAAIAAMAAQAAAAAAAAAIAAQAAQACAAAAAAAJAAEAAQAAAAAAAAAJAAIAAQACAAAAAAAJAAMAAQACAAAAAAAJAAQAAQABAAEAAAAKAAIAAQAAAAAAAAAKAAMAAQAAAAAAAAALAAEAAQAAAAAAAAALAAIAAQAAAAAAAAALAAMAAQAAAAAAAAALAAQAAQABAAEAAAAKAAQAAQABAAEAAAAJAAAAAQABAAEAAAAKAAEAAQABAAEAAAAJAP//AQABAAEAAAAKAAAAAQABAAEAAAALAP//AQABAAEAAAALAAAAAQABAAEAAAD/////AQABAAEAAAD//wAAAQABAAEAAAD//wEAAQABAAEAAAD//wIAAQABAAEAAAD//wMAAQABAAEAAAD//wQAAQABAAEAAAAAAAUAAQACAAAAAAAGAAUAAQACAAAAAAACAAUAAQABAAEAAAAEAAUAAQABAAEAAAAIAAUAAQABAAEAAAAKAAUAAQABAAEAAAA=")
 tile_set = ExtResource("3_odvqy")
 
-[node name="hover-layer" type="TileMapLayer" parent="grid-system"]
+[node name="hover-layer" type="TileMapLayer" parent="grid-system" node_paths=PackedStringArray("camera")]
 tile_set = ExtResource("3_odvqy")
 script = ExtResource("4_ycdx0")
+camera = NodePath("../../Camera2D")
 
 [node name="availability-layer" type="TileMapLayer" parent="grid-system"]
 tile_set = ExtResource("3_odvqy")
 script = ExtResource("5_c2c01")
 
-[node name="unit-manager" type="Node2D" parent="." node_paths=PackedStringArray("grid_system", "play_loop")]
+[node name="unit-manager" type="Node2D" parent="." node_paths=PackedStringArray("play_loop", "grid_system", "hud")]
 script = ExtResource("6_ib36x")
-grid_system = NodePath("../grid-system")
 play_loop = NodePath("..")
+grid_system = NodePath("../grid-system")
+hud = NodePath("../HUD")
 metadata/_edit_lock_ = true
 metadata/_edit_group_ = true
 
-[node name="solider" parent="unit-manager" instance=ExtResource("5_7rlxc")]
+[node name="HUD" type="CanvasLayer" parent="." node_paths=PackedStringArray("camera")]
+script = ExtResource("7_dhsgw")
+camera = NodePath("../Camera2D")
+metadata/_edit_lock_ = true
 
-[node name="solider2" parent="unit-manager" instance=ExtResource("5_7rlxc")]
+[node name="MarginContainer" type="MarginContainer" parent="HUD"]
+custom_minimum_size = Vector2(0, 148)
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="solider3" parent="unit-manager" instance=ExtResource("5_7rlxc")]
+[node name="Panel" type="Panel" parent="HUD/MarginContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HUD/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HUD/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="begin-button" type="Button" parent="HUD"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -189.0
+offset_bottom = 83.0
+grow_horizontal = 0
+text = "Begin"
+
+[node name="owner-choice" type="OptionButton" parent="HUD"]
+offset_right = 173.0
+offset_bottom = 55.0
+selected = 0
+item_count = 3
+popup/item_0/text = "Player"
+popup/item_1/text = "Enemy"
+popup/item_1/id = 1
+popup/item_2/text = "Rogue"
+popup/item_2/id = 2

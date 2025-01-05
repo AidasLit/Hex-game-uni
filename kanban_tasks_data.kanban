@@ -4,6 +4,11 @@
 			"uuid": "ac5a72dd-6b2c-4cf0-ae1d-42e1a521a70d",
 			"title": "Task",
 			"color": "70bafa"
+		},
+		{
+			"uuid": "104489a2-6aeb-400c-a3ed-39e497c62c36",
+			"title": "urgent",
+			"color": "ce1212"
 		}
 	],
 	"stages": [
@@ -11,21 +16,26 @@
 			"uuid": "10be363a-8041-4580-8de1-4fd0ef036022",
 			"title": "Todo",
 			"tasks": [
-				"505dea5e-6d38-4930-b732-305f81cc1a95",
-				"cc63dad5-25fe-49f1-8723-430683b72003"
+				"cc63dad5-25fe-49f1-8723-430683b72003",
+				"feee6d62-d733-495f-8a8f-c4bd223fa020"
 			]
 		},
 		{
 			"uuid": "b603aae4-b4a4-4bdc-9f0e-540a4af58bb7",
 			"title": "Doing",
 			"tasks": [
-				"0e98e3fe-f2b5-4168-bb61-bd8922b2904f"
+				"505dea5e-6d38-4930-b732-305f81cc1a95",
+				"b8a63c16-854f-43af-a60f-ac182089df7f",
+				"e98b4c5a-e063-4fc7-ae03-8de3d9405578",
+				"354273ab-bdde-4ee1-bdf2-15f799a4a11d"
 			]
 		},
 		{
 			"uuid": "394279d7-12d0-45de-b2bf-7833bd408617",
 			"title": "Done",
-			"tasks": []
+			"tasks": [
+				"0e98e3fe-f2b5-4168-bb61-bd8922b2904f"
+			]
 		}
 	],
 	"tasks": [
@@ -48,6 +58,34 @@
 			"title": "Rework unit scene to support multiple types",
 			"description": "",
 			"category": "ac5a72dd-6b2c-4cf0-ae1d-42e1a521a70d",
+			"steps": []
+		},
+		{
+			"uuid": "b8a63c16-854f-43af-a60f-ac182089df7f",
+			"title": "Add game state",
+			"description": "",
+			"category": "104489a2-6aeb-400c-a3ed-39e497c62c36",
+			"steps": []
+		},
+		{
+			"uuid": "feee6d62-d733-495f-8a8f-c4bd223fa020",
+			"title": "Rework grid system to support disjointed pieces of land.",
+			"description": "",
+			"category": "ac5a72dd-6b2c-4cf0-ae1d-42e1a521a70d",
+			"steps": []
+		},
+		{
+			"uuid": "e98b4c5a-e063-4fc7-ae03-8de3d9405578",
+			"title": "Pause menu",
+			"description": "",
+			"category": "104489a2-6aeb-400c-a3ed-39e497c62c36",
+			"steps": []
+		},
+		{
+			"uuid": "354273ab-bdde-4ee1-bdf2-15f799a4a11d",
+			"title": "Unit textures",
+			"description": "",
+			"category": "104489a2-6aeb-400c-a3ed-39e497c62c36",
 			"steps": []
 		}
 	],

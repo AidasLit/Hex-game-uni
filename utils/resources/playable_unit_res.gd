@@ -1,6 +1,7 @@
 extends Resource
 class_name PlayableUnitRes
 
+@export var id : int
 @export var sprite : CompressedTexture2D
 @export var name : String
 @export var max_hp : int
