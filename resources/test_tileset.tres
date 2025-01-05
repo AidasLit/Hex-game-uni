@@ -51,7 +51,6 @@ texture_region_size = Vector2i(128, 128)
 2:0/0 = 0
 0:1/0 = 0
 0:1/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_5woud")
-0:1/0/custom_data_0 = true
 
 [resource]
 tile_shape = 3

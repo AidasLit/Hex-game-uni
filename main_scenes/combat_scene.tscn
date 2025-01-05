@@ -20,16 +20,18 @@ metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(0.2, 0.2)
+zoom = Vector2(0.4, 0.4)
+limit_smoothed = true
 position_smoothing_enabled = true
 position_smoothing_speed = 20.0
 script = ExtResource("2_2fxi3")
 
-[node name="grid-system" type="Node2D" parent="." node_paths=PackedStringArray("unit_manager")]
+[node name="grid-system" type="Node2D" parent="." node_paths=PackedStringArray("unit_manager", "camera")]
 script = ExtResource("2_wow2h")
 unit_manager = NodePath("../unit-manager")
 gen_noise = ExtResource("3_3mphq")
 gen_grad = ExtResource("4_7rqkd")
+camera = NodePath("../Camera2D")
 metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
 

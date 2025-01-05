@@ -22,9 +22,9 @@ const solids_tile_coords : Dictionary = {
 	"sand": Vector2i(1, 0),
 	"shore": Vector2i(2, 0),
 	"sea": Vector2i(3, 0),
-	"mud": Vector2i(0, 1),
+	"cliff": Vector2i(0, 1),
 	"mountain": Vector2i(1, 1),
-	"lava": Vector2i(2, 1),
+	"snow": Vector2i(2, 1),
 	"magma": Vector2i(3, 1)
 }
 

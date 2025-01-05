@@ -4,6 +4,10 @@
 noise_type = 0
 frequency = 0.04
 fractal_type = 2
+fractal_weighted_strength = 0.5
+domain_warp_amplitude = 10.0
+domain_warp_fractal_type = 0
+domain_warp_fractal_octaves = 10
 
 [resource]
 width = 64
