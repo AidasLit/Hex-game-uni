@@ -19,8 +19,6 @@ func _physics_process(delta):
 		var limit_from = Vector2(limit_left + limit_offset.x, limit_top + limit_offset.y)
 		var limit_to = Vector2(limit_right - limit_offset.x, limit_bottom - limit_offset.y)
 		position = position.clamp(limit_from, limit_to)
-		
-		print(position)
 
 func zoom():
 	var new_zoom = get_zoom()

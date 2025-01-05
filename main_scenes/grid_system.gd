@@ -32,12 +32,14 @@ var _queue_cells : Array[Vector2i]
 var astargrid = AStar2D.new()
 # Dictionary - Key: Vector2i, Value : int
 var cells : Dictionary
+var _start_cell = Vector2i(0, 0)
 
 func _ready() -> void:
 	_generate_map()
 	
 	cells.clear()
-	#_setup_astar()
+	
+	_setup_astar()
 
 func _process(delta: float) -> void:
 	pass
@@ -58,6 +60,8 @@ func _generate_map():
 			
 			var temp_coords = Vector2i(x - dimensions.x/2, y - dimensions.y/2)
 			base_layer.set_cell(temp_coords, 1, _get_gen_tile(noise_value))
+			
+			_BFS(Vector2i(x, y))
 	
 	camera.limit_left = _map_to_local(Vector2i(0 - dimensions.x/2, 0 - dimensions.y/2)).x
 	camera.limit_top = _map_to_local(Vector2i(0 - dimensions.x/2, 0 - dimensions.y/2)).y
@@ -81,11 +85,16 @@ func _get_gen_tile(noise_value : float):
 		return Globals.solids_tile_coords["snow"]
 
 func _setup_astar():
-	var start_cell = Vector2i(0, 0)
+	_detect_start(_start_cell)
+	_create_cell(0, _start_cell)
 	
-	_create_cell(0, start_cell)
-	
-	_BFS(start_cell)
+	_BFS(_start_cell)
+
+func _detect_start(current_cell : Vector2i):
+	if _nav_setup_check(current_cell):
+		_start_cell = current_cell
+	else:
+		_detect_start(Vector2i(current_cell.x, current_cell.y - 1))
 
 func _BFS(current_cell : Vector2i):
 	for neighbor : Vector2i in base_layer.get_surrounding_cells(current_cell):

@@ -1,6 +1,8 @@
 extends CanvasLayer
 class_name HUD
 
+@export var camera : Camera2D
+
 @onready var unit_manager: UnitManager = $"../unit-manager"
 @onready var begin_button: Button = $"begin-button"
 @onready var owner_choice: OptionButton = $"owner-choice"
@@ -26,7 +28,7 @@ func _process(delta: float) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.get_button_index() == MOUSE_BUTTON_LEFT:
 		if event.is_pressed():
-			var target_pos = get_viewport().get_mouse_position()
+			var target_pos = camera.get_global_mouse_position()
 			
 			try_place_unit(target_pos)
 
