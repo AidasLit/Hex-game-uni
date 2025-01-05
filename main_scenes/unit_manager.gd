@@ -8,7 +8,7 @@ const playable_unit_scene = preload("res://units/playable_unit.tscn")
 
 @export var play_loop: Node2D
 @export var grid_system: GridNavigationSystem
-@export var hud: HUD
+@export var hud: CanvasLayer
 
 signal action_done
 signal setup_done

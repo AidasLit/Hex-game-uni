@@ -1,4 +1,4 @@
-extends Control
+extends CanvasLayer
 class_name HUD
 
 @onready var unit_manager: UnitManager = $"../unit-manager"
@@ -17,7 +17,7 @@ func _ready() -> void:
 	begin_button.pressed.connect(_on_begin_pressed)
 	begin_button.disabled = true
 	self.hide()
-	self.size = get_viewport().get_visible_rect().size
+	#self.size = get_viewport().get_visible_rect().size
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

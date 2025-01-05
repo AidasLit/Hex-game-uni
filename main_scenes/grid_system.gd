@@ -21,6 +21,8 @@ var _visited_cells : Array[Vector2i]
 var _queue_cells : Array[Vector2i]
 
 @export var unit_manager : UnitManager
+@export var gen_noise : NoiseTexture2D
+@export var gen_grad : GradientTexture2D
 
 @onready var base_layer: TileMapLayer = $"base-layer"
 @onready var hover_layer: TileMapLayer = $"hover-layer"
@@ -31,11 +33,47 @@ var astargrid = AStar2D.new()
 var cells : Dictionary
 
 func _ready() -> void:
+	_generate_map()
+	
 	cells.clear()
-	_setup_astar()
+	#_setup_astar()
 
 func _process(delta: float) -> void:
 	pass
+
+func _generate_map():
+	var gradient : Image = gen_grad.get_image()
+	
+	var dimensions = gradient.get_size()
+	var final_image = gradient.duplicate()
+	
+	gen_noise.noise.seed = randi()
+	var noise : Image = gen_noise.noise.get_image(dimensions.x, dimensions.y)
+	
+	base_layer.clear()
+	for x in range(0, dimensions.x):
+		for y in range(0, dimensions.y):
+			var noise_value = noise.get_pixel(x, y).v * gradient.get_pixel(x, y).v
+			final_image.set_pixel(x, y, Color.from_hsv(0, 0, noise_value))
+			
+			var temp_coords = Vector2i(x - dimensions.x/2, y - dimensions.y/2)
+			base_layer.set_cell(temp_coords, 1, _get_gen_tile(noise_value))
+	
+	pass
+
+func _get_gen_tile(noise_value : float):
+	if noise_value <= 0:
+		return Globals.solids_tile_coords["sea"]
+	elif noise_value <= 0.05:
+		return Globals.solids_tile_coords["shore"]
+	elif noise_value <= 0.1:
+		return Globals.solids_tile_coords["sand"]
+	elif noise_value <= 0.3:
+		return Globals.solids_tile_coords["grass"]
+	elif noise_value <= 0.5:
+		return Globals.solids_tile_coords["mud"]
+	else:
+		return Globals.solids_tile_coords["mountain"]
 
 func _setup_astar():
 	var start_cell = Vector2i(0, 0)
