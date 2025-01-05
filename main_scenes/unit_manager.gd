@@ -35,11 +35,13 @@ func try_place_unit(unit_id : int, at_position : Vector2, unit_owner : Globals.U
 	var target_cell = grid_system._local_to_map(at_position)
 	
 	if !grid_system.base_layer.get_cell_tile_data(target_cell).get_custom_data("walkable"):
-		unit_placed.emit(false)
+		#unit_placed.emit(false)
+		(func(): unit_placed.emit(false)).call_deferred()
 		return
 	
 	if grid_system.astargrid.is_point_disabled(grid_system.cells.get(target_cell)):
-		unit_placed.emit(false)
+		#unit_placed.emit(false)
+		(func(): unit_placed.emit(false)).call_deferred()
 		return
 	
 	
