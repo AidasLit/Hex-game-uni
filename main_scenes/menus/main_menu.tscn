@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://bg2xv1apm3fak"]
+[gd_scene load_steps=2 format=3 uid="uid://bg2xv1apm3fak"]
 
 [ext_resource type="Script" path="res://main_scenes/menus/main_menu.gd" id="1_7yriq"]
-[ext_resource type="StyleBox" uid="uid://dnyetb8q5qb8v" path="res://resources/button_style.tres" id="2_s6iv0"]
 
 [node name="MainMenu" type="Control" node_paths=PackedStringArray("start_button", "quit_button")]
 process_mode = 3
@@ -29,12 +28,11 @@ color = Color(0.1161, 0.43, 0.262587, 1)
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.3
-anchor_top = 0.2
+anchor_top = 0.3
 anchor_right = 0.7
-anchor_bottom = 0.3
+anchor_bottom = 0.4
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = ExtResource("2_s6iv0")
 
 [node name="Label" type="Label" parent="Panel"]
 layout_mode = 1
@@ -53,10 +51,10 @@ horizontal_alignment = 1
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.3
-anchor_top = 0.5
-anchor_right = 0.7
-anchor_bottom = 0.7
+anchor_left = 0.4
+anchor_top = 0.6
+anchor_right = 0.6
+anchor_bottom = 0.8
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -74,7 +72,6 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 30
-theme_override_styles/normal = ExtResource("2_s6iv0")
 text = "Start"
 
 [node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
@@ -87,5 +84,4 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 30
-theme_override_styles/normal = ExtResource("2_s6iv0")
 text = "Quit"
