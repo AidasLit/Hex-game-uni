@@ -70,3 +70,7 @@ func turn_done() -> void:
 	active_unit = action_queue.pop_front()
 	
 	grid_system.set_availability(active_unit)
+	camera.position = active_unit.global_position
+	var tween = get_tree().create_tween()
+	tween.tween_property(camera, "zoom", Vector2(0.6, 0.6), 0.2)
+	

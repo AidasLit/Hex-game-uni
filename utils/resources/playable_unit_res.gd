@@ -6,6 +6,7 @@ class_name PlayableUnitRes
 @export var name : String
 @export var max_hp : int
 @export var damage : int
+@export var speed : int
 @export var movement_range : int
 
 @export var _movement : GDScript

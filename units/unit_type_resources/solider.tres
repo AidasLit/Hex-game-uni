@@ -12,5 +12,6 @@ sprite = ExtResource("2_lncnn")
 name = "solider"
 max_hp = 10
 damage = 2
+speed = 6
 movement_range = 5
 _movement = ExtResource("1_ydoxl")

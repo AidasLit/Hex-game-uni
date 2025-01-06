@@ -7,7 +7,7 @@ func _ready() -> void:
 	pass # Replace with function body.
 
 func _physics_process(delta):
-	zoom()
+	update_zoom()
 	
 	var input_direction = Input.get_vector("left", "right", "up", "down")
 	
@@ -20,7 +20,7 @@ func _physics_process(delta):
 		var limit_to = Vector2(limit_right - limit_offset.x, limit_bottom - limit_offset.y)
 		position = position.clamp(limit_from, limit_to)
 
-func zoom():
+func update_zoom():
 	var new_zoom = get_zoom()
 	
 	if Input.is_action_just_released('wheel_down'):

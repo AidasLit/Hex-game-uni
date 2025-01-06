@@ -12,5 +12,6 @@ sprite = ExtResource("3_bvcw8")
 name = "hunter"
 max_hp = 5
 damage = 4
+speed = 10
 movement_range = 3
 _movement = ExtResource("1_24dbr")
