@@ -5,12 +5,13 @@ class_name HUD
 
 @onready var unit_manager: UnitManager = $"../unit-manager"
 @onready var begin_button: Button = $"begin-button"
-@onready var owner_choice: OptionButton = $"owner-choice"
+@onready var owner_choice: Globals.UnitOwner
 
 @onready var deployable_units_container: HBoxContainer = $MarginContainer/ScrollContainer/HBoxContainer
 const DEPLOYABLE_UNIT_TYPE = preload("res://main_scenes/deployable_unit_type.tscn")
 
 var selected_button = null
+var player_done = false
 
 signal deployment_finished
 
@@ -33,19 +34,41 @@ func _unhandled_input(event: InputEvent) -> void:
 			try_place_unit(target_pos)
 
 func _on_begin_pressed():
-	self.hide()
-	
-	deployment_finished.emit()
-	
-	## TODO temporary fix
-	self.queue_free()
+	#TODO update button text
+	if player_done:
+		self.hide()
+		
+		deployment_finished.emit()
+		
+		## TODO temporary fix
+		self.queue_free()
+	else:
+		player_done = true
+		show_deployable_units(Globals.UnitOwner.Enemy)
 
-func show_deployable_units():
+func setup_units():
+	show_deployable_units(Globals.UnitOwner.Player)
+
+func show_deployable_units(player : Globals.UnitOwner):
 	self.show()
+	deployable_units_container.remove_from_group("deployment_button")
+	owner_choice = player
+	#TODO update a label that shows who is placing units
+	
+	# TODO figure out how to do this with the function wrapped
+	var save_list = func(player):
+		match player:
+			Globals.UnitOwner.Player:
+				return SaveState.player_units
+			Globals.UnitOwner.Enemy:
+				return SaveState.enemy_units
+			_:
+				return null
+	save_list = save_list.call(player)
 	
 	var to_add : bool = true
 	
-	for unit_id in SaveState.units:
+	for unit_id in save_list:
 		for unit_button in deployable_units_container.get_children():
 			if unit_button.id == unit_id:
 				unit_button.amount += 1
@@ -57,6 +80,7 @@ func show_deployable_units():
 			temp.icon = Globals.unit_types[unit_id].sprite
 			temp.id = unit_id
 			temp.amount += 1
+			temp.add_to_group("deployment_button")
 			deployable_units_container.add_child(temp)
 		
 		to_add = true
@@ -66,7 +90,7 @@ func _on_unit_selected(unit_button):
 
 func try_place_unit(target_pos : Vector2):
 	if selected_button:
-		unit_manager.try_place_unit(selected_button.id, target_pos, owner_choice.selected)
+		unit_manager.try_place_unit(selected_button.id, target_pos, owner_choice)
 		var result = false
 		result = await unit_manager.unit_placed
 		

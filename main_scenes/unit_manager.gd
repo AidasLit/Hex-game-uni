@@ -21,7 +21,7 @@ func _ready() -> void:
 	pass # Replace with function body.
 
 func setup_units() -> void:
-	hud.show_deployable_units()
+	hud.setup_units()
 	
 	await hud.deployment_finished
 	

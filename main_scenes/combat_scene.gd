@@ -17,6 +17,7 @@ var action_lock : bool = true
 func _ready() -> void:
 	unit_manager.setup_units()
 	await unit_manager.setup_done
+	camera_to_active()
 	action_lock = false
 
 # self documenting code amirite
@@ -70,7 +71,9 @@ func turn_done() -> void:
 	active_unit = action_queue.pop_front()
 	
 	grid_system.set_availability(active_unit)
+	camera_to_active()
+
+func camera_to_active():
 	camera.position = active_unit.global_position
 	var tween = get_tree().create_tween()
-	tween.tween_property(camera, "zoom", Vector2(0.6, 0.6), 0.2)
-	
+	tween.tween_property(camera, "zoom", Vector2(0.6, 0.6), 0.2).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
