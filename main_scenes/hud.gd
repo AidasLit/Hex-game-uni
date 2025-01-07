@@ -5,6 +5,8 @@ class_name HUD
 
 @onready var unit_manager: UnitManager = $"../unit-manager"
 @onready var begin_button: Button = $"begin-button"
+@onready var current_owner: Label = $"current-owner"
+@onready var game_over: Label = $"game-over"
 @onready var owner_choice: Globals.UnitOwner
 
 @onready var deployable_units_container: HBoxContainer = $MarginContainer/ScrollContainer/HBoxContainer
@@ -12,6 +14,7 @@ const DEPLOYABLE_UNIT_TYPE = preload("res://main_scenes/deployable_unit_type.tsc
 
 var selected_button = null
 var player_done = false
+var deployment_done = false
 
 signal deployment_finished
 
@@ -19,31 +22,34 @@ signal deployment_finished
 func _ready() -> void:
 	begin_button.pressed.connect(_on_begin_pressed)
 	begin_button.disabled = true
-	self.hide()
+	game_over.modulate.a = 0
+	
+	#self.hide()
 	#self.size = get_viewport().get_visible_rect().size
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
 func _unhandled_input(event: InputEvent) -> void:
+	if deployment_done:
+		return
+	
 	if event is InputEventMouseButton and event.get_button_index() == MOUSE_BUTTON_LEFT:
 		if event.is_pressed():
 			var target_pos = camera.get_global_mouse_position()
-			print(target_pos)
 			try_place_unit(target_pos)
 
 func _on_begin_pressed():
-	#TODO update button text
 	if player_done:
-		self.hide()
-		
 		deployment_finished.emit()
+		deployment_done = true
 		
-		## TODO temporary fix
-		self.queue_free()
+		begin_button.queue_free()
+		$MarginContainer.queue_free()
 	else:
 		player_done = true
+		begin_button.disabled = true
 		show_deployable_units(Globals.UnitOwner.Enemy)
 
 func setup_units():
@@ -51,20 +57,15 @@ func setup_units():
 
 func show_deployable_units(player : Globals.UnitOwner):
 	self.show()
-	deployable_units_container.remove_from_group("deployment_button")
-	owner_choice = player
-	#TODO update a label that shows who is placing units
 	
-	# TODO figure out how to do this with the function wrapped
-	var save_list = func(player):
-		match player:
-			Globals.UnitOwner.Player:
-				return SaveState.player_units
-			Globals.UnitOwner.Enemy:
-				return SaveState.enemy_units
-			_:
-				return null
-	save_list = save_list.call(player)
+	for node in get_tree().get_nodes_in_group("deployment_button"):
+		node.free()
+	
+	owner_choice = player
+	
+	set_team_label(player)
+	
+	var save_list = SaveState.unit_lists[player]
 	
 	var to_add : bool = true
 	
@@ -94,7 +95,6 @@ func try_place_unit(target_pos : Vector2):
 		var result = false
 		result = await unit_manager.unit_placed
 		
-		print(result)
 		if result:
 			selected_button.amount -= 1
 			begin_button.disabled = false
@@ -102,3 +102,14 @@ func try_place_unit(target_pos : Vector2):
 		if selected_button.amount <= 0:
 			selected_button.queue_free()
 			selected_button = null
+
+func set_team_label(player : Globals.UnitOwner):
+	var label_stylebox = current_owner.get_theme_stylebox("normal")
+	label_stylebox.bg_color = Globals.team_colors[player]
+	match player:
+		Globals.UnitOwner.Player:
+			current_owner.text = "Player 1"
+		Globals.UnitOwner.Enemy:
+			current_owner.text = "Player 2"
+		_:
+			current_owner.text = "error"

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=4 uid="uid://ch5xo586e1oca"]
+[gd_scene load_steps=14 format=3 uid="uid://ch5xo586e1oca"]
 
 [ext_resource type="Script" path="res://main_scenes/combat_scene.gd" id="1_4yhsa"]
 [ext_resource type="Script" path="res://main_scenes/camera_controls.gd" id="2_2fxi3"]
@@ -11,11 +11,31 @@
 [ext_resource type="Script" path="res://main_scenes/unit_manager.gd" id="6_ib36x"]
 [ext_resource type="Script" path="res://main_scenes/hud.gd" id="7_dhsgw"]
 
-[node name="combat-scene" type="Node2D" node_paths=PackedStringArray("camera", "grid_system", "unit_manager")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4mudp"]
+bg_color = Color(0, 0.5, 0.0166667, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rer1k"]
+bg_color = Color(0, 0, 0, 0.705882)
+
+[sub_resource type="LabelSettings" id="LabelSettings_70rhq"]
+font_size = 100
+outline_size = 20
+
+[node name="combat-scene" type="Node2D" node_paths=PackedStringArray("camera", "grid_system", "unit_manager", "hud")]
 script = ExtResource("1_4yhsa")
 camera = NodePath("Camera2D")
 grid_system = NodePath("grid-system")
 unit_manager = NodePath("unit-manager")
+hud = NodePath("HUD")
 metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
 
@@ -36,7 +56,6 @@ metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
 
 [node name="base-layer" type="TileMapLayer" parent="grid-system"]
-tile_map_data = PackedByteArray("AAAAAAEAAQAAAAAAAAABAAIAAQAAAAAAAAACAAEAAQABAAEAAAAAAAAAAQAAAAAAAAABAAAAAQABAAEAAAABAP//AQAAAAAAAAACAAAAAQABAAEAAAADAAAAAQABAAEAAAAEAAAAAQACAAAAAAAFAAAAAQACAAAAAAAGAAAAAQABAAEAAAAHAAAAAQABAAEAAAAIAAAAAQAAAAAAAAAHAP//AQAAAAAAAAAFAP//AQACAAAAAAADAP//AQABAAEAAAAAAAIAAQAAAAAAAAAAAAMAAQAAAAAAAAAAAAQAAQACAAAAAAABAAEAAQAAAAAAAAABAAMAAQACAAAAAAABAAQAAQABAAEAAAACAAIAAQAAAAAAAAACAAMAAQAAAAAAAAACAAQAAQACAAAAAAADAAEAAQABAAEAAAADAAIAAQAAAAAAAAADAAMAAQACAAAAAAADAAQAAQAAAAAAAAAEAAEAAQABAAEAAAAEAAIAAQAAAAAAAAAEAAMAAQAAAAEAAAAEAAQAAQAAAAAAAAAFAAEAAQACAAAAAAAFAAIAAQAAAAEAAAAFAAMAAQAAAAAAAAAFAAQAAQABAAEAAAAGAAEAAQACAAAAAAAGAAIAAQAAAAAAAAAGAAMAAQAAAAAAAAAGAAQAAQABAAEAAAAHAAEAAQACAAAAAAAHAAIAAQAAAAAAAAAHAAMAAQAAAAAAAAAHAAQAAQACAAAAAAAIAAEAAQAAAAAAAAAIAAIAAQAAAAEAAAAIAAMAAQAAAAAAAAAIAAQAAQACAAAAAAAJAAEAAQAAAAAAAAAJAAIAAQACAAAAAAAJAAMAAQACAAAAAAAJAAQAAQABAAEAAAAKAAIAAQAAAAAAAAAKAAMAAQAAAAAAAAALAAEAAQAAAAAAAAALAAIAAQAAAAAAAAALAAMAAQAAAAAAAAALAAQAAQABAAEAAAAKAAQAAQABAAEAAAAJAAAAAQABAAEAAAAKAAEAAQABAAEAAAAJAP//AQABAAEAAAAKAAAAAQABAAEAAAALAP//AQABAAEAAAALAAAAAQABAAEAAAD/////AQABAAEAAAD//wAAAQABAAEAAAD//wEAAQABAAEAAAD//wIAAQABAAEAAAD//wMAAQABAAEAAAD//wQAAQABAAEAAAAAAAUAAQACAAAAAAAGAAUAAQACAAAAAAACAAUAAQABAAEAAAAEAAUAAQABAAEAAAAIAAUAAQABAAEAAAAKAAUAAQABAAEAAAA=")
 tile_set = ExtResource("3_odvqy")
 
 [node name="hover-layer" type="TileMapLayer" parent="grid-system" node_paths=PackedStringArray("camera")]
@@ -89,21 +108,32 @@ size_flags_vertical = 3
 theme_override_constants/separation = 10
 
 [node name="begin-button" type="Button" parent="HUD"]
-anchors_preset = 1
-anchor_left = 1.0
+anchors_preset = -1
+anchor_left = 0.846
 anchor_right = 1.0
-offset_left = -189.0
-offset_bottom = 83.0
+anchor_bottom = 0.096
 grow_horizontal = 0
-text = "Begin"
+theme_override_font_sizes/font_size = 30
+text = "Place units"
 
-[node name="owner-choice" type="OptionButton" parent="HUD"]
-offset_right = 173.0
-offset_bottom = 55.0
-selected = 0
-item_count = 3
-popup/item_0/text = "Player"
-popup/item_1/text = "Enemy"
-popup/item_1/id = 1
-popup/item_2/text = "Rogue"
-popup/item_2/id = 2
+[node name="current-owner" type="Label" parent="HUD"]
+offset_right = 289.0
+offset_bottom = 123.0
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_4mudp")
+text = "BLANK"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="game-over" type="Label" parent="HUD"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 1
+theme_override_styles/normal = SubResource("StyleBoxFlat_rer1k")
+text = "Game Over"
+label_settings = SubResource("LabelSettings_70rhq")
+horizontal_alignment = 1
+vertical_alignment = 1

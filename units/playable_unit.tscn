@@ -1,27 +1,49 @@
-[gd_scene load_steps=6 format=3 uid="uid://cf7cjrxmf24e4"]
+[gd_scene load_steps=8 format=3 uid="uid://cf7cjrxmf24e4"]
 
 [ext_resource type="Script" path="res://units/playable_unit.gd" id="1_pw12l"]
-[ext_resource type="Texture2D" uid="uid://dhqmfd7nw15k4" path="res://icon.svg" id="2_g1sa5"]
+[ext_resource type="Shader" path="res://resources/sprite_outline.gdshader" id="2_wixlg"]
 [ext_resource type="PackedScene" uid="uid://bgx2xp05arsog" path="res://utils/HealthComponent.tscn" id="3_aytyn"]
+[ext_resource type="Texture2D" uid="uid://c6tcja7bqrvot" path="res://hunter.svg" id="3_lysxt"]
 [ext_resource type="PackedScene" uid="uid://2gfsktjk5lyh" path="res://units/health_bar.tscn" id="4_xmxup"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d4qi8"]
+resource_local_to_scene = true
+shader = ExtResource("2_wixlg")
+shader_parameter/color = Color(1, 0.04, 0.04, 1)
+shader_parameter/width = 5.0
+shader_parameter/pattern = 1
+shader_parameter/inside = false
+shader_parameter/add_margins = true
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_vpbp7"]
 viewport_path = NodePath("SubViewport")
 
 [node name="unit-test" type="CharacterBody2D" groups=["unit"]]
 script = ExtResource("1_pw12l")
-metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
+metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_d4qi8")
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_g1sa5")
+texture = ExtResource("3_lysxt")
 
 [node name="HealthComponent" parent="." instance=ExtResource("3_aytyn")]
 max_hp = 10
 
 [node name="HealthBar" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("4_xmxup")]
-position = Vector2(0, -45)
+position = Vector2(0, -47)
 scale = Vector2(0.326733, 0.454545)
 texture = SubResource("ViewportTexture_vpbp7")
 health_component = NodePath("../HealthComponent")
+
+[node name="Label" type="Label" parent="."]
+anchors_preset = -1
+offset_left = -26.0
+offset_top = 44.0
+offset_right = 26.0
+offset_bottom = 67.0
+text = "00 / 00"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true

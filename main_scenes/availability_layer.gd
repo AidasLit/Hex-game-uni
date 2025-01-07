@@ -6,10 +6,11 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
 func draw_movability(list : Array[Array]) -> void:
+	list.pop_front()
 	for layer in list.size():
 		if layer == list.size() - 1:
 			for tile in list[layer]:

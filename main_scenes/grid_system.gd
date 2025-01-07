@@ -41,14 +41,14 @@ func _ready() -> void:
 	
 	_setup_astar()
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
 func _generate_map():
 	var gradient : Image = gen_grad.get_image()
 	
 	var dimensions = gradient.get_size()
-	var final_image = gradient.duplicate()
+	#var final_image = gradient.duplicate()
 	
 	gen_noise.noise.seed = randi()
 	var noise : Image = gen_noise.noise.get_image(dimensions.x, dimensions.y)
@@ -194,4 +194,4 @@ func set_availability(unit : PlayableUnit) -> void:
 	availability_layer.clear()
 	availability_layer.draw_movability(available_tiles)
 	set_attackability(unit)
-	availability_layer.set_cell(unit.tilemap_position, 0, Globals.transparent_tile_coords["pink"])
+	#availability_layer.set_cell(unit.tilemap_position, 0, Globals.transparent_tile_coords["pink"])

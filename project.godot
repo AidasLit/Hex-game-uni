@@ -21,10 +21,6 @@ Globals="*res://utils/globals.gd"
 SaveState="*res://utils/save_state.gd"
 SceneManager="*res://addons/scene_manager/SceneManager.tscn"
 
-[debug]
-
-gdscript/warnings/untyped_declaration=1
-
 [display]
 
 window/size/viewport_width=1920

@@ -6,7 +6,7 @@ var SPEED = 10
 func _ready() -> void:
 	pass # Replace with function body.
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	update_zoom()
 	
 	var input_direction = Input.get_vector("left", "right", "up", "down")
