@@ -8,14 +8,14 @@ func display_unit(unit : PlayableUnit):
 	$hp.text = "HP: " + str(unit.health_component.current_hp) + " / " + str(unit.health_component.max_hp)
 	$damage.text = "Damage: " + str(unit.unit_res.damage)
 
-func display_values(name : String, max_hp : int, damage : int, slowness : int, range : int):
+func display_values(name : String, max_hp : int, damage : int, slowness : int, movement_range : int):
 	$slowness.show()
 	$"move-range".show()
 	$name.text = "Name: " + name
 	$hp.text = "Max HP: " + str(max_hp)
 	$damage.text = "Damage: " + str(damage)
 	$slowness.text = "Act meter: " + str(slowness)
-	$"move-range".text = "Movement range: " + str(range)
+	$"move-range".text = "Movement range: " + str(movement_range)
 
 func hide_me():
 	$"../..".hide();
