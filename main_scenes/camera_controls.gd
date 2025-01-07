@@ -1,6 +1,6 @@
 extends Camera2D
 
-var SPEED = 10
+var SPEED = 15
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -29,5 +29,5 @@ func update_zoom():
 		new_zoom += Vector2(0.05, 0.05)
 	
 	new_zoom = new_zoom.clamp(Vector2(0.4, 0.4), Vector2(1, 1))
-	SPEED = 10 / new_zoom.x
+	SPEED = 15 / new_zoom.x
 	set_zoom(new_zoom)

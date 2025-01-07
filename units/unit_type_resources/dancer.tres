@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="PlayableUnitRes" load_steps=4 format=3 uid="uid://cpv0wu3c7tx43"]
+
+[ext_resource type="Script" path="res://units/movement_scripts/basic_movement.gd" id="1_hajno"]
+[ext_resource type="Script" path="res://utils/resources/playable_unit_res.gd" id="1_spwjk"]
+[ext_resource type="Texture2D" uid="uid://c5u0lytgdcoxt" path="res://assets/game_characters/Legendary Knights Dancer Zidh.png" id="2_8lo8v"]
+
+[resource]
+script = ExtResource("1_spwjk")
+id = 1
+sprite = ExtResource("2_8lo8v")
+name = "Dancer"
+max_hp = 30
+damage = 10
+slowness = 15
+movement_range = 5
+_movement = ExtResource("1_hajno")

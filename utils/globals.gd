@@ -7,8 +7,8 @@ enum UnitOwner {
 }
 
 const team_colors : Dictionary = {
-	UnitOwner.Player : Color.LIME_GREEN,
-	UnitOwner.Enemy : Color.ORANGE,
+	UnitOwner.Player : Color.PURPLE,
+	UnitOwner.Enemy : Color.RED,
 	UnitOwner.Rogue : Color.CRIMSON
 }
 
@@ -42,6 +42,10 @@ enum ActionType {
 
 ### preload doesnt work here, cyclical dependancy (I have no clue wtf is wrong with it)
 var unit_types : Array[PlayableUnitRes]= [
-	load("res://units/unit_type_resources/solider.tres"),
-	load("res://units/unit_type_resources/hunter.tres")
+	load("res://units/unit_type_resources/assassin.tres"),
+	load("res://units/unit_type_resources/dancer.tres"),
+	load("res://units/unit_type_resources/elf_knight.tres"),
+	load("res://units/unit_type_resources/orc.tres"),
+	load("res://units/unit_type_resources/pirate_bandit.tres"),
+	load("res://units/unit_type_resources/witch.tres")
 ]

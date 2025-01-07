@@ -9,6 +9,7 @@ func _ready() -> void:
 		push_warning(str(self) + ": health component node must be set")
 	
 	health_component.hp_changed.connect(hp_changed)
+	health_component.max_hp_changed.connect(max_hp_changed)
 	health_component.zero_hp.connect(die)
 	health_bar.max_value = health_component.max_hp
 
@@ -19,6 +20,9 @@ func _process(_delta: float) -> void:
 
 func hp_changed(value : int):
 	health_bar.value = value
+
+func max_hp_changed(value : int):
+	health_bar.max_value = value
 
 func die():
 	#var tween = get_tree().create_tween()

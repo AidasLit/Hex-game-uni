@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="PlayableUnitRes" load_steps=4 format=3 uid="uid://603qkh4k3rjx"]
+
+[ext_resource type="Script" path="res://units/movement_scripts/basic_movement.gd" id="1_4fkui"]
+[ext_resource type="Script" path="res://utils/resources/playable_unit_res.gd" id="1_xd3m2"]
+[ext_resource type="Texture2D" uid="uid://b4kid1ocewm8k" path="res://assets/game_characters/Halloween Witch.png" id="2_ta552"]
+
+[resource]
+script = ExtResource("1_xd3m2")
+id = 5
+sprite = ExtResource("2_ta552")
+name = "Witch"
+max_hp = 20
+damage = 30
+slowness = 35
+movement_range = 9
+_movement = ExtResource("1_4fkui")

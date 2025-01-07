@@ -1,11 +1,11 @@
 [gd_resource type="TileSet" load_steps=8 format=3 uid="uid://ctmfxmh1mw5a0"]
 
 [ext_resource type="Texture2D" uid="uid://cjm4r70vuqbcn" path="res://assets/Terrain - Solid Flat - 1px Outline (Black) - 128x128.png" id="1_hupb5"]
-[ext_resource type="Texture2D" uid="uid://b8nlhnbwf2vyi" path="res://assets/Terrain - Solid transparent - no Outline - 128x128.png" id="1_rr1o8"]
+[ext_resource type="Texture2D" uid="uid://csu7ypkowpeig" path="res://assets/Terrain - Solid transparent - no Outline - 128x128-2.png" id="1_ochbn"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cm765"]
 resource_name = "Transparent"
-texture = ExtResource("1_rr1o8")
+texture = ExtResource("1_ochbn")
 texture_region_size = Vector2i(128, 128)
 0:0/0 = 0
 1:0/0 = 0

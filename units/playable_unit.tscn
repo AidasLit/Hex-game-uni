@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://units/playable_unit.gd" id="1_pw12l"]
 [ext_resource type="Shader" path="res://resources/sprite_outline.gdshader" id="2_wixlg"]
 [ext_resource type="PackedScene" uid="uid://bgx2xp05arsog" path="res://utils/HealthComponent.tscn" id="3_aytyn"]
-[ext_resource type="Texture2D" uid="uid://c6tcja7bqrvot" path="res://hunter.svg" id="3_lysxt"]
+[ext_resource type="Texture2D" uid="uid://c5u0lytgdcoxt" path="res://assets/game_characters/Legendary Knights Dancer Zidh.png" id="3_in8ea"]
 [ext_resource type="PackedScene" uid="uid://2gfsktjk5lyh" path="res://units/health_bar.tscn" id="4_xmxup"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_d4qi8"]
@@ -25,11 +25,10 @@ metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_d4qi8")
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("3_lysxt")
+scale = Vector2(0.35, 0.35)
+texture = ExtResource("3_in8ea")
 
 [node name="HealthComponent" parent="." instance=ExtResource("3_aytyn")]
-max_hp = 10
 
 [node name="HealthBar" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("4_xmxup")]
 position = Vector2(0, -47)
@@ -38,7 +37,6 @@ texture = SubResource("ViewportTexture_vpbp7")
 health_component = NodePath("../HealthComponent")
 
 [node name="Label" type="Label" parent="."]
-anchors_preset = -1
 offset_left = -26.0
 offset_top = 44.0
 offset_right = 26.0

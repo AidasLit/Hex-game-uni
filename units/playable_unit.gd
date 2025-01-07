@@ -16,7 +16,6 @@ signal attack_finished
 signal kill_me(unit_ref)
 
 var tilemap_position : Vector2i
-# TODO move the movement logic to the resource
 var movement_range : int
 var unit_owner : Globals.UnitOwner
 
@@ -28,11 +27,14 @@ func setup() -> void:
 	unit_res.setup(self)
 	base_texture.texture = unit_res.sprite
 	health_component.max_hp = unit_res.max_hp
+	health_component.reset_hp()
 	
 	turn_reset()
 
 func travel_path(path : Array[Vector2]):
 	for next_step : Vector2 in path:
+		sprite_flip(next_step)
+		
 		# await needs to happen inside this loop
 		# if it's in a seperate function, the looped functions will be executed in parallel, which is not what we want
 		var tween = get_tree().create_tween()
@@ -45,6 +47,8 @@ func travel_path(path : Array[Vector2]):
 
 # travels to a cell, for singular use only
 func goto_location(target : Vector2):
+	sprite_flip(target)
+	
 	var tween = get_tree().create_tween()
 	tween.tween_property(self, "global_position", target, 0.2)
 	await tween.finished
@@ -54,6 +58,8 @@ func goto_location(target : Vector2):
 func nudge_attack(target : Vector2):
 	var return_pos = global_position
 	var direction = (target - global_position).normalized()
+	
+	sprite_flip(target)
 	
 	var tween = get_tree().create_tween()
 	tween.tween_property(self, "global_position", return_pos + direction * 50, 0.1)
@@ -71,3 +77,9 @@ func turn_reset() -> void:
 
 func _on_zero_hp() -> void:
 	kill_me.emit(self)
+
+func sprite_flip(next_step : Vector2):
+	if next_step.x > global_position.x:
+		base_texture.flip_h = true
+	elif next_step.x < global_position.x:
+		base_texture.flip_h = false

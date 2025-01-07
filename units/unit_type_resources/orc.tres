@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="PlayableUnitRes" load_steps=4 format=3 uid="uid://dq6mkncwaa081"]
+
+[ext_resource type="Script" path="res://units/movement_scripts/basic_movement.gd" id="1_4tjnc"]
+[ext_resource type="Script" path="res://utils/resources/playable_unit_res.gd" id="1_7g2uk"]
+[ext_resource type="Texture2D" uid="uid://dpm8o15dvnhes" path="res://assets/game_characters/Boss Orc Chief Grunt.png" id="2_23rs5"]
+
+[resource]
+script = ExtResource("1_7g2uk")
+id = 3
+sprite = ExtResource("2_23rs5")
+name = "Orc"
+max_hp = 70
+damage = 40
+slowness = 50
+movement_range = 3
+_movement = ExtResource("1_4tjnc")

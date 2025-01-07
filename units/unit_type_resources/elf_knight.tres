@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="PlayableUnitRes" load_steps=4 format=3 uid="uid://ct80mxdv01myu"]
+
+[ext_resource type="Script" path="res://utils/resources/playable_unit_res.gd" id="1_3l0ne"]
+[ext_resource type="Script" path="res://units/movement_scripts/basic_movement.gd" id="1_cjyfc"]
+[ext_resource type="Texture2D" uid="uid://bl1sx3b6jo0lu" path="res://assets/game_characters/Elf_Knight_Sword.png" id="2_hph2e"]
+
+[resource]
+script = ExtResource("1_3l0ne")
+id = 2
+sprite = ExtResource("2_hph2e")
+name = "Knight"
+max_hp = 50
+damage = 15
+slowness = 30
+movement_range = 4
+_movement = ExtResource("1_cjyfc")

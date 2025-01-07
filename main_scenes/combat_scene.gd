@@ -8,6 +8,7 @@ extends Node2D
 @export var grid_system: GridNavigationSystem
 @export var unit_manager: UnitManager
 @export var hud: HUD
+@export var unit_stat_display: StatsDisplay
 
 var unit_list : Array[PlayableUnit]
 var action_queue : Array[PlayableUnit]
@@ -30,6 +31,8 @@ func _ready() -> void:
 		grid_system.set_availability(active_unit)
 		camera_to_active()
 		hud.set_team_label(active_unit.unit_owner)
+		unit_stat_display.display_unit(active_unit)
+		unit_stat_display.show_me()
 		
 		var tween = get_tree().create_tween()
 		tween.tween_property(active_unit, "scale", Vector2(1.5, 1.5), 0.3)
@@ -64,7 +67,8 @@ func move(move_to : Vector2i) -> void:
 	
 	if active_unit.movement_range <= 0:
 		turn_done()
-	
+	else:
+		camera_to_active()
 	action_lock = false
 
 func attack(attack_to : Vector2i) -> void:
@@ -95,6 +99,7 @@ func turn_done() -> void:
 		grid_system.set_availability(active_unit)
 		camera_to_active()
 		hud.set_team_label(active_unit.unit_owner)
+		unit_stat_display.display_unit(active_unit)
 		
 		var tween = get_tree().create_tween()
 		tween.tween_property(active_unit, "scale", Vector2(1.5, 1.5), 0.3)
@@ -103,8 +108,10 @@ func turn_done() -> void:
 
 func camera_to_active():
 	camera.position = active_unit.global_position
+	#TODO movement range limits (3 to 12)
+	var zoom = 1.2 - (float(clamp(active_unit.unit_res.movement_range, 3, 12)) / 15)
 	var tween = get_tree().create_tween()
-	tween.tween_property(camera, "zoom", Vector2.ONE, 0.2).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(camera, "zoom", Vector2(zoom, zoom), 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
 
 
 func update_queue():

@@ -7,6 +7,7 @@ class_name HUD
 @onready var begin_button: Button = $"begin-button"
 @onready var current_owner: Label = $"current-owner"
 @onready var game_over: Label = $"game-over"
+@onready var unit_stats: StatsDisplay = $"PanelContainer/MarginContainer/unit-stats"
 @onready var owner_choice: Globals.UnitOwner
 
 @onready var deployable_units_container: HBoxContainer = $MarginContainer/ScrollContainer/HBoxContainer
@@ -23,6 +24,7 @@ func _ready() -> void:
 	begin_button.pressed.connect(_on_begin_pressed)
 	begin_button.disabled = true
 	game_over.modulate.a = 0
+	unit_stats.hide_me()
 	
 	#self.hide()
 	#self.size = get_viewport().get_visible_rect().size
@@ -87,6 +89,10 @@ func show_deployable_units(player : Globals.UnitOwner):
 		to_add = true
 
 func _on_unit_selected(unit_button):
+	var temp_stats = Globals.unit_types[unit_button.id]
+	unit_stats.display_values(temp_stats.name,\
+		temp_stats.max_hp, temp_stats.damage, temp_stats.slowness, temp_stats.movement_range)
+	unit_stats.show_me()
 	selected_button = unit_button
 
 func try_place_unit(target_pos : Vector2):
@@ -100,6 +106,7 @@ func try_place_unit(target_pos : Vector2):
 			begin_button.disabled = false
 		
 		if selected_button.amount <= 0:
+			unit_stats.hide_me()
 			selected_button.queue_free()
 			selected_button = null
 

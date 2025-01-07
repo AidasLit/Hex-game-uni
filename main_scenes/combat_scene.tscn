@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://ch5xo586e1oca"]
+[gd_scene load_steps=15 format=3 uid="uid://ch5xo586e1oca"]
 
 [ext_resource type="Script" path="res://main_scenes/combat_scene.gd" id="1_4yhsa"]
 [ext_resource type="Script" path="res://main_scenes/camera_controls.gd" id="2_2fxi3"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://main_scenes/availability_layer.gd" id="5_c2c01"]
 [ext_resource type="Script" path="res://main_scenes/unit_manager.gd" id="6_ib36x"]
 [ext_resource type="Script" path="res://main_scenes/hud.gd" id="7_dhsgw"]
+[ext_resource type="Script" path="res://main_scenes/unit_stats.gd" id="11_0i6lg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4mudp"]
 bg_color = Color(0, 0.5, 0.0166667, 1)
@@ -30,12 +31,13 @@ bg_color = Color(0, 0, 0, 0.705882)
 font_size = 100
 outline_size = 20
 
-[node name="combat-scene" type="Node2D" node_paths=PackedStringArray("camera", "grid_system", "unit_manager", "hud")]
+[node name="combat-scene" type="Node2D" node_paths=PackedStringArray("camera", "grid_system", "unit_manager", "hud", "unit_stat_display")]
 script = ExtResource("1_4yhsa")
 camera = NodePath("Camera2D")
 grid_system = NodePath("grid-system")
 unit_manager = NodePath("unit-manager")
 hud = NodePath("HUD")
+unit_stat_display = NodePath("HUD/PanelContainer/MarginContainer/unit-stats")
 metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
 
@@ -43,7 +45,7 @@ metadata/_edit_lock_ = true
 zoom = Vector2(0.4, 0.4)
 limit_smoothed = true
 position_smoothing_enabled = true
-position_smoothing_speed = 15.0
+position_smoothing_speed = 10.0
 script = ExtResource("2_2fxi3")
 
 [node name="grid-system" type="Node2D" parent="." node_paths=PackedStringArray("unit_manager", "camera")]
@@ -112,18 +114,69 @@ anchors_preset = -1
 anchor_left = 0.846
 anchor_right = 1.0
 anchor_bottom = 0.096
+offset_top = 10.0
+offset_right = -10.0
 grow_horizontal = 0
 theme_override_font_sizes/font_size = 30
 text = "Place units"
 
 [node name="current-owner" type="Label" parent="HUD"]
-offset_right = 289.0
-offset_bottom = 123.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 299.0
+offset_bottom = 133.0
 theme_override_font_sizes/font_size = 40
 theme_override_styles/normal = SubResource("StyleBoxFlat_4mudp")
 text = "BLANK"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="HUD"]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 10.0
+offset_top = -123.0
+offset_right = 85.0
+offset_bottom = 123.0
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HUD/PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="unit-stats" type="VBoxContainer" parent="HUD/PanelContainer/MarginContainer"]
+layout_mode = 2
+script = ExtResource("11_0i6lg")
+
+[node name="name" type="Label" parent="HUD/PanelContainer/MarginContainer/unit-stats"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "test"
+
+[node name="hp" type="Label" parent="HUD/PanelContainer/MarginContainer/unit-stats"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "test"
+
+[node name="damage" type="Label" parent="HUD/PanelContainer/MarginContainer/unit-stats"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "test"
+
+[node name="slowness" type="Label" parent="HUD/PanelContainer/MarginContainer/unit-stats"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "test"
+
+[node name="move-range" type="Label" parent="HUD/PanelContainer/MarginContainer/unit-stats"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "test"
 
 [node name="game-over" type="Label" parent="HUD"]
 anchors_preset = 15

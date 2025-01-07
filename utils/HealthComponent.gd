@@ -1,10 +1,14 @@
 extends Node
 class_name HealthComponent
 
-@export var max_hp : int
-
 signal zero_hp
 signal hp_changed(change : int)
+signal max_hp_changed(change : int)
+
+var max_hp : int = 10 :
+	set(value):
+		max_hp = value
+		max_hp_changed.emit(value)
 
 var current_hp : int :
 	set(value):
@@ -20,10 +24,13 @@ var current_hp : int :
 			current_hp = value
 
 func _ready() -> void:
-	current_hp = max_hp
+	reset_hp()
 
 func _process(_delta: float) -> void:
 	pass
 
 func receive_damage(damage : int):
 	current_hp -= damage
+
+func reset_hp():
+	current_hp = max_hp
