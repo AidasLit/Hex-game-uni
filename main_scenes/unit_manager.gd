@@ -21,13 +21,13 @@ func _ready() -> void:
 	pass # Replace with function body.
 
 func setup_units() -> void:
-	hud.show_deployable_units()
+	hud.setup_units()
 	
 	await hud.deployment_finished
 	
-	play_loop.active_unit = play_loop.action_queue.pop_front()
-	#await play_loop.active_unit.done_moving
-	grid_system.set_availability(play_loop.active_unit)
+	#TODO cant use action_queue here
+	#play_loop.active_unit = play_loop.action_queue.pop_front()
+	#grid_system.set_availability(play_loop.active_unit)
 	
 	setup_done.emit()
 
@@ -48,22 +48,16 @@ func try_place_unit(unit_id : int, at_position : Vector2, unit_owner : Globals.U
 	var unit = playable_unit_scene.instantiate()
 	self.add_child(unit)
 	
-	match unit_owner:
-		Globals.UnitOwner.Player:
-			unit.modulate = Color(0, 1, 0)
-		Globals.UnitOwner.Enemy:
-			unit.modulate = Color(1, 0, 0)
-		Globals.UnitOwner.Rogue:
-			unit.modulate = Color(0, 0, 1)
-	
 	unit.unit_res = Globals.unit_types[unit_id].duplicate()
 	unit.setup()
+	unit.base_texture.material.set_shader_parameter("color", Globals.team_colors[unit_owner])
 	
 	unit.unit_owner = unit_owner
 	unit.tilemap_position = target_cell
 	map_of_units[unit.tilemap_position] = unit
 	unit.kill_me.connect(kill_unit)
-	play_loop.action_queue.push_back(unit)
+	play_loop.unit_list.push_back(unit)
+	play_loop.team_lists[unit_owner].push_back(unit)
 	grid_system.set_tile_disabled(unit.tilemap_position, true)
 	
 	unit.global_position = grid_system._map_to_local(unit.tilemap_position)
@@ -80,6 +74,8 @@ func kill_unit(unit : PlayableUnit):
 	grid_system.set_tile_disabled(unit.tilemap_position, false)
 	
 	#delete unit
+	play_loop.team_lists[unit.unit_owner].erase(unit)
+	play_loop.unit_list.erase(unit)
 	play_loop.action_queue.erase(unit)
 	unit.queue_free()
 

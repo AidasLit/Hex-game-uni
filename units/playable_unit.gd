@@ -6,6 +6,7 @@ class_name PlayableUnit
 
 @onready var health_component: HealthComponent = $HealthComponent
 @onready var base_texture: Sprite2D = $Sprite2D
+@onready var speed_label: Label = $Label
 
 @export var unit_res: PlayableUnitRes
 
@@ -63,6 +64,10 @@ func nudge_attack(target : Vector2):
 
 func turn_reset() -> void:
 	movement_range = unit_res.movement_range
+	unit_res.reset_speed_counter()
+	
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "scale", Vector2.ONE, 0.3)
 
 func _on_zero_hp() -> void:
 	kill_me.emit(self)

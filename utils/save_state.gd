@@ -1,17 +1,9 @@
 extends Node
 
-### array of ids. 
-var units : Array[int] = []
+const unit_lists : Dictionary = {
+	Globals.UnitOwner.Player : [0, 0, 1, 1],
+	Globals.UnitOwner.Enemy : [0, 0, 1, 1]
+}
 
 func _ready() -> void:
-	units.append(0)
-	units.append(0)
-	units.append(0)
-	units.append(0)
-	units.append(0)
-	units.append(1)
-	units.append(1)
-	units.append(1)
-	units.append(1)
-	units.append(1)
-	
+	pass

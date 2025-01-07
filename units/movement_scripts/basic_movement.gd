@@ -14,7 +14,7 @@ func _cycle_neighbors(available_points : Array[int], current_level : Array, grid
 	var neighbors : Array[Vector2i] = []
 	for tile : Vector2i in current_level:
 		for neighbor : int in grid_system.astargrid.get_point_connections(grid_system.cells[tile]):
-			var cell_data
+			#var cell_data
 			if grid_system.navigation_check(Vector2i(grid_system.astargrid.get_point_position(neighbor))):
 				if !available_points.has(neighbor):
 					available_points.append(neighbor)
