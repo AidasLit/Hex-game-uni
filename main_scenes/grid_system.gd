@@ -34,6 +34,8 @@ var astargrid = AStar2D.new()
 var cells : Dictionary
 var _start_cell = Vector2i(0, 0)
 
+var seed = randi()
+
 func _ready() -> void:
 	_generate_map()
 	
@@ -50,7 +52,7 @@ func _generate_map():
 	var dimensions = gradient.get_size()
 	#var final_image = gradient.duplicate()
 	
-	gen_noise.noise.seed = randi()
+	gen_noise.noise.seed = seed
 	var noise : Image = gen_noise.noise.get_image(dimensions.x, dimensions.y)
 	
 	base_layer.clear()
