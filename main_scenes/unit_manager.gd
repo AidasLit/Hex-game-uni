@@ -21,8 +21,6 @@ func _ready() -> void:
 	pass # Replace with function body.
 
 func setup_units() -> void:
-	hud.setup_units()
-	
 	await hud.deployment_finished
 	
 	#TODO cant use action_queue here
@@ -31,7 +29,7 @@ func setup_units() -> void:
 	
 	setup_done.emit()
 
-func try_place_unit(unit_id : int, at_position : Vector2, unit_owner : Globals.UnitOwner):
+func try_place_unit(unit_id : int, at_position : Vector2):
 	var target_cell = grid_system._local_to_map(at_position)
 	
 	if !grid_system.base_layer.get_cell_tile_data(target_cell).get_custom_data("walkable"):
@@ -45,19 +43,17 @@ func try_place_unit(unit_id : int, at_position : Vector2, unit_owner : Globals.U
 		return
 	
 	
-	var unit = playable_unit_scene.instantiate()
+	var unit : PlayableUnit = playable_unit_scene.instantiate()
 	self.add_child(unit)
 	
 	unit.unit_res = Globals.unit_types[unit_id].duplicate()
 	unit.setup()
-	unit.base_texture.material.set_shader_parameter("color", Globals.team_colors[unit_owner])
 	
-	unit.unit_owner = unit_owner
 	unit.tilemap_position = target_cell
 	map_of_units[unit.tilemap_position] = unit
 	unit.kill_me.connect(kill_unit)
 	play_loop.unit_list.push_back(unit)
-	play_loop.team_lists[unit_owner].push_back(unit)
+	play_loop.action_queue.push_back(unit)
 	grid_system.set_tile_disabled(unit.tilemap_position, true)
 	
 	unit.global_position = grid_system._map_to_local(unit.tilemap_position)
@@ -74,7 +70,6 @@ func kill_unit(unit : PlayableUnit):
 	grid_system.set_tile_disabled(unit.tilemap_position, false)
 	
 	#delete unit
-	play_loop.team_lists[unit.unit_owner].erase(unit)
 	play_loop.unit_list.erase(unit)
 	play_loop.action_queue.erase(unit)
 	unit.queue_free()

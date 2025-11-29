@@ -1,17 +1,5 @@
 extends Node
 
-enum UnitOwner {
-	Player,
-	Enemy,
-	Rogue
-}
-
-const team_colors : Dictionary = {
-	UnitOwner.Player : Color.PURPLE,
-	UnitOwner.Enemy : Color.RED,
-	UnitOwner.Rogue : Color.CRIMSON
-}
-
 const transparent_tile_coords : Dictionary = {
 	"green": Vector2i(0, 0),
 	"red": Vector2i(1, 0),
