@@ -48,7 +48,7 @@ func try_place_unit(target_pos : Vector2):
 	if(unit_count <= 0):
 		return
 	
-	unit_manager.try_place_unit(0, target_pos)
+	unit_manager.try_place_unit(target_pos)
 	var result = false
 	result = await unit_manager.unit_placed
 	

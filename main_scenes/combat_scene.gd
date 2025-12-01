@@ -12,22 +12,24 @@ extends Node2D
 
 var unit_list : Array[PlayableUnit]
 var action_queue : Array[PlayableUnit]
-var active_unit : PlayableUnit
+var active_unit : PlayableUnit :
+	set(value):
+		if active_unit:
+			active_unit.is_active = false
+		active_unit = value
+		active_unit.is_active = true
 
 var action_lock : bool = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	unit_manager.setup_units()
-	await unit_manager.setup_done
+	await hud.deployment_finished
 	
 	active_unit = action_queue.pop_front()
+	
 	camera_to_active()
 	unit_stat_display.display_unit(active_unit)
 	unit_stat_display.show_me()
-	
-	var tween = get_tree().create_tween()
-	tween.tween_property(active_unit, "scale", Vector2(1.5, 1.5), 0.3)
 	
 	action_lock = false
 
@@ -63,22 +65,19 @@ func attack(attack_to : Vector2i) -> void:
 func turn_done() -> void:
 	action_lock = true
 	active_unit.turn_reset()
-	
 	action_queue.push_back(active_unit)
 	
 	active_unit = action_queue.pop_front()
+	
 	camera_to_active()
 	unit_stat_display.display_unit(active_unit)
-	
-	var tween = get_tree().create_tween()
-	tween.tween_property(active_unit, "scale", Vector2(1.5, 1.5), 0.3)
 	
 	action_lock = false
 
 func camera_to_active():
 	camera.position = active_unit.global_position
 	#TODO movement range limits (3 to 12)
-	var zoom = 1.2 - (float(clamp(active_unit.unit_res.movement_range, 3, 12)) / 15)
+	var zoom = 1.2 - (float(clamp(active_unit.movement_range, 3, 12)) / 15)
 	var tween = get_tree().create_tween()
 	tween.tween_property(camera, "zoom", Vector2(zoom, zoom), 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
 

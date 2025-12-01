@@ -8,14 +8,5 @@ class_name PlayableUnitRes
 @export var damage : int
 @export var movement_range : int
 
-@export var _movement : GDScript
-
-var movement
-var attack
-
-func setup(unit):
-	movement = _movement.new()
-	movement.unit = unit
-
 func print_name() -> void:
 	print(name)

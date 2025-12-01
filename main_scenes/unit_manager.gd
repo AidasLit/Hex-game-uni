@@ -8,11 +8,15 @@ const playable_unit_scene = preload("res://units/playable_unit.tscn")
 
 @export var play_loop: Node2D
 @export var grid_system: GridNavigationSystem
-@export var hud: CanvasLayer
 
 signal action_done
-signal setup_done
 signal unit_placed(successful : bool)
+func call_unit_placed(successful : bool):
+	# TODO for some reason signal doesnt get caught the first time it's used
+	# unless it's being called in a deferred mode. lookup more of
+	# https://www.reddit.com/r/godot/comments/p6jm0s/are_signals_called_inline_or_are_they_deferred_in/
+	#unit_placed.emit(successful)
+	(func(): unit_placed.emit(successful)).call_deferred()
 
 var map_of_units : Dictionary
 
@@ -20,49 +24,29 @@ var map_of_units : Dictionary
 func _ready() -> void:
 	pass # Replace with function body.
 
-func setup_units() -> void:
-	await hud.deployment_finished
-	
-	#TODO cant use action_queue here
-	#play_loop.active_unit = play_loop.action_queue.pop_front()
-	#grid_system.set_availability(play_loop.active_unit)
-	
-	setup_done.emit()
-
-func try_place_unit(unit_id : int, at_position : Vector2):
+func try_place_unit(at_position : Vector2):
 	var target_cell = grid_system._local_to_map(at_position)
 	
-	if !grid_system.base_layer.get_cell_tile_data(target_cell).get_custom_data("walkable"):
-		#unit_placed.emit(false)
-		(func(): unit_placed.emit(false)).call_deferred()
+	if grid_system.base_layer.get_cell_atlas_coords(target_cell) == Vector2i(-1, -1) or  \
+	!grid_system.base_layer.get_cell_tile_data(target_cell).get_custom_data("walkable") or \
+	grid_system.astargrid.is_point_disabled(grid_system.cells.get(target_cell)):
+		call_unit_placed(false)
 		return
-	
-	if grid_system.astargrid.is_point_disabled(grid_system.cells.get(target_cell)):
-		#unit_placed.emit(false)
-		(func(): unit_placed.emit(false)).call_deferred()
-		return
-	
 	
 	var unit : PlayableUnit = playable_unit_scene.instantiate()
 	self.add_child(unit)
 	
-	unit.unit_res = Globals.unit_types[unit_id].duplicate()
-	unit.setup()
-	
 	unit.tilemap_position = target_cell
-	map_of_units[unit.tilemap_position] = unit
+	unit.global_position = grid_system._map_to_local(unit.tilemap_position)
 	unit.kill_me.connect(kill_unit)
+	
+	grid_system.set_tile_disabled(unit.tilemap_position, true)
+	map_of_units[unit.tilemap_position] = unit
+	
 	play_loop.unit_list.push_back(unit)
 	play_loop.action_queue.push_back(unit)
-	grid_system.set_tile_disabled(unit.tilemap_position, true)
 	
-	unit.global_position = grid_system._map_to_local(unit.tilemap_position)
-	
-	### TODO for some reason signal doesnt get caught the first time it's used
-	### unless it's being called in a deferred mode. lookup more of
-	### https://www.reddit.com/r/godot/comments/p6jm0s/are_signals_called_inline_or_are_they_deferred_in/
-	#unit_placed.emit(true)
-	(func(): unit_placed.emit(true)).call_deferred()
+	call_unit_placed(true)
 
 func kill_unit(unit : PlayableUnit):
 	#remove old positions
@@ -94,6 +78,5 @@ func move_unit(unit : PlayableUnit, move_to : Vector2i) -> void:
 	#add new positions
 	map_of_units[unit.tilemap_position] = unit
 	grid_system.set_tile_disabled(unit.tilemap_position, true)
-	grid_system.set_availability(unit)
 	
 	action_done.emit()

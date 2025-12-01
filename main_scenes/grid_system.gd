@@ -20,70 +20,62 @@ class_name GridNavigationSystem
 var _visited_cells : Array[Vector2i]
 var _queue_cells : Array[Vector2i]
 
-@export var unit_manager : UnitManager
-@export var gen_noise : NoiseTexture2D
-@export var gen_grad : GradientTexture2D
 @export var camera: Camera2D
 
 @onready var base_layer: TileMapLayer = $"base-layer"
 @onready var hover_layer: TileMapLayer = $"hover-layer"
-@onready var availability_layer: TileMapLayer = $"availability-layer"
 
 var astargrid = AStar2D.new()
 # Dictionary - Key: Vector2i, Value : int
 var cells : Dictionary
 var _start_cell = Vector2i(0, 0)
 
-
 func _ready() -> void:
-	setup_camera()
-	
-	cells.clear()
-	
 	_setup_astar()
+	setup_camera()
 
 func setup_camera():
 	var dimensions = Vector2(21, 10)
-	camera.limit_left = _map_to_local(Vector2i(0, 0)).x
-	camera.limit_top = _map_to_local(Vector2i(0, 0)).y
-	camera.limit_right = _map_to_local(Vector2i(dimensions.x, dimensions.y)).x
-	camera.limit_bottom = _map_to_local(Vector2i(dimensions.x, dimensions.y)).y
+	camera.limit_left = _map_to_local(Vector2i(0, 0)).x as int
+	camera.limit_top = _map_to_local(Vector2i(0, 0)).y as int
+	camera.limit_right = _map_to_local(Vector2i(dimensions.x, dimensions.y)).x as int
+	camera.limit_bottom = _map_to_local(Vector2i(dimensions.x, dimensions.y)).y as int
 
 func _setup_astar():
 	_start_cell = Vector2i(0, 0)
-	_create_cell(0, _start_cell)
+	
+	_visited_cells.append(_start_cell)
+	astargrid.add_point(0, _start_cell)
+	cells[_start_cell] = 0
+	
 	_BFS(_start_cell)
 
 func _BFS(current_cell : Vector2i):
 	for neighbor : Vector2i in base_layer.get_surrounding_cells(current_cell):
-		if base_layer.get_cell_tile_data(neighbor):
-			if _nav_setup_check(neighbor):
-				if !_visited_cells.has(neighbor):
-					_queue_cells.append(neighbor)
-					_create_cell(_visited_cells.size(), neighbor)
-				
-				astargrid.connect_points(cells[neighbor], cells[current_cell])
+		var cell_data = base_layer.get_cell_tile_data(neighbor)
+		
+		if !cell_data:
+			continue
+		
+		if !cell_data.get_custom_data("walkable"):
+			continue
+		
+		if !_visited_cells.has(neighbor):
+			_queue_cells.append(neighbor)
+			_visited_cells.append(neighbor)
+			astargrid.add_point(_visited_cells.size(), neighbor)
+			cells[neighbor] = _visited_cells.size()
+		
+		astargrid.connect_points(cells[neighbor], cells[current_cell])
 	
 	if _queue_cells:
 		_BFS(_queue_cells.pop_front())
-
-func _create_cell(id : int, location : Vector2i):
-	_visited_cells.append(location)
-	astargrid.add_point(id, location)
-	cells[location] = id
 
 func _local_to_map(location : Vector2) -> Vector2i:
 	return base_layer.local_to_map(location)
 
 func _map_to_local(map_location : Vector2i) -> Vector2:
 	return base_layer.map_to_local(map_location)
-
-func _nav_setup_check(target_cell : Vector2i) -> bool:
-	var cell_data = base_layer.get_cell_tile_data(target_cell)
-	if cell_data.get_custom_data("walkable"):
-		return true
-	
-	return false
 
 # can this cell be traveled to
 func navigation_check(target_cell : Vector2i) -> bool:
@@ -95,12 +87,8 @@ func navigation_check(target_cell : Vector2i) -> bool:
 	return false
 
 func get_navigation_path(from : Vector2i, to : Vector2i) -> Array[Vector2i]:
-	#var from_cell = _local_to_map(from)
-	#var target_cell = _local_to_map(to)
-	
-	# return empty path is the destination is invalid
+	# return empty path if the destination is invalid
 	if not cells.has(to):
-		#print("invalid target")
 		return []
 	
 	if not navigation_check(to):
@@ -123,33 +111,3 @@ func path_to_global_path(path : Array[Vector2i]) -> Array[Vector2]:
 # TODO this needs a rework
 func set_tile_disabled(tile_pos : Vector2i, disable : bool) -> void:
 	astargrid.set_point_disabled(cells.get(tile_pos), disable)
-
-func set_attackability(unit : PlayableUnit) -> void:
-	var available_points : Array[int] = []
-	var available_tiles : Array[Vector2i] = []
-	
-	var unit_tile_id : int = cells.get(unit.tilemap_position)
-	
-	for neighbor : int in astargrid.get_point_connections(unit_tile_id):
-		var temp_pos = Vector2i(astargrid.get_point_position(neighbor))
-		
-		if unit_manager.map_of_units.has(temp_pos):
-			if unit_manager.map_of_units[temp_pos].unit_owner == Globals.UnitOwner.Rogue or\
-				unit_manager.map_of_units[temp_pos].unit_owner != unit.unit_owner:
-				if !available_points.has(neighbor):
-					available_points.append(neighbor)
-	
-	#points -> tiles translation
-	for point : int in available_points:
-		var tile = Vector2i(astargrid.get_point_position(point))
-		available_tiles.append(tile)
-	
-	availability_layer.draw_attackability(available_tiles)
-
-func set_availability(unit : PlayableUnit) -> void:
-	var available_tiles = unit.unit_res.movement.get_available_tiles(self)
-
-	availability_layer.clear()
-	availability_layer.draw_movability(available_tiles)
-	set_attackability(unit)
-	#availability_layer.set_cell(unit.tilemap_position, 0, Globals.transparent_tile_coords["pink"])

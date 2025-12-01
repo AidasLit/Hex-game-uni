@@ -27,13 +27,3 @@ enum ActionType {
 	Movement,
 	Attack
 }
-
-### preload doesnt work here, cyclical dependancy (I have no clue wtf is wrong with it)
-var unit_types : Array[PlayableUnitRes]= [
-	load("res://units/unit_type_resources/assassin.tres"),
-	load("res://units/unit_type_resources/dancer.tres"),
-	load("res://units/unit_type_resources/elf_knight.tres"),
-	load("res://units/unit_type_resources/orc.tres"),
-	load("res://units/unit_type_resources/pirate_bandit.tres"),
-	load("res://units/unit_type_resources/witch.tres")
-]

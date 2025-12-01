@@ -7,9 +7,13 @@ class_name PlayableUnit
 @onready var health_component: HealthComponent = $HealthComponent
 @onready var base_texture: Sprite2D = $Sprite2D
 
-@export var unit_res: PlayableUnitRes
+@export var id : int
+@export var sprite : CompressedTexture2D
+@export var my_name : String
+@export var max_hp : int
+@export var damage : int
+@export var max_movement_range : int
 
-signal setup_done
 signal done_moving
 signal attack_finished
 signal kill_me(unit_ref)
@@ -17,14 +21,20 @@ signal kill_me(unit_ref)
 var tilemap_position : Vector2i
 var movement_range : int
 
+var is_active = false : 
+	set(value):
+		var tween = get_tree().create_tween()
+		if value:
+			tween.tween_property(self, "scale", Vector2(1.5, 1.5), 0.3)
+		else:
+			tween.tween_property(self, "scale", Vector2.ONE, 0.3)
+		is_active = value
+
 func _ready() -> void:
 	health_component.zero_hp.connect(_on_zero_hp)
-
-# setup for resource stuff, has to be called by the unit manager
-func setup() -> void:
-	unit_res.setup(self)
-	base_texture.texture = unit_res.sprite
-	health_component.max_hp = unit_res.max_hp
+	
+	health_component.max_hp = max_hp
+	base_texture.texture = sprite
 	health_component.reset_hp()
 	
 	turn_reset()
@@ -67,10 +77,7 @@ func nudge_attack(target : Vector2):
 	attack_finished.emit()
 
 func turn_reset() -> void:
-	movement_range = unit_res.movement_range
-	
-	var tween = get_tree().create_tween()
-	tween.tween_property(self, "scale", Vector2.ONE, 0.3)
+	movement_range = max_movement_range
 
 func _on_zero_hp() -> void:
 	kill_me.emit(self)

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://vymvbw3egx7w" path="res://units/playable_unit.gd" id="1_pw12l"]
 [ext_resource type="Shader" uid="uid://p3hf6l58hsy2" path="res://resources/sprite_outline.gdshader" id="2_wixlg"]
 [ext_resource type="PackedScene" uid="uid://bgx2xp05arsog" path="res://utils/HealthComponent.tscn" id="3_aytyn"]
-[ext_resource type="Texture2D" uid="uid://c5u0lytgdcoxt" path="res://assets/game_characters/Legendary Knights Dancer Zidh.png" id="3_in8ea"]
+[ext_resource type="Texture2D" uid="uid://bl1sx3b6jo0lu" path="res://assets/game_characters/Elf_Knight_Sword.png" id="4_jkouh"]
 [ext_resource type="PackedScene" uid="uid://2gfsktjk5lyh" path="res://units/health_bar.tscn" id="4_xmxup"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_d4qi8"]
@@ -20,13 +20,18 @@ viewport_path = NodePath("SubViewport")
 
 [node name="unit-test" type="CharacterBody2D" groups=["unit"]]
 script = ExtResource("1_pw12l")
+sprite = ExtResource("4_jkouh")
+my_name = "Knight"
+max_hp = 50
+damage = 15
+max_movement_range = 4
 metadata/_edit_lock_ = true
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_d4qi8")
 scale = Vector2(0.35, 0.35)
-texture = ExtResource("3_in8ea")
+texture = ExtResource("4_jkouh")
 
 [node name="HealthComponent" parent="." instance=ExtResource("3_aytyn")]
 
