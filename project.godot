@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 Globals="*res://utils/globals.gd"
 SaveState="*res://utils/save_state.gd"
 SceneManager="*res://addons/scene_manager/SceneManager.tscn"
+GdPAIAutoload="*res://addons/GdPlanningAI/gdpai_autoload.gd"
 
 [display]
 
