@@ -46,6 +46,8 @@ func try_place_unit(at_position : Vector2):
 	play_loop.unit_list.push_back(unit)
 	play_loop.action_queue.push_back(unit)
 	
+	unit.agent.blackboard.set_property("tilemap_position", unit.tilemap_position)
+	
 	call_unit_placed(true)
 
 func kill_unit(unit : PlayableUnit):

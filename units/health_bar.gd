@@ -11,7 +11,7 @@ func _ready() -> void:
 	health_component.hp_changed.connect(hp_changed)
 	health_component.max_hp_changed.connect(max_hp_changed)
 	health_component.zero_hp.connect(die)
-	health_bar.max_value = health_component.max_hp
+	health_bar.max_value = health_component._max_hp
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

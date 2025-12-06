@@ -111,3 +111,12 @@ func path_to_global_path(path : Array[Vector2i]) -> Array[Vector2]:
 # TODO this needs a rework
 func set_tile_disabled(tile_pos : Vector2i, disable : bool) -> void:
 	astargrid.set_point_disabled(cells.get(tile_pos), disable)
+
+func get_navigable_neighbors(from : Vector2i) -> Array[Vector2i]:
+	var neighbors : Array[Vector2i] = []
+	
+	for tile in base_layer.get_surrounding_cells(from):
+		if navigation_check(tile):
+			neighbors.append(tile)
+	
+	return neighbors

@@ -34,12 +34,15 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.get_button_index() == MOUSE_BUTTON_LEFT:
+		if deployment_done:
+			return
 		if event.is_pressed():
 			var target_pos = camera.get_global_mouse_position()
 			try_place_unit(target_pos)
 
 func _on_begin_pressed():
 	deployment_finished.emit()
+	deployment_done = true
 	
 	begin_button.queue_free()
 	$MarginContainer.queue_free()

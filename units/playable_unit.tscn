@@ -1,10 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://cf7cjrxmf24e4"]
+[gd_scene load_steps=11 format=3 uid="uid://cf7cjrxmf24e4"]
 
 [ext_resource type="Script" uid="uid://vymvbw3egx7w" path="res://units/playable_unit.gd" id="1_pw12l"]
 [ext_resource type="Shader" uid="uid://p3hf6l58hsy2" path="res://resources/sprite_outline.gdshader" id="2_wixlg"]
 [ext_resource type="PackedScene" uid="uid://bgx2xp05arsog" path="res://utils/HealthComponent.tscn" id="3_aytyn"]
 [ext_resource type="Texture2D" uid="uid://bl1sx3b6jo0lu" path="res://assets/game_characters/Elf_Knight_Sword.png" id="4_jkouh"]
 [ext_resource type="PackedScene" uid="uid://2gfsktjk5lyh" path="res://units/health_bar.tscn" id="4_xmxup"]
+[ext_resource type="Script" uid="uid://dadt3s5cpl0e5" path="res://addons/GdPlanningAI/scripts/nodes/gdpai_agent.gd" id="6_ku42r"]
+[ext_resource type="Script" uid="uid://cvie3m6t7c0hd" path="res://addons/GdPlanningAI/scripts/gdpai_blackboard_plan.gd" id="7_7xndh"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_d4qi8"]
 resource_local_to_scene = true
@@ -18,8 +20,16 @@ shader_parameter/add_margins = true
 [sub_resource type="ViewportTexture" id="ViewportTexture_vpbp7"]
 viewport_path = NodePath("SubViewport")
 
-[node name="unit-test" type="CharacterBody2D" groups=["unit"]]
+[sub_resource type="Resource" id="Resource_xikd6"]
+script = ExtResource("7_7xndh")
+blackboard_backend = {
+"health": 100.0
+}
+metadata/_custom_type_script = "uid://cvie3m6t7c0hd"
+
+[node name="unit-test" type="CharacterBody2D" node_paths=PackedStringArray("agent") groups=["unit"]]
 script = ExtResource("1_pw12l")
+agent = NodePath("GdPAIAgent")
 sprite = ExtResource("4_jkouh")
 my_name = "Knight"
 max_hp = 50
@@ -33,10 +43,16 @@ material = SubResource("ShaderMaterial_d4qi8")
 scale = Vector2(0.35, 0.35)
 texture = ExtResource("4_jkouh")
 
-[node name="HealthComponent" parent="." instance=ExtResource("3_aytyn")]
+[node name="HealthComponent" parent="." node_paths=PackedStringArray("agent") instance=ExtResource("3_aytyn")]
+agent = NodePath("../GdPAIAgent")
 
 [node name="HealthBar" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("4_xmxup")]
 position = Vector2(0, -47)
 scale = Vector2(0.326733, 0.454545)
 texture = SubResource("ViewportTexture_vpbp7")
 health_component = NodePath("../HealthComponent")
+
+[node name="GdPAIAgent" type="Node" parent="." node_paths=PackedStringArray("entity")]
+script = ExtResource("6_ku42r")
+entity = NodePath("..")
+blackboard_plan = SubResource("Resource_xikd6")

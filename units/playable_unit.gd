@@ -7,6 +7,8 @@ class_name PlayableUnit
 @onready var health_component: HealthComponent = $HealthComponent
 @onready var base_texture: Sprite2D = $Sprite2D
 
+## Reference to the GdPAI agent.
+@export var agent: GdPAIAgent
 @export var id : int
 @export var sprite : CompressedTexture2D
 @export var my_name : String
@@ -18,6 +20,8 @@ signal done_moving
 signal attack_finished
 signal kill_me(unit_ref)
 
+var grid_system : GridNavigationSystem
+var unit_manager : UnitManager
 var tilemap_position : Vector2i
 var movement_range : int
 
@@ -31,13 +35,25 @@ var is_active = false :
 		is_active = value
 
 func _ready() -> void:
-	health_component.zero_hp.connect(_on_zero_hp)
+	assert(agent, "agent isn't set")
+	grid_system = get_tree().get_first_node_in_group("grid")
+	unit_manager = get_tree().get_first_node_in_group("unit_manager")
 	
-	health_component.max_hp = max_hp
-	base_texture.texture = sprite
+	# Set up the world node, agent goals, and agent available actions.
+	agent.world_node = GdPAIUTILS.get_child_of_type(get_tree().root, GdPAIWorldNode)
+	
+	#agent.goals.append(SampleHungerGoal.new())
+	agent.goals.append(WanderGoal.new())
+	
+	agent.self_actions.append(WanderAction.new(grid_system, unit_manager))
+	
+	health_component.zero_hp.connect(_on_zero_hp)
+	health_component._max_hp = max_hp
 	health_component.reset_hp()
 	
-	turn_reset()
+	base_texture.texture = sprite
+	
+	agent.blackboard.set_property("max_hp", health_component._max_hp)
 
 func travel_path(path : Array[Vector2]):
 	for next_step : Vector2 in path:
@@ -75,9 +91,6 @@ func nudge_attack(target : Vector2):
 	await tween.finished
 	
 	attack_finished.emit()
-
-func turn_reset() -> void:
-	movement_range = max_movement_range
 
 func _on_zero_hp() -> void:
 	kill_me.emit(self)
