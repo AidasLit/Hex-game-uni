@@ -34,7 +34,9 @@ func get_preconditions() -> Array[Precondition]:
 
 # Override
 func simulate_effect(agent_blackboard: GdPAIBlackboard, world_state: GdPAIBlackboard):
-	pass
+	var sim_position: Vector2i = agent_blackboard.get_property("tilemap_position")
+	sim_position.x += 1
+	agent_blackboard.set_property("tilemap_position", sim_position)
 
 
 # Override
@@ -64,7 +66,8 @@ func pre_perform_action(agent: GdPAIAgent) -> Action.Status:
 func perform_action(agent: GdPAIAgent, delta: float) -> Action.Status:
 	var target_location = agent.blackboard.get_property(uid_property("target_location"))
 	unit_manager.move_unit(agent.blackboard.get_property("entity"), target_location)
-	#await unit_manager.action_done
+	if agent.blackboard.get_property("entity").is_moving == true:
+		return Action.Status.RUNNING
 	return Action.Status.SUCCESS
 
 

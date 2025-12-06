@@ -25,6 +25,8 @@ var unit_manager : UnitManager
 var tilemap_position : Vector2i
 var movement_range : int
 
+var is_moving : bool = false
+
 var is_active = false : 
 	set(value):
 		var tween = get_tree().create_tween()
@@ -56,6 +58,7 @@ func _ready() -> void:
 	agent.blackboard.set_property("max_hp", health_component._max_hp)
 
 func travel_path(path : Array[Vector2]):
+	is_moving = true
 	for next_step : Vector2 in path:
 		sprite_flip(next_step)
 		
@@ -68,9 +71,11 @@ func travel_path(path : Array[Vector2]):
 		await get_tree().create_timer(0.1).timeout
 	
 	done_moving.emit()
+	is_moving = false
 
 # travels to a cell, for singular use only
 func goto_location(target : Vector2):
+	is_moving = true
 	sprite_flip(target)
 	
 	var tween = get_tree().create_tween()
@@ -78,6 +83,7 @@ func goto_location(target : Vector2):
 	await tween.finished
 	
 	done_moving.emit()
+	is_moving = false
 
 func nudge_attack(target : Vector2):
 	var return_pos = global_position
