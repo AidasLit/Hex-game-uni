@@ -18,7 +18,10 @@ class_name PlayableUnit
 
 signal kill_me(unit_ref)
 
-var tilemap_position : Vector2i
+var tilemap_position : Vector2i :
+	set(value):
+		agent.blackboard.set_property("tilemap_position", value)
+		tilemap_position = value
 var movement_range : int
 
 var is_active = false : 
@@ -51,10 +54,10 @@ func travel_path(path : Array[Vector2]):
 		# await needs to happen inside this loop
 		# if it's in a seperate function, the looped functions will be executed in parallel, which is not what we want
 		var tween = get_tree().create_tween()
-		tween.tween_property(self, "global_position", next_step, 0.1)
+		tween.tween_property(self, "global_position", next_step, 0.2)
 		await tween.finished
 		
-		await get_tree().create_timer(0.1).timeout
+		await get_tree().create_timer(0.4).timeout
 	
 	Globals.action_done.emit()
 

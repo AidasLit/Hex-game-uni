@@ -95,18 +95,11 @@ func get_navigation_path(from : Vector2i, to : Vector2i) -> Array[Vector2i]:
 	if not navigation_check(to):
 		return []
 	
-	print("\nfrom: ", from, "  to: ", to)
-	print(astargrid.get_point_path(cells[from], cells[to]))
-	print(astargrid.get_id_path(cells[from], cells[to]))
-	var path = astargrid.get_id_path(cells[from], cells[to])
+	var path = astargrid.get_point_path(cells[from], cells[to])
 	var position_path : Array[Vector2i] = []
 	
-	assert(astargrid.get_point_path(cells[from], cells[to]).size() == 
-		astargrid.get_id_path(cells[from], cells[to]).size(), 
-		"path sizes differ")
-	
-	for step : int in path:
-		position_path.append(Vector2i(astargrid.get_point_position(step)))
+	for step : Vector2 in path:
+		position_path.append(Vector2i(step))
 	
 	return position_path
 

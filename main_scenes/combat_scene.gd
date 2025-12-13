@@ -24,6 +24,7 @@ func _ready() -> void:
 	active_unit.is_active = true
 	
 	Globals.action_initiated.connect(action_initialised)
+	Globals.action_done.connect(action_done)
 	
 	camera_to_active()
 	unit_stat_display.display_unit(active_unit)
@@ -37,6 +38,7 @@ func _process(_delta: float) -> void:
 		SceneManager.change_scene("res://main_scenes/menus/main_menu.tscn")
 
 func move(move_to : Vector2i) -> void:
+	print("moving from combat: ", active_unit.tilemap_position)
 	unit_manager.move_unit(active_unit, move_to)
 
 #func attack(attack_to : Vector2i) -> void:
