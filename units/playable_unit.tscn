@@ -27,7 +27,7 @@ blackboard_backend = {
 }
 metadata/_custom_type_script = "uid://cvie3m6t7c0hd"
 
-[node name="unit-test" type="CharacterBody2D" node_paths=PackedStringArray("agent") groups=["unit"]]
+[node name="unit-test" type="Node2D" node_paths=PackedStringArray("agent") groups=["unit"]]
 script = ExtResource("1_pw12l")
 agent = NodePath("GdPAIAgent")
 sprite = ExtResource("4_jkouh")

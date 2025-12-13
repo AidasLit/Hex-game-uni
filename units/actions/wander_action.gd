@@ -2,16 +2,16 @@ class_name WanderAction
 extends Action
 
 var grid_system : GridNavigationSystem
-var unit_manager : UnitManager
+var play_loop : Node
 
 # Override
-func _init(_grid_system: GridNavigationSystem, _unit_manager: UnitManager):
+func _init(_grid_system: GridNavigationSystem, _play_loop: Node):
 	# If implementing _init(), make sure to call super() so a uid is created.
 	super()
 	
 	assert(_grid_system, "grid stsrem not set")
 	grid_system = _grid_system
-	unit_manager = _unit_manager
+	play_loop = _play_loop
 
 
 # Override
@@ -19,6 +19,7 @@ func get_validity_checks() -> Array[Precondition]:
 	var checks: Array[Precondition] = []
 	checks.append(Precondition.agent_has_property("entity"))
 	checks.append(Precondition.agent_has_property("tilemap_position"))
+	checks.append(Precondition.agent_property_equal_to("is_active", true))
 	return checks
 
 
@@ -29,6 +30,9 @@ func get_action_cost(agent_blackboard: GdPAIBlackboard, world_state: GdPAIBlackb
 
 # Override
 func get_preconditions() -> Array[Precondition]:
+	#var conditions: Array[Precondition] = []
+	#conditions.append(Precondition.agent_property_equal_to("is_active", true))
+	#return conditions
 	return []
 
 
@@ -65,9 +69,10 @@ func pre_perform_action(agent: GdPAIAgent) -> Action.Status:
 # Override
 func perform_action(agent: GdPAIAgent, delta: float) -> Action.Status:
 	var target_location = agent.blackboard.get_property(uid_property("target_location"))
-	unit_manager.move_unit(agent.blackboard.get_property("entity"), target_location)
-	if agent.blackboard.get_property("entity").is_moving == true:
-		return Action.Status.RUNNING
+	
+	play_loop.move(target_location)
+	
+	agent.blackboard.get_property("entity").is_active = false
 	return Action.Status.SUCCESS
 
 

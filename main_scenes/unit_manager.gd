@@ -9,7 +9,6 @@ const playable_unit_scene = preload("res://units/playable_unit.tscn")
 @export var play_loop: Node2D
 @export var grid_system: GridNavigationSystem
 
-signal action_done
 signal unit_placed(successful : bool)
 func call_unit_placed(successful : bool):
 	# TODO for some reason signal doesnt get caught the first time it's used
@@ -38,6 +37,11 @@ func try_place_unit(at_position : Vector2):
 	
 	unit.tilemap_position = target_cell
 	unit.global_position = grid_system._map_to_local(unit.tilemap_position)
+	
+	unit.agent.world_node = GdPAIUTILS.get_child_of_type(get_tree().root, GdPAIWorldNode)
+	unit.agent.goals.append(WanderGoal.new())
+	unit.agent.self_actions.append(WanderAction.new(grid_system, play_loop))
+	
 	unit.kill_me.connect(kill_unit)
 	
 	grid_system.set_tile_disabled(unit.tilemap_position, true)
@@ -64,14 +68,13 @@ func move_unit(unit : PlayableUnit, move_to : Vector2i) -> void:
 	#get path
 	var path = grid_system.get_navigation_path(unit.tilemap_position, move_to)
 	path.pop_front()
-	
 	#remove old positions
 	map_of_units.erase(unit.tilemap_position)
 	grid_system.set_tile_disabled(unit.tilemap_position, false)
 	
 	#traverse
 	unit.travel_path(grid_system.path_to_global_path(path))
-	await unit.done_moving
+	#await unit.done_moving
 	
 	#update unit
 	unit.tilemap_position = path.back()
@@ -80,5 +83,3 @@ func move_unit(unit : PlayableUnit, move_to : Vector2i) -> void:
 	#add new positions
 	map_of_units[unit.tilemap_position] = unit
 	grid_system.set_tile_disabled(unit.tilemap_position, true)
-	
-	action_done.emit()

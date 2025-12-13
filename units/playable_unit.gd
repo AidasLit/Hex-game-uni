@@ -1,4 +1,4 @@
-extends CharacterBody2D
+extends Node2D
 class_name PlayableUnit
 
 ### All logic that is shared by all units
@@ -16,16 +16,10 @@ class_name PlayableUnit
 @export var damage : int
 @export var max_movement_range : int
 
-signal done_moving
-signal attack_finished
 signal kill_me(unit_ref)
 
-var grid_system : GridNavigationSystem
-var unit_manager : UnitManager
 var tilemap_position : Vector2i
 var movement_range : int
-
-var is_moving : bool = false
 
 var is_active = false : 
 	set(value):
@@ -35,19 +29,10 @@ var is_active = false :
 		else:
 			tween.tween_property(self, "scale", Vector2.ONE, 0.3)
 		is_active = value
+		agent.blackboard.set_property("is_active", value)
 
 func _ready() -> void:
 	assert(agent, "agent isn't set")
-	grid_system = get_tree().get_first_node_in_group("grid")
-	unit_manager = get_tree().get_first_node_in_group("unit_manager")
-	
-	# Set up the world node, agent goals, and agent available actions.
-	agent.world_node = GdPAIUTILS.get_child_of_type(get_tree().root, GdPAIWorldNode)
-	
-	#agent.goals.append(SampleHungerGoal.new())
-	agent.goals.append(WanderGoal.new())
-	
-	agent.self_actions.append(WanderAction.new(grid_system, unit_manager))
 	
 	health_component.zero_hp.connect(_on_zero_hp)
 	health_component._max_hp = max_hp
@@ -58,7 +43,8 @@ func _ready() -> void:
 	agent.blackboard.set_property("max_hp", health_component._max_hp)
 
 func travel_path(path : Array[Vector2]):
-	is_moving = true
+	Globals.action_initiated.emit()
+	
 	for next_step : Vector2 in path:
 		sprite_flip(next_step)
 		
@@ -70,33 +56,20 @@ func travel_path(path : Array[Vector2]):
 		
 		await get_tree().create_timer(0.1).timeout
 	
-	done_moving.emit()
-	is_moving = false
+	Globals.action_done.emit()
 
-# travels to a cell, for singular use only
-func goto_location(target : Vector2):
-	is_moving = true
-	sprite_flip(target)
-	
-	var tween = get_tree().create_tween()
-	tween.tween_property(self, "global_position", target, 0.2)
-	await tween.finished
-	
-	done_moving.emit()
-	is_moving = false
-
-func nudge_attack(target : Vector2):
-	var return_pos = global_position
-	var direction = (target - global_position).normalized()
-	
-	sprite_flip(target)
-	
-	var tween = get_tree().create_tween()
-	tween.tween_property(self, "global_position", return_pos + direction * 50, 0.1)
-	tween.tween_property(self, "global_position", return_pos, 0.2)
-	await tween.finished
-	
-	attack_finished.emit()
+#func nudge_attack(target : Vector2):
+	#var return_pos = global_position
+	#var direction = (target - global_position).normalized()
+	#
+	#sprite_flip(target)
+	#
+	#var tween = get_tree().create_tween()
+	#tween.tween_property(self, "global_position", return_pos + direction * 50, 0.1)
+	#tween.tween_property(self, "global_position", return_pos, 0.2)
+	#await tween.finished
+	#
+	#attack_finished.emit()
 
 func _on_zero_hp() -> void:
 	kill_me.emit(self)

@@ -27,3 +27,6 @@ enum ActionType {
 	Movement,
 	Attack
 }
+
+signal action_initiated
+signal action_done

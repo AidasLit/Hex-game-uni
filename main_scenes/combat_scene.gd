@@ -12,13 +12,8 @@ extends Node2D
 
 var unit_list : Array[PlayableUnit]
 var action_queue : Array[PlayableUnit]
-var active_unit : PlayableUnit :
-	set(value):
-		if active_unit:
-			active_unit.is_active = false
-		active_unit = value
-		active_unit.is_active = true
 
+var active_unit : PlayableUnit
 var action_lock : bool = true
 
 # Called when the node enters the scene tree for the first time.
@@ -26,6 +21,9 @@ func _ready() -> void:
 	await hud.deployment_finished
 	
 	active_unit = action_queue.pop_front()
+	active_unit.is_active = true
+	
+	Globals.action_initiated.connect(action_initialised)
 	
 	camera_to_active()
 	unit_stat_display.display_unit(active_unit)
@@ -40,25 +38,26 @@ func _process(_delta: float) -> void:
 
 func move(move_to : Vector2i) -> void:
 	unit_manager.move_unit(active_unit, move_to)
-	await unit_manager.action_done
-	
-	turn_done()
 
-func attack(attack_to : Vector2i) -> void:
-	var unit = unit_manager.map_of_units[attack_to]
-	
-	unit.health_component.receive_damage(active_unit.unit_res.damage)
-	active_unit.nudge_attack(unit.global_position)
-	await active_unit.attack_finished
-	
-	turn_done()
+#func attack(attack_to : Vector2i) -> void:
+	#var unit = unit_manager.map_of_units[attack_to]
+	#
+	#unit.health_component.receive_damage(active_unit.unit_res.damage)
+	#active_unit.nudge_attack(unit.global_position)
+	#await active_unit.attack_finished
+	#
+	#turn_done()
 
-func turn_done() -> void:
-	action_queue.push_back(active_unit)
-	active_unit = action_queue.pop_front()
-	
+func action_initialised():
 	camera_to_active()
 	unit_stat_display.display_unit(active_unit)
+
+func action_done():
+	action_queue.push_back(active_unit)
+	active_unit.is_active = false
+	
+	active_unit = action_queue.pop_front()
+	active_unit.is_active = true
 
 func camera_to_active():
 	camera.position = active_unit.global_position

@@ -49,6 +49,7 @@ func _setup_astar():
 	cells[_start_cell] = 0
 	
 	_BFS(_start_cell)
+	#get_navigation_path(Vector2i(0, 0), Vector2i(0, 1))
 
 func _BFS(current_cell : Vector2i):
 	for neighbor : Vector2i in base_layer.get_surrounding_cells(current_cell):
@@ -94,8 +95,15 @@ func get_navigation_path(from : Vector2i, to : Vector2i) -> Array[Vector2i]:
 	if not navigation_check(to):
 		return []
 	
+	print("\nfrom: ", from, "  to: ", to)
+	print(astargrid.get_point_path(cells[from], cells[to]))
+	print(astargrid.get_id_path(cells[from], cells[to]))
 	var path = astargrid.get_id_path(cells[from], cells[to])
 	var position_path : Array[Vector2i] = []
+	
+	assert(astargrid.get_point_path(cells[from], cells[to]).size() == 
+		astargrid.get_id_path(cells[from], cells[to]).size(), 
+		"path sizes differ")
 	
 	for step : int in path:
 		position_path.append(Vector2i(astargrid.get_point_position(step)))
@@ -116,6 +124,9 @@ func get_navigable_neighbors(from : Vector2i) -> Array[Vector2i]:
 	var neighbors : Array[Vector2i] = []
 	
 	for tile in base_layer.get_surrounding_cells(from):
+		if(not base_layer.get_cell_tile_data(tile)):
+			continue
+		
 		if navigation_check(tile):
 			neighbors.append(tile)
 	
