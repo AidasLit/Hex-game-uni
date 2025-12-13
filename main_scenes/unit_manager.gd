@@ -65,12 +65,13 @@ func kill_unit(unit : PlayableUnit):
 	unit.queue_free()
 
 func move_unit(unit : PlayableUnit, move_to : Vector2i) -> void:
-	#get path
-	var path = grid_system.get_navigation_path(unit.tilemap_position, move_to)
-	path.pop_front()
 	#remove old positions
 	map_of_units.erase(unit.tilemap_position)
 	grid_system.set_tile_disabled(unit.tilemap_position, false)
+	
+	#get path
+	var path = grid_system.get_navigation_path(unit.tilemap_position, move_to)
+	path.pop_front()
 	
 	#traverse
 	unit.travel_path(grid_system.path_to_global_path(path))
