@@ -38,7 +38,6 @@ func _process(_delta: float) -> void:
 		SceneManager.change_scene("res://main_scenes/menus/main_menu.tscn")
 
 func move(move_to : Vector2i) -> void:
-	print("moving from combat: ", active_unit.tilemap_position)
 	unit_manager.move_unit(active_unit, move_to)
 
 #func attack(attack_to : Vector2i) -> void:

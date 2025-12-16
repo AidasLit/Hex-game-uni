@@ -1,4 +1,4 @@
-class_name WanderAction
+class_name CutTreeAction
 extends Action
 
 var grid_system : GridNavigationSystem
@@ -64,6 +64,8 @@ func pre_perform_action(agent: GdPAIAgent) -> Action.Status:
 	var target_location : Vector2i = possible_targets.pick_random()
 	agent.blackboard.set_property(uid_property("target_location"), target_location)
 	
+	# Set up movement flags.
+	agent.blackboard.set_property(uid_property("prior_position"), agent_position)
 	return Action.Status.SUCCESS
 
 
@@ -71,7 +73,7 @@ func pre_perform_action(agent: GdPAIAgent) -> Action.Status:
 func perform_action(agent: GdPAIAgent, delta: float) -> Action.Status:
 	var target_location = agent.blackboard.get_property(uid_property("target_location"))
 	
-	play_loop.move(target_location)
+	play_loop.cut_tree(target_location)
 	
 	agent.blackboard.get_property("entity").is_active = false
 	return Action.Status.SUCCESS
@@ -81,5 +83,6 @@ func perform_action(agent: GdPAIAgent, delta: float) -> Action.Status:
 func post_perform_action(agent: GdPAIAgent) -> Action.Status:
 	agent.blackboard.erase_property(uid_property("tilemap_position"))
 	agent.blackboard.erase_property(uid_property("target_location"))
+	agent.blackboard.erase_property(uid_property("prior_position"))
 
 	return Action.Status.SUCCESS

@@ -40,7 +40,10 @@ func try_place_unit(at_position : Vector2):
 	
 	unit.agent.world_node = GdPAIUTILS.get_child_of_type(get_tree().root, GdPAIWorldNode)
 	unit.agent.goals.append(WanderGoal.new())
-	unit.agent.self_actions.append(WanderAction.new(grid_system, play_loop))
+	unit.agent.self_actions.append(MoveAction.new(grid_system, play_loop, Vector2i(8, 2)))
+	unit.agent.self_actions.append(MoveAction.new(grid_system, play_loop, Vector2i(10, 2)))
+	unit.agent.self_actions.append(MoveAction.new(grid_system, play_loop, Vector2i(8, 6)))
+	unit.agent.self_actions.append(MoveAction.new(grid_system, play_loop, Vector2i(10, 6)))
 	
 	unit.kill_me.connect(kill_unit)
 	
@@ -67,7 +70,7 @@ func kill_unit(unit : PlayableUnit):
 func move_unit(unit : PlayableUnit, move_to : Vector2i) -> void:
 	#remove old positions
 	map_of_units.erase(unit.tilemap_position)
-	grid_system.set_tile_disabled(unit.tilemap_position, false)
+	#grid_system.set_tile_disabled(unit.tilemap_position, false)
 	
 	#get path
 	var path = grid_system.get_navigation_path(unit.tilemap_position, move_to)

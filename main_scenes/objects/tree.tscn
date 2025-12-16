@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://blmdyywmffl20"]
+
+[ext_resource type="Script" uid="uid://o5b5n6fo8wlh" path="res://main_scenes/objects/tree.gd" id="1_4hv6r"]
+[ext_resource type="Texture2D" uid="uid://cfegvnkgo1mkn" path="res://assets/tree1.png" id="2_heyjl"]
+[ext_resource type="Script" uid="uid://df2i5ktnvaapn" path="res://main_scenes/objects/tree_object_data.gd" id="3_heyjl"]
+
+[node name="Tree" type="Node2D"]
+script = ExtResource("1_4hv6r")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_heyjl")
+region_enabled = true
+region_rect = Rect2(128, 256, 128, 128)
+
+[node name="TreeObjectData" type="Node" parent="." node_paths=PackedStringArray("entity")]
+script = ExtResource("3_heyjl")
+entity = NodePath("..")

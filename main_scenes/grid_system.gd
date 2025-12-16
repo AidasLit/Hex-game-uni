@@ -90,10 +90,14 @@ func navigation_check(target_cell : Vector2i) -> bool:
 func get_navigation_path(from : Vector2i, to : Vector2i) -> Array[Vector2i]:
 	# return empty path if the destination is invalid
 	if not cells.has(to):
+		print("no cell to navigate to")
 		return []
 	
 	if not navigation_check(to):
+		print("cell ", to , " to navigate to not navigable, from ", from)
 		return []
+	
+	set_tile_disabled(from, false)
 	
 	var path = astargrid.get_id_path(cells[from], cells[to])
 	var position_path : Array[Vector2i] = []
