@@ -54,7 +54,7 @@ func pre_perform_action(agent: GdPAIAgent) -> Action.Status:
 	var agent_position: Vector2i = agent.blackboard.get_property("tilemap_position")
 	agent.blackboard.set_property(uid_property("tilemap_position"), agent_position)
 	
-	print("\nmoving from action: ", agent_position)
+	print("\nwandering from: ", agent_position)
 	
 	var possible_targets = grid_system.get_navigable_neighbors(agent_position)
 	if possible_targets.is_empty():

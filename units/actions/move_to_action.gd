@@ -33,8 +33,8 @@ func get_action_cost(agent_blackboard: GdPAIBlackboard, world_state: GdPAIBlackb
 	
 	if path.size() == 0:
 		return INF
-	
-	return (path.size() - 1) as float / 4
+	print(4.0 / (path.size() - 1) as float)
+	return 4.0 / (path.size() - 1) as float
 
 
 # Override
