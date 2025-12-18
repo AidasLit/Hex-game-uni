@@ -1,3 +1,3 @@
 extends Node
 
-const unit_count = 4
+const unit_count = 10

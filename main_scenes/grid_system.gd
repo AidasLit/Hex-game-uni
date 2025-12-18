@@ -106,7 +106,9 @@ func get_navigation_path(from : Vector2i, to : Vector2i, stop_next_to : bool) ->
 		
 		var test_path = astargrid.get_id_path(cells[from], cells[to])
 		#test_path = astargrid.get_id_path(cells[from], cells[to])
-		if to == Vector2i(astargrid.get_point_position(test_path[test_path.size() - 1])):
+		if test_path.size() == 0:
+			return []
+		elif to == Vector2i(astargrid.get_point_position(test_path[test_path.size() - 1])):
 			# only the target tile is disabled
 			allow_partial = true
 		
@@ -136,7 +138,6 @@ func path_to_global_path(path : Array[Vector2i]) -> Array[Vector2]:
 		global_path.append(_map_to_local(step))
 	return global_path
 
-# TODO this needs a rework
 func set_tile_disabled(tile_pos : Vector2i, disable : bool) -> void:
 	astargrid.set_point_disabled(cells.get(tile_pos), disable)
 

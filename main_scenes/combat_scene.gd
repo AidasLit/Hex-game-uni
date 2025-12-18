@@ -22,6 +22,8 @@ func _ready() -> void:
 	Globals.world_blackboard = gd_pai_world_node.blackboard_plan
 	
 	unit_manager.generate_tree()
+	unit_manager.generate_tree()
+	unit_manager.generate_tree()
 	
 	await hud.deployment_finished
 	
