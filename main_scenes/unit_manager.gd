@@ -5,6 +5,7 @@ class_name UnitManager
 ### No gameplay actions, only receiving commands and making units perform them
 
 const playable_unit_scene = preload("res://units/playable_unit.tscn")
+const tree_scene = preload("uid://blmdyywmffl20")
 
 @export var play_loop: Node2D
 @export var grid_system: GridNavigationSystem
@@ -40,10 +41,12 @@ func try_place_unit(at_position : Vector2):
 	
 	unit.agent.world_node = GdPAIUTILS.get_child_of_type(get_tree().root, GdPAIWorldNode)
 	unit.agent.goals.append(WanderGoal.new())
-	unit.agent.self_actions.append(MoveAction.new(grid_system, play_loop, Vector2i(8, 2)))
-	unit.agent.self_actions.append(MoveAction.new(grid_system, play_loop, Vector2i(10, 2)))
-	unit.agent.self_actions.append(MoveAction.new(grid_system, play_loop, Vector2i(8, 6)))
-	unit.agent.self_actions.append(MoveAction.new(grid_system, play_loop, Vector2i(10, 6)))
+	#unit.agent.goals.append(ChopTreesGoal.new())
+	#unit.agent.self_actions.append(MoveToAction.new(grid_system, play_loop, Vector2i(8, 2)))
+	#unit.agent.self_actions.append(MoveToAction.new(grid_system, play_loop, Vector2i(11, 2)))
+	#unit.agent.self_actions.append(MoveToAction.new(grid_system, play_loop, Vector2i(8, 6)))
+	#unit.agent.self_actions.append(MoveToAction.new(grid_system, play_loop, Vector2i(11, 6)))
+	unit.agent.self_actions.append(WanderAction.new(grid_system, play_loop))
 	
 	unit.kill_me.connect(kill_unit)
 	
@@ -67,13 +70,13 @@ func kill_unit(unit : PlayableUnit):
 	play_loop.action_queue.erase(unit)
 	unit.queue_free()
 
-func move_unit(unit : PlayableUnit, move_to : Vector2i) -> void:
+func move_unit(unit : PlayableUnit, move_to : Vector2i, stop_next_to : bool) -> void:
 	#remove old positions
 	map_of_units.erase(unit.tilemap_position)
 	#grid_system.set_tile_disabled(unit.tilemap_position, false)
 	
 	#get path
-	var path = grid_system.get_navigation_path(unit.tilemap_position, move_to)
+	var path = grid_system.get_navigation_path(unit.tilemap_position, move_to, stop_next_to)
 	path.pop_front()
 	
 	#traverse
@@ -87,3 +90,23 @@ func move_unit(unit : PlayableUnit, move_to : Vector2i) -> void:
 	#add new positions
 	map_of_units[unit.tilemap_position] = unit
 	grid_system.set_tile_disabled(unit.tilemap_position, true)
+
+func generate_tree():
+	var tilemap_position = grid_system.get_random_tile()
+	
+	var tree : TreeObject = tree_scene.instantiate()
+	self.add_child(tree)
+	
+	tree._data_init(play_loop, grid_system, tilemap_position)
+	tree.global_position = grid_system._map_to_local(tilemap_position)
+	
+	tree.kill_me.connect(kill_tree)
+	
+	grid_system.set_tile_disabled(tilemap_position, true)
+
+func kill_tree(tree : TreeObject):
+	#remove old positions
+	grid_system.set_tile_disabled(tree.tilemap_position, false)
+	
+	#delete unit
+	tree.queue_free()

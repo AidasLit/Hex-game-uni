@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://cfegvnkgo1mkn" path="res://assets/tree1.png" id="2_heyjl"]
 [ext_resource type="Script" uid="uid://df2i5ktnvaapn" path="res://main_scenes/objects/tree_object_data.gd" id="3_heyjl"]
 
-[node name="Tree" type="Node2D"]
+[node name="Tree" type="Node2D" groups=["tree"]]
 script = ExtResource("1_4hv6r")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

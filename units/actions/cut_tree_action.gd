@@ -20,6 +20,7 @@ func get_validity_checks() -> Array[Precondition]:
 	checks.append(Precondition.agent_has_property("entity"))
 	checks.append(Precondition.agent_has_property("tilemap_position"))
 	checks.append(Precondition.agent_property_equal_to("is_active", true))
+	checks.append(Precondition.world_state_has_object_data_of_group("TreeObjectData"))
 	return checks
 
 

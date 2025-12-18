@@ -28,5 +28,7 @@ enum ActionType {
 	Attack
 }
 
+var world_blackboard
+
 signal action_initiated
 signal action_done

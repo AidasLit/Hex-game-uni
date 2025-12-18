@@ -5,6 +5,7 @@ extends Node2D
 
 @export var camera : Camera2D
 
+@export var gd_pai_world_node: GdPAIWorldNode
 @export var grid_system: GridNavigationSystem
 @export var unit_manager: UnitManager
 @export var hud: HUD
@@ -18,6 +19,12 @@ var action_lock : bool = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	Globals.world_blackboard = gd_pai_world_node.blackboard_plan
+	
+	unit_manager.generate_tree()
+	unit_manager.generate_tree()
+	unit_manager.generate_tree()
+	
 	await hud.deployment_finished
 	
 	active_unit = action_queue.pop_front()
@@ -37,8 +44,9 @@ func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("ui_cancel"):
 		SceneManager.change_scene("res://main_scenes/menus/main_menu.tscn")
 
-func move(move_to : Vector2i) -> void:
-	unit_manager.move_unit(active_unit, move_to)
+func move(move_to : Vector2i, stop_next_to : bool) -> void:
+	unit_manager.move_unit(active_unit, move_to, stop_next_to)
+
 
 #func attack(attack_to : Vector2i) -> void:
 	#var unit = unit_manager.map_of_units[attack_to]
@@ -63,9 +71,9 @@ func action_done():
 func camera_to_active():
 	camera.position = active_unit.global_position
 	#TODO movement range limits (3 to 12)
-	var zoom = 1.2 - (float(clamp(active_unit.movement_range, 3, 12)) / 15)
-	var tween = get_tree().create_tween()
-	tween.tween_property(camera, "zoom", Vector2(zoom, zoom), 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	#var zoom = 1.2 - (float(clamp(active_unit.movement_range, 3, 12)) / 15)
+	#var tween = get_tree().create_tween()
+	#tween.tween_property(camera, "zoom", Vector2(zoom, zoom), 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
 
 func game_over():
 	await get_tree().create_timer(1).timeout

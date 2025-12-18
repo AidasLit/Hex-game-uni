@@ -57,7 +57,7 @@ func travel_path(path : Array[Vector2]):
 		tween.tween_property(self, "global_position", next_step, 0.2)
 		await tween.finished
 		
-		await get_tree().create_timer(0.4).timeout
+		await get_tree().create_timer(0.1).timeout
 	
 	Globals.action_done.emit()
 

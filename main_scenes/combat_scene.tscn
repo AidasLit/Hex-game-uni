@@ -35,9 +35,10 @@ bg_color = Color(0, 0, 0, 0.705882)
 font_size = 100
 outline_size = 20
 
-[node name="combat-scene" type="Node2D" node_paths=PackedStringArray("camera", "grid_system", "unit_manager", "hud", "unit_stat_display")]
+[node name="combat-scene" type="Node2D" node_paths=PackedStringArray("camera", "gd_pai_world_node", "grid_system", "unit_manager", "hud", "unit_stat_display")]
 script = ExtResource("1_4yhsa")
 camera = NodePath("Camera2D")
+gd_pai_world_node = NodePath("GdPAIWorldNode")
 grid_system = NodePath("grid-system")
 unit_manager = NodePath("unit-manager")
 hud = NodePath("HUD")
@@ -82,7 +83,6 @@ metadata/_edit_lock_ = true
 metadata/_edit_group_ = true
 
 [node name="HUD" type="CanvasLayer" parent="." node_paths=PackedStringArray("camera")]
-visible = false
 script = ExtResource("7_dhsgw")
 camera = NodePath("../Camera2D")
 metadata/_edit_lock_ = true
@@ -147,6 +147,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="PanelContainer" type="PanelContainer" parent="HUD"]
+visible = false
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5

@@ -28,7 +28,7 @@ func get_validity_checks() -> Array[Precondition]:
 
 # Override
 func get_action_cost(agent_blackboard: GdPAIBlackboard, world_state: GdPAIBlackboard) -> float:
-	var path = grid_system.get_navigation_path(agent_blackboard.get_property("tilemap_position"), target)
+	var path = grid_system.get_navigation_path(agent_blackboard.get_property("tilemap_position"), target, false)
 	agent_blackboard.set_property("path_length", path.size())
 	
 	if path.size() == 0:
@@ -46,7 +46,7 @@ func get_preconditions() -> Array[Precondition]:
 
 # Override
 func simulate_effect(agent_blackboard: GdPAIBlackboard, world_state: GdPAIBlackboard):
-	var path = grid_system.get_navigation_path(agent_blackboard.get_property("tilemap_position"), target)
+	#var path = grid_system.get_navigation_path(agent_blackboard.get_property("tilemap_position"), target)
 	
 	agent_blackboard.set_property("tilemap_position", target)
 
@@ -76,7 +76,7 @@ func pre_perform_action(agent: GdPAIAgent) -> Action.Status:
 func perform_action(agent: GdPAIAgent, delta: float) -> Action.Status:
 	var target_location = agent.blackboard.get_property(uid_property("target_location"))
 	
-	play_loop.move(target_location)
+	play_loop.move(target_location, false)
 	
 	agent.blackboard.get_property("entity").is_active = false
 	return Action.Status.SUCCESS

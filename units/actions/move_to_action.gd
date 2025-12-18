@@ -1,17 +1,19 @@
-class_name WanderAction
+class_name MoveToAction
 extends Action
 
 var grid_system : GridNavigationSystem
 var play_loop : Node
+var target : Vector2i
 
 # Override
-func _init(_grid_system: GridNavigationSystem, _play_loop: Node):
+func _init(_grid_system: GridNavigationSystem, _play_loop: Node, _target: Vector2i):
 	# If implementing _init(), make sure to call super() so a uid is created.
 	super()
 	
 	assert(_grid_system, "grid stsrem not set")
 	grid_system = _grid_system
 	play_loop = _play_loop
+	target = _target
 
 
 # Override
@@ -20,27 +22,34 @@ func get_validity_checks() -> Array[Precondition]:
 	checks.append(Precondition.agent_has_property("entity"))
 	checks.append(Precondition.agent_has_property("tilemap_position"))
 	checks.append(Precondition.agent_property_equal_to("is_active", true))
+	
 	return checks
 
 
 # Override
 func get_action_cost(agent_blackboard: GdPAIBlackboard, world_state: GdPAIBlackboard) -> float:
-	return 1
+	var path = grid_system.get_navigation_path(agent_blackboard.get_property("tilemap_position"), target, true)
+	agent_blackboard.set_property("path_length", path.size())
+	
+	if path.size() == 0:
+		return INF
+	
+	return (path.size() - 1) as float / 4
 
 
 # Override
 func get_preconditions() -> Array[Precondition]:
-	#var conditions: Array[Precondition] = []
-	#conditions.append(Precondition.agent_property_equal_to("is_active", true))
-	#return conditions
-	return []
+	var conditions: Array[Precondition] = []
+	conditions.append(Precondition.agent_property_not_equal_to("tilemap_position", target))
+	return conditions
 
 
 # Override
 func simulate_effect(agent_blackboard: GdPAIBlackboard, world_state: GdPAIBlackboard):
-	var sim_position: Vector2i = agent_blackboard.get_property("tilemap_position")
-	sim_position.x += 1
-	agent_blackboard.set_property("tilemap_position", sim_position)
+	var path = grid_system.get_navigation_path(agent_blackboard.get_property("tilemap_position"), target, true)
+	var next_to_target = path.back()
+	
+	agent_blackboard.set_property("tilemap_position", next_to_target)
 
 
 # Override
@@ -54,15 +63,12 @@ func pre_perform_action(agent: GdPAIAgent) -> Action.Status:
 	var agent_position: Vector2i = agent.blackboard.get_property("tilemap_position")
 	agent.blackboard.set_property(uid_property("tilemap_position"), agent_position)
 	
-	print("\nmoving from action: ", agent_position)
-	
-	var possible_targets = grid_system.get_navigable_neighbors(agent_position)
-	if possible_targets.is_empty():
+	if agent.blackboard.get_property("path_length"):
 		Globals.action_done.emit()
 		return Action.Status.FAILURE
 	
-	var target_location : Vector2i = possible_targets.pick_random()
-	agent.blackboard.set_property(uid_property("target_location"), target_location)
+	print("\nmoving from: ", agent_position, " to next to: ", target)
+	agent.blackboard.set_property(uid_property("target_location"), target)
 	
 	return Action.Status.SUCCESS
 
@@ -71,7 +77,7 @@ func pre_perform_action(agent: GdPAIAgent) -> Action.Status:
 func perform_action(agent: GdPAIAgent, delta: float) -> Action.Status:
 	var target_location = agent.blackboard.get_property(uid_property("target_location"))
 	
-	play_loop.move(target_location, false)
+	play_loop.move(target_location, true)
 	
 	agent.blackboard.get_property("entity").is_active = false
 	return Action.Status.SUCCESS
