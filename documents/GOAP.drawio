@@ -1,0 +1,28 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0" version="29.2.7">
+  <diagram name="Page-1" id="IJxq65f1cnb7UNoa97Pw">
+    <mxGraphModel dx="1042" dy="543" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="qM5V10I5FPHfd1SYbuuR-1" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Tree" vertex="1">
+          <mxGeometry height="100" width="160" x="340" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="qM5V10I5FPHfd1SYbuuR-2" parent="qM5V10I5FPHfd1SYbuuR-1" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;Provided actions:&lt;/div&gt;&lt;div&gt;move_to_action(position)&lt;/div&gt;&lt;div&gt;chop_tree_action(position)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="160" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="qM5V10I5FPHfd1SYbuuR-5" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Bonfire" vertex="1">
+          <mxGeometry height="100" width="160" x="100" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="qM5V10I5FPHfd1SYbuuR-6" parent="qM5V10I5FPHfd1SYbuuR-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;Provided actions:&lt;/div&gt;&lt;div&gt;move_to_action(position)&lt;/div&gt;&lt;div&gt;feed_fire_action(position)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="160" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="qM5V10I5FPHfd1SYbuuR-7" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Wood" vertex="1">
+          <mxGeometry height="100" width="160" x="140" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="qM5V10I5FPHfd1SYbuuR-8" parent="qM5V10I5FPHfd1SYbuuR-7" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;Provided actions:&lt;/div&gt;&lt;div&gt;move_action(position)&lt;/div&gt;&lt;div&gt;take_wood_action()&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="160" y="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
