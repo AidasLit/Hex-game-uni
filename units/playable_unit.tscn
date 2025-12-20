@@ -35,8 +35,8 @@ my_name = "Knight"
 max_hp = 50
 damage = 15
 max_movement_range = 4
-metadata/_edit_lock_ = true
 metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_d4qi8")

@@ -7,67 +7,54 @@ class_name UnitManager
 const playable_unit_scene = preload("res://units/playable_unit.tscn")
 const tree_scene = preload("uid://blmdyywmffl20")
 
-@export var play_loop: Node2D
-@export var grid_system: GridNavigationSystem
-
-signal unit_placed(successful : bool)
 func call_unit_placed(successful : bool):
 	# TODO for some reason signal doesnt get caught the first time it's used
 	# unless it's being called in a deferred mode. lookup more of
 	# https://www.reddit.com/r/godot/comments/p6jm0s/are_signals_called_inline_or_are_they_deferred_in/
 	#unit_placed.emit(successful)
-	(func(): unit_placed.emit(successful)).call_deferred()
+	(func(): SignalBus.unit_placed.emit(successful)).call_deferred()
 
 var map_of_units : Dictionary
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	SignalBus.kill_me.connect(kill_unit)
 
 func try_place_unit(at_position : Vector2):
-	var target_cell = grid_system._local_to_map(at_position)
-	
-	if grid_system.base_layer.get_cell_atlas_coords(target_cell) == Vector2i(-1, -1) or  \
-	!grid_system.base_layer.get_cell_tile_data(target_cell).get_custom_data("walkable") or \
-	grid_system.astargrid.is_point_disabled(grid_system.cells.get(target_cell)):
+	if not Globals.grid_system.is_global_pos_valid(at_position):
 		call_unit_placed(false)
 		return
 	
 	var unit : PlayableUnit = playable_unit_scene.instantiate()
 	self.add_child(unit)
 	
-	unit.tilemap_position = target_cell
-	unit.global_position = grid_system._map_to_local(unit.tilemap_position)
+	unit.tilemap_position = Globals.grid_system._local_to_map(at_position)
+	unit.global_position = Globals.grid_system._map_to_local(unit.tilemap_position)
 	
 	unit.agent.world_node = GdPAIUTILS.get_child_of_type(get_tree().root, GdPAIWorldNode)
 	unit.agent.goals.append(WanderGoal.new())
-	#unit.agent.goals.append(ChopTreesGoal.new())
-	#unit.agent.self_actions.append(MoveToAction.new(grid_system, play_loop, Vector2i(8, 2)))
-	#unit.agent.self_actions.append(MoveToAction.new(grid_system, play_loop, Vector2i(11, 2)))
-	#unit.agent.self_actions.append(MoveToAction.new(grid_system, play_loop, Vector2i(8, 6)))
-	#unit.agent.self_actions.append(MoveToAction.new(grid_system, play_loop, Vector2i(11, 6)))
-	unit.agent.self_actions.append(WanderAction.new(grid_system, play_loop))
+	unit.agent.goals.append(ChopTreesGoal.new())
+	unit.agent.self_actions.append(WanderAction.new())
 	
-	unit.kill_me.connect(kill_unit)
-	
-	grid_system.set_tile_disabled(unit.tilemap_position, true)
+	Globals.grid_system.set_tile_disabled(unit.tilemap_position, true)
 	map_of_units[unit.tilemap_position] = unit
 	
-	play_loop.unit_list.push_back(unit)
-	play_loop.action_queue.push_back(unit)
-	
-	unit.agent.blackboard.set_property("tilemap_position", unit.tilemap_position)
+	Globals.play_loop.unit_list.push_back(unit)
+	Globals.play_loop.action_queue.push_back(unit)
 	
 	call_unit_placed(true)
 
-func kill_unit(unit : PlayableUnit):
-	#remove old positions
-	map_of_units.erase(unit.tilemap_position)
-	grid_system.set_tile_disabled(unit.tilemap_position, false)
+func kill_unit(unit):
+	if unit is PlayableUnit:
+		map_of_units.erase(unit.tilemap_position)
+		
+		Globals.play_loop.unit_list.erase(unit)
+		Globals.play_loop.action_queue.erase(unit)
+	elif unit is TreeObject:
+		pass
 	
+	Globals.grid_system.set_tile_disabled(unit.tilemap_position, false)
 	#delete unit
-	play_loop.unit_list.erase(unit)
-	play_loop.action_queue.erase(unit)
 	unit.queue_free()
 
 func move_unit(unit : PlayableUnit, move_to : Vector2i, stop_next_to : bool) -> void:
@@ -76,11 +63,11 @@ func move_unit(unit : PlayableUnit, move_to : Vector2i, stop_next_to : bool) -> 
 	#grid_system.set_tile_disabled(unit.tilemap_position, false)
 	
 	#get path
-	var path = grid_system.get_navigation_path(unit.tilemap_position, move_to, stop_next_to)
+	var path = Globals.grid_system.get_navigation_path(unit.tilemap_position, move_to, stop_next_to)
 	path.pop_front()
 	
 	#traverse
-	unit.travel_path(grid_system.path_to_global_path(path))
+	unit.travel_path(Globals.grid_system.path_to_global_path(path))
 	#await unit.done_moving
 	
 	#update unit
@@ -89,24 +76,29 @@ func move_unit(unit : PlayableUnit, move_to : Vector2i, stop_next_to : bool) -> 
 	
 	#add new positions
 	map_of_units[unit.tilemap_position] = unit
-	grid_system.set_tile_disabled(unit.tilemap_position, true)
+	Globals.grid_system.set_tile_disabled(unit.tilemap_position, true)
+
+func chop_tree(unit : PlayableUnit, tree_position : Vector2i):
+	var tree : TreeObject = map_of_units[tree_position]
+	
+	tree.chopped()
+	
+	unit.nudge_attack(tree_position)
+	
+	map_of_units.erase(tree_position)
+	Globals.grid_system.set_tile_disabled(tree_position, false)
 
 func generate_tree():
-	var tilemap_position = grid_system.get_random_tile()
+	var tilemap_position = Globals.grid_system.get_random_tile()
 	
 	var tree : TreeObject = tree_scene.instantiate()
 	self.add_child(tree)
 	
-	tree._data_init(play_loop, grid_system, tilemap_position)
-	tree.global_position = grid_system._map_to_local(tilemap_position)
+	tree._data_init(tilemap_position)
+	tree.global_position = Globals.grid_system._map_to_local(tilemap_position)
 	
-	tree.kill_me.connect(kill_tree)
+	map_of_units[tilemap_position] = tree
 	
-	grid_system.set_tile_disabled(tilemap_position, true)
-
-func kill_tree(tree : TreeObject):
-	#remove old positions
-	grid_system.set_tile_disabled(tree.tilemap_position, false)
-	
-	#delete unit
-	tree.queue_free()
+	Globals.grid_system.set_tile_disabled(tilemap_position, true)
+	var tree_count = Globals.world_blackboard.get_property("tree_count")
+	Globals.world_blackboard.set_property("tree_count", tree_count + 1)

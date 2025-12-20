@@ -1,9 +1,6 @@
 extends CanvasLayer
 class_name HUD
 
-@export var camera : Camera2D
-
-@onready var unit_manager: UnitManager = $"../unit-manager"
 @onready var begin_button: Button = $"begin-button"
 @onready var current_owner: Label = $"current-owner"
 @onready var game_over: Label = $"game-over"
@@ -15,8 +12,6 @@ class_name HUD
 var player_done = false
 var deployment_done = false
 var unit_count = SaveState.unit_count
-
-signal deployment_finished
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -37,11 +32,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		if deployment_done:
 			return
 		if event.is_pressed():
-			var target_pos = camera.get_global_mouse_position()
+			var target_pos = Globals.camera.get_global_mouse_position()
 			try_place_unit(target_pos)
 
 func _on_begin_pressed():
-	deployment_finished.emit()
+	SignalBus.deployment_finished.emit()
 	deployment_done = true
 	
 	begin_button.queue_free()
@@ -51,9 +46,9 @@ func try_place_unit(target_pos : Vector2):
 	if(unit_count <= 0):
 		return
 	
-	unit_manager.try_place_unit(target_pos)
+	Globals.unit_manager.try_place_unit(target_pos)
 	var result = false
-	result = await unit_manager.unit_placed
+	result = await SignalBus.unit_placed
 	
 	if result:
 		unit_count -= 1

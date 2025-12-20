@@ -1,3 +1,4 @@
+class_name PlayLoop
 extends Node2D
 
 ### Controls game state/flow
@@ -19,21 +20,27 @@ var action_lock : bool = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	Globals.world_blackboard = gd_pai_world_node.blackboard_plan
+	Globals.play_loop = self
+	Globals.grid_system = grid_system
+	Globals.unit_manager = unit_manager
+	Globals.hud = hud
+	Globals.camera = camera
+	Globals.world_blackboard = gd_pai_world_node.world_state
+	
+	SignalBus.action_initiated.connect(action_initialised)
+	SignalBus.action_done.connect(action_done)
+	
+	camera.setup()
 	
 	unit_manager.generate_tree()
-	unit_manager.generate_tree()
-	unit_manager.generate_tree()
 	
-	await hud.deployment_finished
+	await SignalBus.deployment_finished
 	
 	active_unit = action_queue.pop_front()
 	active_unit.is_active = true
 	
-	Globals.action_initiated.connect(action_initialised)
-	Globals.action_done.connect(action_done)
+	camera.to_active()
 	
-	camera_to_active()
 	unit_stat_display.display_unit(active_unit)
 	unit_stat_display.show_me()
 	
@@ -47,6 +54,8 @@ func _process(_delta: float) -> void:
 func move(move_to : Vector2i, stop_next_to : bool) -> void:
 	unit_manager.move_unit(active_unit, move_to, stop_next_to)
 
+func cut_tree(target_position : Vector2i):
+	unit_manager.chop_tree(active_unit, target_position)
 
 #func attack(attack_to : Vector2i) -> void:
 	#var unit = unit_manager.map_of_units[attack_to]
@@ -58,7 +67,6 @@ func move(move_to : Vector2i, stop_next_to : bool) -> void:
 	#turn_done()
 
 func action_initialised():
-	camera_to_active()
 	unit_stat_display.display_unit(active_unit)
 
 func action_done():
@@ -67,13 +75,8 @@ func action_done():
 	
 	active_unit = action_queue.pop_front()
 	active_unit.is_active = true
-
-func camera_to_active():
-	camera.position = active_unit.global_position
-	#TODO movement range limits (3 to 12)
-	#var zoom = 1.2 - (float(clamp(active_unit.movement_range, 3, 12)) / 15)
-	#var tween = get_tree().create_tween()
-	#tween.tween_property(camera, "zoom", Vector2(zoom, zoom), 0.5).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
+	
+	camera.to_active()
 
 func game_over():
 	await get_tree().create_timer(1).timeout

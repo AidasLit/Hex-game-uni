@@ -20,30 +20,19 @@ class_name GridNavigationSystem
 var _visited_cells : Array[Vector2i]
 var _queue_cells : Array[Vector2i]
 
-@export var camera: Camera2D
-
 @onready var base_layer: TileMapLayer = $"base-layer"
 @onready var hover_layer: TileMapLayer = $"hover-layer"
 
 var astargrid = AStar2D.new()
 # Dictionary - Key: Vector2i, Value : int
 var cells : Dictionary
-var _start_cell = Vector2i(0, 0)
+var _start_cell = Vector2i(1, 1)
+var dimensions = Vector2(20, 9)
 
 func _ready() -> void:
 	_setup_astar()
-	setup_camera()
-
-func setup_camera():
-	var dimensions = Vector2(21, 10)
-	camera.limit_left = _map_to_local(Vector2i(0, 0)).x as int
-	camera.limit_top = _map_to_local(Vector2i(0, 0)).y as int
-	camera.limit_right = _map_to_local(Vector2i(dimensions.x, dimensions.y)).x as int
-	camera.limit_bottom = _map_to_local(Vector2i(dimensions.x, dimensions.y)).y as int
 
 func _setup_astar():
-	_start_cell = Vector2i(0, 0)
-	
 	_visited_cells.append(_start_cell)
 	astargrid.add_point(astargrid.get_available_point_id(), _start_cell)
 	cells[_start_cell] = 0
@@ -145,7 +134,7 @@ func get_navigable_neighbors(from : Vector2i) -> Array[Vector2i]:
 	var neighbors : Array[Vector2i] = []
 	
 	for tile in base_layer.get_surrounding_cells(from):
-		if(not base_layer.get_cell_tile_data(tile)):
+		if not base_layer.get_cell_tile_data(tile):
 			continue
 		
 		if navigation_check(tile):
@@ -164,3 +153,26 @@ func get_random_tile() -> Vector2i:
 	var rand_id = randi_range(0, count - 1)
 	
 	return Vector2i(astargrid.get_point_position(rand_id))
+
+func is_global_pos_valid(pos : Vector2) -> bool:
+	var target_cell = _local_to_map(pos)
+	
+	if base_layer.get_cell_atlas_coords(target_cell) == Vector2i(-1, -1):
+		return false
+	if !base_layer.get_cell_tile_data(target_cell).get_custom_data("walkable"):
+		return false
+	if astargrid.is_point_disabled(cells.get(target_cell)):
+		return false
+	
+	return true
+
+func get_neighbors(from : Vector2i) -> Array[Vector2i]:
+	var neighbors : Array[Vector2i] = []
+	
+	for tile in base_layer.get_surrounding_cells(from):
+		if not base_layer.get_cell_tile_data(tile):
+			continue
+		
+		neighbors.append(tile)
+	
+	return neighbors

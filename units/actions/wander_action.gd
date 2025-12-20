@@ -1,17 +1,11 @@
 class_name WanderAction
 extends Action
 
-var grid_system : GridNavigationSystem
-var play_loop : Node
 
 # Override
-func _init(_grid_system: GridNavigationSystem, _play_loop: Node):
+func _init():
 	# If implementing _init(), make sure to call super() so a uid is created.
 	super()
-	
-	assert(_grid_system, "grid stsrem not set")
-	grid_system = _grid_system
-	play_loop = _play_loop
 
 
 # Override
@@ -56,7 +50,7 @@ func pre_perform_action(agent: GdPAIAgent) -> Action.Status:
 	
 	print("\nwandering from: ", agent_position)
 	
-	var possible_targets = grid_system.get_navigable_neighbors(agent_position)
+	var possible_targets = Globals.grid_system.get_navigable_neighbors(agent_position)
 	if possible_targets.is_empty():
 		Globals.action_done.emit()
 		return Action.Status.FAILURE
@@ -71,7 +65,7 @@ func pre_perform_action(agent: GdPAIAgent) -> Action.Status:
 func perform_action(agent: GdPAIAgent, delta: float) -> Action.Status:
 	var target_location = agent.blackboard.get_property(uid_property("target_location"))
 	
-	play_loop.move(target_location, false)
+	Globals.play_loop.move(target_location, false)
 	
 	agent.blackboard.get_property("entity").is_active = false
 	return Action.Status.SUCCESS
@@ -83,3 +77,6 @@ func post_perform_action(agent: GdPAIAgent) -> Action.Status:
 	agent.blackboard.erase_property(uid_property("target_location"))
 
 	return Action.Status.SUCCESS
+
+func get_title() -> String:
+	return "Wander"

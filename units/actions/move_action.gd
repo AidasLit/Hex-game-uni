@@ -1,18 +1,13 @@
 class_name MoveAction
 extends Action
 
-var grid_system : GridNavigationSystem
-var play_loop : Node
 var target : Vector2i
 
 # Override
-func _init(_grid_system: GridNavigationSystem, _play_loop: Node, _target: Vector2i):
+func _init(_target: Vector2i):
 	# If implementing _init(), make sure to call super() so a uid is created.
 	super()
 	
-	assert(_grid_system, "grid stsrem not set")
-	grid_system = _grid_system
-	play_loop = _play_loop
 	target = _target
 
 
@@ -28,7 +23,7 @@ func get_validity_checks() -> Array[Precondition]:
 
 # Override
 func get_action_cost(agent_blackboard: GdPAIBlackboard, world_state: GdPAIBlackboard) -> float:
-	var path = grid_system.get_navigation_path(agent_blackboard.get_property("tilemap_position"), target, false)
+	var path = Globals.grid_system.get_navigation_path(agent_blackboard.get_property("tilemap_position"), target, false)
 	agent_blackboard.set_property("path_length", path.size())
 	
 	if path.size() == 0:
@@ -76,7 +71,7 @@ func pre_perform_action(agent: GdPAIAgent) -> Action.Status:
 func perform_action(agent: GdPAIAgent, delta: float) -> Action.Status:
 	var target_location = agent.blackboard.get_property(uid_property("target_location"))
 	
-	play_loop.move(target_location, false)
+	Globals.play_loop.move(target_location, false)
 	
 	agent.blackboard.get_property("entity").is_active = false
 	return Action.Status.SUCCESS

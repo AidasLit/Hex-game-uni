@@ -1,7 +1,5 @@
 extends TileMapLayer
 
-@export var camera : Camera2D
-
 var hovered_cell : Vector2i
 var prev_hovered_cell : Vector2i
 
@@ -15,7 +13,7 @@ func _process(_delta: float) -> void:
 	_update_hovered_cell()
 
 func _update_hovered_cell():
-	hovered_cell = self.local_to_map(camera.get_global_mouse_position())
+	hovered_cell = self.local_to_map(Globals.camera.get_global_mouse_position())
 	
 	if hovered_cell != prev_hovered_cell:
 		self.erase_cell(prev_hovered_cell)

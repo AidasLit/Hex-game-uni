@@ -2,8 +2,6 @@ class_name TreeObjectData
 extends GdPAIObjectData
 
 var tilemap_position : Vector2i
-var play_loop : Node2D
-var grid_system : GridNavigationSystem
 
 # Override
 func get_group_labels():
@@ -19,11 +17,13 @@ func get_provided_actions() -> Array[Action]:
 		#self,
 	#)
 	var move_to_action: MoveToAction = MoveToAction.new(
-		grid_system,
-		play_loop,
 		tilemap_position
 	)
-	return [move_to_action]
+	var chop_tree_action : ChopTreeAction = ChopTreeAction.new(
+		tilemap_position,
+		get_parent()
+	)
+	return [move_to_action, chop_tree_action]
 
 
 # Override

@@ -1,5 +1,13 @@
 extends Node
 
+var play_loop : PlayLoop
+var grid_system : GridNavigationSystem
+var unit_manager : UnitManager
+var hud : HUD
+var camera : Camera2D
+
+var world_blackboard : GdPAIBlackboard
+
 const transparent_tile_coords : Dictionary = {
 	"green": Vector2i(0, 0),
 	"red": Vector2i(1, 0),
@@ -27,8 +35,3 @@ enum ActionType {
 	Movement,
 	Attack
 }
-
-var world_blackboard
-
-signal action_initiated
-signal action_done
