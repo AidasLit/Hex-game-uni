@@ -31,10 +31,10 @@ func try_place_unit(at_position : Vector2):
 	unit.tilemap_position = Globals.grid_system._local_to_map(at_position)
 	unit.global_position = Globals.grid_system._map_to_local(unit.tilemap_position)
 	
-	unit.agent.world_node = GdPAIUTILS.get_child_of_type(get_tree().root, GdPAIWorldNode)
-	unit.agent.goals.append(WanderGoal.new())
-	unit.agent.goals.append(ChopTreesGoal.new())
-	unit.agent.self_actions.append(WanderAction.new())
+	#unit.agent.world_node = GdPAIUTILS.get_child_of_type(get_tree().root, GdPAIWorldNode)
+	#unit.agent.goals.append(WanderGoal.new())
+	#unit.agent.goals.append(ChopTreesGoal.new())
+	#unit.agent.self_actions.append(WanderAction.new())
 	
 	Globals.grid_system.set_tile_disabled(unit.tilemap_position, true)
 	map_of_units[unit.tilemap_position] = unit

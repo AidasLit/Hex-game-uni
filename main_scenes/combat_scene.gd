@@ -32,7 +32,7 @@ func _ready() -> void:
 	
 	camera.setup()
 	
-	unit_manager.generate_tree()
+	#unit_manager.generate_tree()
 	
 	await SignalBus.deployment_finished
 	

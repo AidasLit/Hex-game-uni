@@ -14,6 +14,7 @@ func get_validity_checks() -> Array[Precondition]:
 	checks.append(Precondition.agent_has_property("entity"))
 	checks.append(Precondition.agent_has_property("tilemap_position"))
 	checks.append(Precondition.agent_property_equal_to("is_active", true))
+	
 	return checks
 
 
@@ -45,10 +46,10 @@ func reverse_simulate_effect(agent_blackboard: GdPAIBlackboard, world_state: GdP
 # Override
 func pre_perform_action(agent: GdPAIAgent) -> Action.Status:
 	# Cache location data.
-	var agent_position: Vector2i = agent.blackboard.get_property("tilemap_position")
+	var agent_position: Vector2i = agent.blackboard.get_property("entity").tilemap_position
 	agent.blackboard.set_property(uid_property("tilemap_position"), agent_position)
 	
-	print("\nwandering from: ", agent_position)
+	print("\nACTION: wandering from: ", agent_position)
 	
 	var possible_targets = Globals.grid_system.get_navigable_neighbors(agent_position)
 	if possible_targets.is_empty():

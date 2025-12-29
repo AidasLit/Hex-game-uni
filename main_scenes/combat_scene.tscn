@@ -1,23 +1,14 @@
-[gd_scene load_steps=16 format=4 uid="uid://ch5xo586e1oca"]
+[gd_scene load_steps=13 format=4 uid="uid://ch5xo586e1oca"]
 
 [ext_resource type="Script" uid="uid://ttv8na1f4oqn" path="res://main_scenes/combat_scene.gd" id="1_4yhsa"]
 [ext_resource type="Script" uid="uid://df3vr268nsx0k" path="res://main_scenes/camera_controls.gd" id="2_2fxi3"]
-[ext_resource type="Script" uid="uid://cu134mwsik6n5" path="res://addons/GdPlanningAI/scripts/nodes/gdpai_world_node.gd" id="2_33iov"]
 [ext_resource type="Script" uid="uid://buhecm53orc24" path="res://main_scenes/grid_system.gd" id="2_wow2h"]
 [ext_resource type="TileSet" uid="uid://ctmfxmh1mw5a0" path="res://resources/test_tileset.tres" id="3_odvqy"]
-[ext_resource type="Script" uid="uid://cvie3m6t7c0hd" path="res://addons/GdPlanningAI/scripts/gdpai_blackboard_plan.gd" id="3_xh2fc"]
 [ext_resource type="Script" uid="uid://b5sis1r2nwsdk" path="res://main_scenes/hover_layer.gd" id="4_ycdx0"]
 [ext_resource type="Script" uid="uid://ukjgvqjmugqk" path="res://main_scenes/unit_manager.gd" id="6_ib36x"]
 [ext_resource type="Script" uid="uid://c8j7oucodfrno" path="res://main_scenes/hud.gd" id="7_dhsgw"]
 [ext_resource type="Script" uid="uid://dvrb5515gq4j8" path="res://main_scenes/unit_stats.gd" id="11_0i6lg"]
 [ext_resource type="Texture2D" uid="uid://bl1sx3b6jo0lu" path="res://assets/game_characters/Elf_Knight_Sword.png" id="11_xh2fc"]
-
-[sub_resource type="Resource" id="Resource_ddvv1"]
-script = ExtResource("3_xh2fc")
-blackboard_backend = {
-"tree_count": 0
-}
-metadata/_custom_type_script = "uid://cvie3m6t7c0hd"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4mudp"]
 bg_color = Color(0, 0.5, 0.0166667, 1)
@@ -50,8 +41,6 @@ metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
 
 [node name="GdPAIWorldNode" type="Node" parent="."]
-script = ExtResource("2_33iov")
-blackboard_plan = SubResource("Resource_ddvv1")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(0.4, 0.4)

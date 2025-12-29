@@ -1,15 +1,13 @@
 class_name ChopTreeAction
 extends Action
 
-var target : Vector2i
 var tree : TreeObject
 
 # Override
-func _init(_target: Vector2i, _tree : TreeObject):
+func _init(_tree : TreeObject):
 	# If implementing _init(), make sure to call super() so a uid is created.
 	super()
 	
-	target = _target
 	tree = _tree
 
 # Override
@@ -20,27 +18,24 @@ func get_validity_checks() -> Array[Precondition]:
 	checks.append(Precondition.agent_property_equal_to("is_active", true))
 	checks.append(Precondition.check_is_object_valid(tree))
 	
-	var can_get_to_check: Precondition = Precondition.new()
-	can_get_to_check.eval_func = func(blackboard: GdPAIBlackboard, world_state: GdPAIBlackboard):
-		var entity: Node = blackboard.get_property("entity")
-		var agent_position: Vector2i = entity.tilemap_position
-		
-		var path = Globals.grid_system.get_navigation_path(agent_position, target, true)
-		
-		#print("can get to to: ", not path.is_empty())
-		return not path.is_empty()
-
-	var standing_next_to: Precondition = Precondition.new()
-	standing_next_to.eval_func = func(blackboard: GdPAIBlackboard, world_state: GdPAIBlackboard):
-		var entity: Node = blackboard.get_property("entity")
-		var agent_position: Vector2i = entity.tilemap_position
-		
-		var available_neighbors = Globals.grid_system.get_neighbors(agent_position)
-		
-		return available_neighbors.has(target)
+	#var standing_next_to: Precondition = Precondition.new()
+	#standing_next_to.eval_func = func(blackboard: GdPAIBlackboard, world_state: GdPAIBlackboard):
+		#var agent : PlayableUnit = blackboard.get_property("entity")
+		#
+		#var available_neighbors = Globals.grid_system.get_neighbors(tree.tilemap_position)
+		#
+		#print("VALIDITY: ChopTree - tree pos: ", tree.tilemap_position, ", simulated pos: ", agent.tilemap_position)
+		#
+		#return available_neighbors.has(agent.tilemap_position)
+	#
+	#checks.append(standing_next_to)
 	
-	checks.append(can_get_to_check)
-	checks.append(standing_next_to)
+	var validity_print: Precondition = Precondition.new()
+	validity_print.eval_func = func(blackboard: GdPAIBlackboard, world_state: GdPAIBlackboard):
+		print("\nVALIDITY: ChopAction - ", true)
+		return true
+	
+	checks.append(validity_print)
 	
 	return checks
 
@@ -52,23 +47,37 @@ func get_action_cost(agent_blackboard: GdPAIBlackboard, world_state: GdPAIBlackb
 
 # Override
 func get_preconditions() -> Array[Precondition]:
-	return []
+	var standing_next_to: Precondition = Precondition.new()
+	standing_next_to.eval_func = func(blackboard: GdPAIBlackboard, world_state: GdPAIBlackboard):
+		var blackboard_agent_position = blackboard.get_property("tilemap_position")
+		
+		var available_neighbors = Globals.grid_system.get_neighbors(tree.tilemap_position)
+		
+		print("PRECONDITION: ChopTree - tree pos: ", tree.tilemap_position, ", simulated pos: ", blackboard_agent_position)
+		
+		return available_neighbors.has(blackboard_agent_position)
+	return [standing_next_to]
 
 
 # Override
 func simulate_effect(agent_blackboard: GdPAIBlackboard, world_state: GdPAIBlackboard):
 	var tree_count = world_state.get_property("tree_count")
 	world_state.set_property("tree_count", tree_count - 1)
+	print("SIMULATION: ChopTree")
 
 
 # Override
 func reverse_simulate_effect(agent_blackboard: GdPAIBlackboard, world_state: GdPAIBlackboard):
-	pass
+	var tree_count = world_state.get_property("tree_count")
+	world_state.set_property("tree_count", tree_count + 1)
+	print("REVERSE SIM: ChopTree")
 
 
 # Override
 func pre_perform_action(agent: GdPAIAgent) -> Action.Status:
-	agent.blackboard.set_property(uid_property("target_position"), target)
+	agent.blackboard.set_property(uid_property("target_position"), tree.tilemap_position)
+	
+	print("\nACTION: ChopTree")
 	
 	return Action.Status.SUCCESS
 

@@ -20,7 +20,6 @@ func get_provided_actions() -> Array[Action]:
 		tilemap_position
 	)
 	var chop_tree_action : ChopTreeAction = ChopTreeAction.new(
-		tilemap_position,
 		get_parent()
 	)
 	return [move_to_action, chop_tree_action]

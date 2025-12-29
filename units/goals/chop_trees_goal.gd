@@ -3,14 +3,15 @@ extends Goal
 
 # Override
 func compute_reward(agent: GdPAIAgent) -> float:
-	return 30
+	return Globals.world_blackboard.get_property("tree_count") * 10
 
 # Override
 func get_desired_state(agent: GdPAIAgent) -> Array[Precondition]:
 	
-	var desired_condition: Precondition = Precondition.world_state_property_equal_to("tree_count", 0)
+	#var some_trees: Precondition = Precondition.world_state_property_greater_than("tree_count", 0)
+	var no_trees: Precondition = Precondition.world_state_property_equal_to("tree_count", 0)
 	
-	return [desired_condition]
+	return [no_trees]
 
 # Overload
 func get_title() -> String:

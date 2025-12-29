@@ -65,7 +65,7 @@ func nudge_attack(target : Vector2):
 	SignalBus.action_initiated.emit()
 	
 	var return_pos = global_position
-	var direction = (target - global_position).normalized()
+	var direction = (Globals.grid_system._map_to_local(target) - global_position).normalized()
 	
 	sprite_flip(target)
 	

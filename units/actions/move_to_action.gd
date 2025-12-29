@@ -18,25 +18,32 @@ func get_validity_checks() -> Array[Precondition]:
 	checks.append(Precondition.agent_has_property("tilemap_position"))
 	checks.append(Precondition.agent_property_equal_to("is_active", true))
 	
+	var can_get_to_check: Precondition = Precondition.new()
+	can_get_to_check.eval_func = func(blackboard: GdPAIBlackboard, world_state: GdPAIBlackboard):
+		var agent_position: Vector2i = blackboard.get_property("tilemap_position")
+		
+		var path = Globals.grid_system.get_navigation_path(agent_position, target, true)
+		
+		var next_to_target = path.back()
+		blackboard.set_property("tilemap_position", next_to_target)
+		
+		print("\nVALIDITY: MoveTo - target navigable: ", not path.is_empty())
+		
+		return not path.is_empty()
+	checks.append(can_get_to_check)
+	
 	return checks
 
 
 # Override
 func get_action_cost(agent_blackboard: GdPAIBlackboard, world_state: GdPAIBlackboard) -> float:
-	#var path = Globals.grid_system.get_navigation_path(agent_blackboard.get_property("tilemap_position"), target, true)
-	#agent_blackboard.set_property("path_length", path.size())
-	#
-	#if path.size() == 0:
-		#return INF
-	#
-	#return (path.size() - 1) as float / 4.0
 	return 1
 
 
 # Override
 func get_preconditions() -> Array[Precondition]:
 	var conditions: Array[Precondition] = []
-	conditions.append(Precondition.agent_property_not_equal_to("tilemap_position", target))
+	#conditions.append(Precondition.agent_property_not_equal_to("tilemap_position", target))
 	return conditions
 
 
@@ -45,6 +52,7 @@ func simulate_effect(agent_blackboard: GdPAIBlackboard, world_state: GdPAIBlackb
 	var path = Globals.grid_system.get_navigation_path(agent_blackboard.get_property("tilemap_position"), target, true)
 	var next_to_target = path.back()
 	
+	print("SIMULATION: MoveTo - final position: ", next_to_target)
 	agent_blackboard.set_property("tilemap_position", next_to_target)
 
 
@@ -63,9 +71,9 @@ func pre_perform_action(agent: GdPAIAgent) -> Action.Status:
 		Globals.action_done.emit()
 		return Action.Status.FAILURE
 	
-	print("\nmoving from: ", agent_position, " to next to: ", target)
 	agent.blackboard.set_property(uid_property("target_location"), target)
 	
+	print("\nACTION: MoveTo - from ", agent_position, " to next to: ", target)
 	return Action.Status.SUCCESS
 
 
