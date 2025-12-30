@@ -2,7 +2,6 @@ extends Node
 
 var play_loop : PlayLoop
 var grid_system : GridNavigationSystem
-var unit_manager : UnitManager
 var hud : HUD
 var camera : Camera2D
 

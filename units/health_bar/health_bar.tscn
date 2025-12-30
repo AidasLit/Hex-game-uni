@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://2gfsktjk5lyh"]
 
-[ext_resource type="Script" path="res://units/health_bar.gd" id="1_66kgx"]
+[ext_resource type="Script" uid="uid://ccrtdc2g0kwni" path="res://units/health_bar/health_bar.gd" id="1_66kgx"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_seuxd"]
 viewport_path = NodePath("SubViewport")

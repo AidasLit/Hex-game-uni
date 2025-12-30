@@ -1,10 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://cf7cjrxmf24e4"]
+[gd_scene load_steps=10 format=3 uid="uid://cf7cjrxmf24e4"]
 
 [ext_resource type="Script" uid="uid://vymvbw3egx7w" path="res://units/playable_unit.gd" id="1_pw12l"]
 [ext_resource type="Shader" uid="uid://p3hf6l58hsy2" path="res://resources/sprite_outline.gdshader" id="2_wixlg"]
 [ext_resource type="PackedScene" uid="uid://bgx2xp05arsog" path="res://utils/HealthComponent.tscn" id="3_aytyn"]
 [ext_resource type="Texture2D" uid="uid://bl1sx3b6jo0lu" path="res://assets/game_characters/Elf_Knight_Sword.png" id="4_jkouh"]
-[ext_resource type="PackedScene" uid="uid://2gfsktjk5lyh" path="res://units/health_bar.tscn" id="4_xmxup"]
+[ext_resource type="PackedScene" uid="uid://2gfsktjk5lyh" path="res://units/health_bar/health_bar.tscn" id="4_xmxup"]
+[ext_resource type="Script" uid="uid://dadt3s5cpl0e5" path="res://addons/GdPlanningAI/scripts/nodes/gdpai_agent.gd" id="6_jkouh"]
+[ext_resource type="Resource" uid="uid://rcu11i7jywo2" path="res://units/agent_config.tres" id="7_kn8t3"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_d4qi8"]
 resource_local_to_scene = true
@@ -18,14 +20,14 @@ shader_parameter/add_margins = true
 [sub_resource type="ViewportTexture" id="ViewportTexture_vpbp7"]
 viewport_path = NodePath("SubViewport")
 
-[node name="unit-test" type="Node2D" node_paths=PackedStringArray("agent") groups=["unit"]]
+[node name="PlayableUnit" type="Node2D" node_paths=PackedStringArray("agent") groups=["unit"]]
 script = ExtResource("1_pw12l")
+agent = NodePath("GdPAIAgent")
 sprite = ExtResource("4_jkouh")
 my_name = "Knight"
 max_hp = 50
 damage = 15
 max_movement_range = 4
-agent = NodePath("GdPAIAgent")
 metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
 
@@ -43,4 +45,7 @@ scale = Vector2(0.326733, 0.454545)
 texture = SubResource("ViewportTexture_vpbp7")
 health_component = NodePath("../HealthComponent")
 
-[node name="GdPAIAgent" type="Node" parent="."]
+[node name="GdPAIAgent" type="Node" parent="." node_paths=PackedStringArray("entity")]
+script = ExtResource("6_jkouh")
+entity = NodePath("..")
+config = ExtResource("7_kn8t3")

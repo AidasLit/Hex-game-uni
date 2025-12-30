@@ -2,7 +2,7 @@ class_name WanderGoal
 extends Goal
 
 # Override
-func compute_reward(agent: GdPAIAgent) -> float:
+func compute_reward(_agent: GdPAIAgent) -> float:
 	return 5
 
 # Override
@@ -10,7 +10,7 @@ func get_desired_state(agent: GdPAIAgent) -> Array[Precondition]:
 	var agent_position: Vector2i = agent.blackboard.get_property("tilemap_position")
 	
 	var move_condition: Precondition = Precondition.new()
-	move_condition.eval_func = func(blackboard: GdPAIBlackboard, world_state: GdPAIBlackboard):
+	move_condition.eval_func = func(blackboard: GdPAIBlackboard, _world_state: GdPAIBlackboard):
 		var sim_position: Vector2i = blackboard.get_property("tilemap_position")
 		
 		var x_diff = abs(agent_position.x - sim_position.x)

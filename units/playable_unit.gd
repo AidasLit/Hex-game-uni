@@ -4,6 +4,12 @@ class_name PlayableUnit
 ### All logic that is shared by all units
 ### Individual logic goes into resources
 
+enum States{
+	IDLE,
+	MOVEMENT,
+	NUDGE
+}
+
 @onready var health_component: HealthComponent = $HealthComponent
 @onready var base_texture: Sprite2D = $Sprite2D
 
@@ -17,21 +23,15 @@ class_name PlayableUnit
 @export var damage : int
 @export var max_movement_range : int
 
+var state : States = States.IDLE
+
+signal state_changed
+
 var tilemap_position : Vector2i :
 	set(value):
 		agent.blackboard.set_property("tilemap_position", value)
 		tilemap_position = value
 var movement_range : int
-
-var is_active = false : 
-	set(value):
-		var tween = get_tree().create_tween()
-		if value:
-			tween.tween_property(self, "scale", Vector2(1.5, 1.5), 0.3)
-		else:
-			tween.tween_property(self, "scale", Vector2.ONE, 0.3)
-		is_active = value
-		agent.blackboard.set_property("is_active", value)
 
 func _ready() -> void:
 	assert(agent, "agent isn't set")
@@ -44,26 +44,49 @@ func _ready() -> void:
 	
 	agent.blackboard.set_property("max_hp", health_component._max_hp)
 
-func travel_path(path : Array[Vector2]):
-	SignalBus.action_initiated.emit()
+func change_state(new_state : States) -> void:
+	if (state == new_state):
+		print("old and new states are identical")
+		return
 	
+	var old_state = state
+	
+	# State exit logic
+	match old_state:
+		States.IDLE:
+			pass
+		_:
+			pass
+	
+	# State enter logic
+	match new_state:
+		States.IDLE:
+			var tween = get_tree().create_tween()
+			tween.tween_property(self, "scale", Vector2.ONE, 0.3)
+		_:
+			var tween = get_tree().create_tween()
+			tween.tween_property(self, "scale", Vector2.ONE, 0.3)
+	
+	state_changed.emit()
+
+func travel_path(path : Array[Vector2]):
 	for next_step : Vector2 in path:
 		sprite_flip(next_step)
 		
 		# await needs to happen inside this loop
-		# if it's in a seperate function, the looped functions will be executed in parallel, which is not what we want
+		# if it's in a seperate function, the looped functions will be executed in "parallel", which is not what we want
 		var tween = get_tree().create_tween()
 		tween.tween_property(self, "global_position", next_step, 0.2)
 		await tween.finished
 		
 		await get_tree().create_timer(0.05).timeout
+		
+		tilemap_position = Globals.grid_system._local_to_map(next_step)
 		Globals.camera.to_active()
 	
 	SignalBus.action_done.emit()
 
 func nudge_attack(target : Vector2):
-	SignalBus.action_initiated.emit()
-	
 	var return_pos = global_position
 	var direction = (Globals.grid_system._map_to_local(target) - global_position).normalized()
 	

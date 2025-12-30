@@ -1,55 +1,59 @@
 class_name WanderAction
 extends Action
 
-
-# Override
-func _init():
-	# If implementing _init(), make sure to call super() so a uid is created.
-	super()
-
-
 # Override
 func get_validity_checks() -> Array[Precondition]:
 	var checks: Array[Precondition] = []
 	checks.append(Precondition.agent_has_property("entity"))
 	checks.append(Precondition.agent_has_property("tilemap_position"))
-	checks.append(Precondition.agent_property_equal_to("is_active", true))
+	
+	var is_not_surrounded: Precondition = Precondition.new()
+	is_not_surrounded.eval_func = func(blackboard: GdPAIBlackboard, _world_state: GdPAIBlackboard):
+		var agent_position: Vector2i = blackboard.get_property("entity").tilemap_position
+		
+		var available_neighbors = Globals.grid_system.get_neighbors(agent_position)
+		
+		return not available_neighbors.is_empty()
+	checks.append(is_not_surrounded)
 	
 	return checks
 
 
 # Override
-func get_action_cost(agent_blackboard: GdPAIBlackboard, world_state: GdPAIBlackboard) -> float:
+func get_action_cost(
+		_agent_blackboard: GdPAIBlackboard, 
+		_world_state: GdPAIBlackboard
+) -> float:
 	return 1
 
 
 # Override
 func get_preconditions() -> Array[Precondition]:
-	#var conditions: Array[Precondition] = []
-	#conditions.append(Precondition.agent_property_equal_to("is_active", true))
-	#return conditions
 	return []
 
 
 # Override
-func simulate_effect(agent_blackboard: GdPAIBlackboard, world_state: GdPAIBlackboard):
+func simulate_effect(
+		agent_blackboard: GdPAIBlackboard, 
+		_world_state: GdPAIBlackboard
+):
 	var sim_position: Vector2i = agent_blackboard.get_property("tilemap_position")
 	sim_position.x += 1
 	agent_blackboard.set_property("tilemap_position", sim_position)
 
 
 # Override
-func reverse_simulate_effect(agent_blackboard: GdPAIBlackboard, world_state: GdPAIBlackboard):
+func reverse_simulate_effect(
+		_agent_blackboard: GdPAIBlackboard, 
+		_world_state: GdPAIBlackboard
+):
 	pass
 
 
 # Override
 func pre_perform_action(agent: GdPAIAgent) -> Action.Status:
 	# Cache location data.
-	var agent_position: Vector2i = agent.blackboard.get_property("entity").tilemap_position
-	agent.blackboard.set_property(uid_property("tilemap_position"), agent_position)
-	
-	print("\nACTION: wandering from: ", agent_position)
+	var agent_position: Vector2i = agent.blackboard.get_property("tilemap_position")
 	
 	var possible_targets = Globals.grid_system.get_navigable_neighbors(agent_position)
 	if possible_targets.is_empty():
@@ -63,18 +67,24 @@ func pre_perform_action(agent: GdPAIAgent) -> Action.Status:
 
 
 # Override
-func perform_action(agent: GdPAIAgent, delta: float) -> Action.Status:
+func perform_action(
+		agent: GdPAIAgent, 
+		_delta: float
+) -> Action.Status:
 	var target_location = agent.blackboard.get_property(uid_property("target_location"))
 	
 	Globals.play_loop.move(target_location, false)
+	print("\nACTION: wandering")
 	
-	agent.blackboard.get_property("entity").is_active = false
+	if agent.get_parent().state == PlayableUnit.States.MOVEMENT:
+		print("ACTION RUNNNNNNING")
+		return Action.Status.RUNNING
+	
 	return Action.Status.SUCCESS
 
 
 # Override
 func post_perform_action(agent: GdPAIAgent) -> Action.Status:
-	agent.blackboard.erase_property(uid_property("tilemap_position"))
 	agent.blackboard.erase_property(uid_property("target_location"))
 
 	return Action.Status.SUCCESS
