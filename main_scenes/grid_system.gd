@@ -22,6 +22,7 @@ var _queue_cells : Array[Vector2i]
 
 @onready var base_layer: TileMapLayer = $"base-layer"
 @onready var hover_layer: TileMapLayer = $"hover-layer"
+@onready var debug_layer: TileMapLayer = $"debug-layer"
 
 var astargrid = AStar2D.new()
 # Dictionary - Key: Vector2i, Value : int
@@ -36,9 +37,9 @@ func _setup_astar():
 	_visited_cells.append(_start_cell)
 	astargrid.add_point(astargrid.get_available_point_id(), _start_cell)
 	cells[_start_cell] = 0
+	set_tile_disabled(_start_cell, false)
 	
 	_BFS(_start_cell)
-	#get_navigation_path(Vector2i(0, 0), Vector2i(0, 1))
 
 func _BFS(current_cell : Vector2i):
 	for neighbor : Vector2i in base_layer.get_surrounding_cells(current_cell):
@@ -55,6 +56,7 @@ func _BFS(current_cell : Vector2i):
 			_visited_cells.append(neighbor)
 			cells[neighbor] = astargrid.get_available_point_id()
 			astargrid.add_point(astargrid.get_available_point_id(), neighbor)
+			set_tile_disabled(neighbor, false)
 		
 		astargrid.connect_points(cells[neighbor], cells[current_cell])
 	
@@ -86,7 +88,9 @@ func get_navigation_path(from : Vector2i, to : Vector2i, stop_next_to : bool) ->
 		print("trying to navigate from one position to itself")
 		return []
 	
-	#var test_path
+	var from_original = astargrid.is_point_disabled(cells.get(from))
+	var to_original = astargrid.is_point_disabled(cells.get(to))
+	
 	var allow_partial = false
 	set_tile_disabled(from, false)
 	
@@ -94,7 +98,6 @@ func get_navigation_path(from : Vector2i, to : Vector2i, stop_next_to : bool) ->
 		set_tile_disabled(to, false)
 		
 		var test_path = astargrid.get_id_path(cells[from], cells[to])
-		#test_path = astargrid.get_id_path(cells[from], cells[to])
 		if test_path.size() == 0:
 			return []
 		elif to == Vector2i(astargrid.get_point_position(test_path[test_path.size() - 1])):
@@ -109,16 +112,13 @@ func get_navigation_path(from : Vector2i, to : Vector2i, stop_next_to : bool) ->
 	
 	var path = astargrid.get_id_path(cells[from], cells[to], allow_partial)
 	var position_path : Array[Vector2i] = []
-	#var test_position_path : Array[Vector2i] = []
 	
 	for step : int in path:
 		position_path.append(Vector2i(astargrid.get_point_position(step)))
 	
-	#for step : int in test_path:
-		#test_position_path.append(Vector2i(astargrid.get_point_position(step)))
+	set_tile_disabled(from, from_original)
+	set_tile_disabled(to, to_original)
 	
-	#print(test_position_path)
-	#print(position_path)
 	return position_path
 
 func path_to_global_path(path : Array[Vector2i]) -> Array[Vector2]:
@@ -129,6 +129,10 @@ func path_to_global_path(path : Array[Vector2i]) -> Array[Vector2]:
 
 func set_tile_disabled(tile_pos : Vector2i, disable : bool) -> void:
 	astargrid.set_point_disabled(cells.get(tile_pos), disable)
+	if disable:
+		debug_layer.set_cell(tile_pos, 0, Globals.transparent_tile_coords["red"])
+	else:
+		debug_layer.set_cell(tile_pos, 0, Globals.transparent_tile_coords["green"])
 
 func get_navigable_neighbors(from : Vector2i) -> Array[Vector2i]:
 	var neighbors : Array[Vector2i] = []

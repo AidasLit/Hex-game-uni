@@ -64,16 +64,8 @@ func reverse_simulate_effect(
 
 # Override
 func pre_perform_action(agent: GdPAIAgent) -> Action.Status:
-	# Cache location data.
-	var agent_position: Vector2i = agent.blackboard.get_property("tilemap_position")
-	agent.blackboard.set_property(uid_property("tilemap_position"), agent_position)
-	
-	if agent.blackboard.get_property("path_length"):
-		Globals.action_done.emit()
-		return Action.Status.FAILURE
-	
+	agent.blackboard.set_property(uid_property("action_started"), false)
 	agent.blackboard.set_property(uid_property("target_position"), target)
-	
 	
 	return Action.Status.SUCCESS
 
@@ -83,23 +75,20 @@ func perform_action(
 		agent: GdPAIAgent, 
 		_delta: float
 ) -> Action.Status:
-	var start_position: Vector2i = agent.blackboard.get_property(uid_property("tilemap_position"))
-	var target_position = agent.blackboard.get_property(uid_property("target_position"))
+	var started_status: bool = agent.blackboard.get_property(uid_property("action_started"))
+	var target_position: Vector2i = agent.blackboard.get_property(uid_property("target_position"))
 	
-	if start_position == agent.get_parent().tilemap_position:
-		Globals.play_loop.move(target_position, true)
+	if not started_status:
+		agent.blackboard.set_property(uid_property("action_started"), true)
+		
+		agent.entity.move(target_position, true)
 	
-	var available_neighbors = Globals.grid_system.get_neighbors(target_position)
-	
-	if available_neighbors.has(agent.get_parent().tilemap_position):
-		return Action.Status.SUCCESS
-	
-	return Action.Status.RUNNING
+	return Action.Status.RUNNING if agent.entity.is_active else Action.Status.SUCCESS
 
 
 # Override
 func post_perform_action(agent: GdPAIAgent) -> Action.Status:
-	agent.blackboard.erase_property(uid_property("tilemap_position"))
+	agent.blackboard.erase_property(uid_property("action_started"))
 	agent.blackboard.erase_property(uid_property("target_position"))
 	return Action.Status.SUCCESS
 

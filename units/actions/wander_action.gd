@@ -52,16 +52,17 @@ func reverse_simulate_effect(
 
 # Override
 func pre_perform_action(agent: GdPAIAgent) -> Action.Status:
-	# Cache location data.
+	agent.blackboard.set_property(uid_property("action_started"), false)
+	
 	var agent_position: Vector2i = agent.blackboard.get_property("tilemap_position")
 	
 	var possible_targets = Globals.grid_system.get_navigable_neighbors(agent_position)
 	if possible_targets.is_empty():
-		Globals.action_done.emit()
+		SignalBus.action_done.emit()
 		return Action.Status.FAILURE
 	
 	var target_location : Vector2i = possible_targets.pick_random()
-	agent.blackboard.set_property(uid_property("target_location"), target_location)
+	agent.blackboard.set_property(uid_property("target_position"), target_location)
 	
 	return Action.Status.SUCCESS
 
@@ -71,22 +72,21 @@ func perform_action(
 		agent: GdPAIAgent, 
 		_delta: float
 ) -> Action.Status:
-	var target_location = agent.blackboard.get_property(uid_property("target_location"))
+	var started_status: bool = agent.blackboard.get_property(uid_property("action_started"))
+	var target_position: Vector2i = agent.blackboard.get_property(uid_property("target_position"))
 	
-	Globals.play_loop.move(target_location, false)
-	print("\nACTION: wandering")
+	if not started_status:
+		agent.blackboard.set_property(uid_property("action_started"), true)
+		
+		agent.entity.move(target_position, false)
 	
-	if agent.get_parent().state == PlayableUnit.States.MOVEMENT:
-		print("ACTION RUNNNNNNING")
-		return Action.Status.RUNNING
-	
-	return Action.Status.SUCCESS
+	return Action.Status.RUNNING if agent.entity.is_active else Action.Status.SUCCESS
 
 
 # Override
 func post_perform_action(agent: GdPAIAgent) -> Action.Status:
-	agent.blackboard.erase_property(uid_property("target_location"))
-
+	agent.blackboard.erase_property(uid_property("action_started"))
+	agent.blackboard.erase_property(uid_property("target_position"))
 	return Action.Status.SUCCESS
 
 func get_title() -> String:

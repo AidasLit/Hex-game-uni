@@ -71,6 +71,9 @@ tile_set = ExtResource("3_odvqy")
 tile_set = ExtResource("3_odvqy")
 script = ExtResource("4_ycdx0")
 
+[node name="debug-layer" type="TileMapLayer" parent="grid-system"]
+tile_set = ExtResource("3_odvqy")
+
 [node name="units" type="Node2D" parent="."]
 metadata/_edit_group_ = true
 metadata/_edit_lock_ = true

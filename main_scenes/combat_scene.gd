@@ -39,7 +39,6 @@ func _ready() -> void:
 	Globals.camera = camera
 	Globals.world_blackboard = gd_pai_world_node.world_state
 	
-	SignalBus.action_initiated.connect(action_initialised)
 	SignalBus.action_done.connect(action_done)
 	SignalBus.kill_me.connect(kill_unit)
 	
@@ -52,10 +51,13 @@ func _ready() -> void:
 	generate_tree()
 	generate_tree()
 	generate_tree()
+	generate_tree()
 	
 	await SignalBus.deployment_finished
 	
 	active_unit = action_queue.pop_front()
+	active_unit.is_active = true
+	
 	active_unit.agent.manually_start_plan()
 	
 	camera.to_active()
@@ -70,16 +72,19 @@ func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("ui_cancel"):
 		SceneManager.change_scene("res://main_scenes/menus/main_menu.tscn")
 
-func action_initialised():
-	unit_stat_display.display_unit(active_unit)
-
 func action_done():
+	# handle old unit
 	action_queue.push_back(active_unit)
-	active_unit.change_state(PlayableUnit.States.IDLE)
+	active_unit.is_active = false
 	
+	# init new unit
 	active_unit = action_queue.pop_front()
+	active_unit.is_active = true
+	
 	active_unit.agent.manually_start_plan()
 	
+	# handle visuals for new unit
+	unit_stat_display.display_unit(active_unit)
 	camera.to_active()
 
 func game_over():
@@ -94,37 +99,6 @@ func game_over():
 	
 	SceneManager.change_scene("res://main_scenes/menus/main_menu.tscn")
 
-
-# TODO make units handle their own actions
-#region Unit Actions
-func move(move_to : Vector2i, stop_next_to : bool) -> void:
-	#remove old positions
-	map_of_units.erase(active_unit.tilemap_position)
-	#grid_system.set_tile_disabled(unit.tilemap_position, false)
-	
-	#get path
-	var path = Globals.grid_system.get_navigation_path(active_unit.tilemap_position, move_to, stop_next_to)
-	path.pop_front()
-	
-	#traverse
-	active_unit.change_state(PlayableUnit.States.MOVEMENT)
-	active_unit.travel_path(Globals.grid_system.path_to_global_path(path))
-	
-	#add new positions
-	map_of_units[active_unit.tilemap_position] = active_unit
-	grid_system.set_tile_disabled(active_unit.tilemap_position, true)
-
-
-func cut_tree(target_position : Vector2i):
-	var tree : TreeObject = map_of_units[target_position]
-	
-	tree.chopped()
-	
-	active_unit.change_state(PlayableUnit.States.NUDGE)
-	active_unit.nudge_attack(target_position)
-	
-	Globals.grid_system.set_tile_disabled(target_position, false)
-#endregion
 
 #region Unit Management
 func try_place_unit(at_position : Vector2):

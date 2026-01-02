@@ -10,6 +10,7 @@ func _init(_tree : TreeObject):
 # Override
 func get_validity_checks() -> Array[Precondition]:
 	var checks: Array[Precondition] = []
+	
 	checks.append(Precondition.agent_has_property("entity"))
 	checks.append(Precondition.agent_has_property("tilemap_position"))
 	checks.append(Precondition.check_is_object_valid(tree))
@@ -57,6 +58,7 @@ func reverse_simulate_effect(
 
 # Override
 func pre_perform_action(agent: GdPAIAgent) -> Action.Status:
+	agent.blackboard.set_property(uid_property("action_started"), false)
 	agent.blackboard.set_property(uid_property("target_position"), tree.tilemap_position)
 	
 	return Action.Status.SUCCESS
@@ -67,16 +69,20 @@ func perform_action(
 		agent: GdPAIAgent, 
 		_delta: float
 ) -> Action.Status:
+	var started_status: bool = agent.blackboard.get_property(uid_property("action_started"))
 	var target_position = agent.blackboard.get_property(uid_property("target_position"))
 	
-	print("\nACTION: ChopTree")
-	Globals.play_loop.cut_tree(target_position)
+	if not started_status:
+		agent.blackboard.set_property(uid_property("action_started"), true)
+		
+		agent.entity.cut_tree(target_position)
 	
-	return Action.Status.SUCCESS
+	return Action.Status.RUNNING if agent.entity.is_active else Action.Status.SUCCESS
 
 
 # Override
 func post_perform_action(agent: GdPAIAgent) -> Action.Status:
+	agent.blackboard.erase_property(uid_property("action_started"))
 	agent.blackboard.erase_property(uid_property("target_position"))
 	return Action.Status.SUCCESS
 
