@@ -38,6 +38,3 @@ func update_zoom():
 	new_zoom = new_zoom.clamp(Vector2.ONE * 1, Vector2.ONE * 3)
 	SPEED = 15 / new_zoom.x
 	set_zoom(new_zoom)
-
-func to_active():
-	position = Globals.play_loop.active_unit.global_position

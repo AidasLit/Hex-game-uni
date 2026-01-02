@@ -22,9 +22,6 @@ func call_unit_placed(successful : bool):
 	#unit_placed.emit(successful)
 	(func(): SignalBus.unit_placed.emit(successful)).call_deferred()
 
-# TODO move this to Globals
-var map_of_units : Dictionary
-
 var unit_list : Array[PlayableUnit]
 var action_queue : Array[PlayableUnit]
 
@@ -40,10 +37,12 @@ func _ready() -> void:
 	Globals.world_blackboard = gd_pai_world_node.world_state
 	
 	SignalBus.action_done.connect(action_done)
-	SignalBus.kill_me.connect(kill_unit)
 	
 	camera.setup()
 	
+	generate_tree()
+	generate_tree()
+	generate_tree()
 	generate_tree()
 	generate_tree()
 	generate_tree()
@@ -60,9 +59,7 @@ func _ready() -> void:
 	
 	active_unit.agent.manually_start_plan()
 	
-	camera.to_active()
-	
-	unit_stat_display.display_unit(active_unit)
+	unit_stat_display.display_planning(active_unit)
 	unit_stat_display.show_me()
 	
 	action_lock = false
@@ -77,6 +74,8 @@ func action_done():
 	action_queue.push_back(active_unit)
 	active_unit.is_active = false
 	
+	#await get_tree().create_timer(0.2).timeout
+	
 	# init new unit
 	active_unit = action_queue.pop_front()
 	active_unit.is_active = true
@@ -84,8 +83,7 @@ func action_done():
 	active_unit.agent.manually_start_plan()
 	
 	# handle visuals for new unit
-	unit_stat_display.display_unit(active_unit)
-	camera.to_active()
+	unit_stat_display.display_planning(active_unit)
 
 func game_over():
 	await get_tree().create_timer(1).timeout
@@ -115,8 +113,7 @@ func try_place_unit(at_position : Vector2):
 	unit.agent.world_node = GdPAIUTILS.get_child_of_type(get_tree().root, GdPAIWorldNode)
 	unit.agent.goals.append(ChopTreesGoal.new())
 	
-	grid_system.set_tile_disabled(unit.tilemap_position, true)
-	map_of_units[unit.tilemap_position] = unit
+	Globals.register_unit(unit)
 	
 	unit_list.push_back(unit)
 	action_queue.push_back(unit)
@@ -132,24 +129,8 @@ func generate_tree():
 	tree._data_init(tilemap_position)
 	tree.global_position = grid_system._map_to_local(tilemap_position)
 	
-	map_of_units[tilemap_position] = tree
-	
-	grid_system.set_tile_disabled(tilemap_position, true)
+	Globals.register_unit(tree)
 	
 	var tree_count = Globals.world_blackboard.get_property("tree_count")
 	Globals.world_blackboard.set_property("tree_count", tree_count + 1)
-
-
-func kill_unit(unit):
-	if unit is PlayableUnit:
-		map_of_units.erase(unit.tilemap_position)
-		unit_list.erase(unit)
-		action_queue.erase(unit)
-	elif unit is TreeObject:
-		map_of_units.erase(unit.tilemap_position)
-	
-	grid_system.set_tile_disabled(unit.tilemap_position, false)
-	
-	#delete unit
-	unit.queue_free()
 #endregion

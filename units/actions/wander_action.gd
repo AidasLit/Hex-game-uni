@@ -72,6 +72,9 @@ func perform_action(
 		agent: GdPAIAgent, 
 		_delta: float
 ) -> Action.Status:
+	if not agent.entity.is_active:
+		return Action.Status.RUNNING
+	
 	var started_status: bool = agent.blackboard.get_property(uid_property("action_started"))
 	var target_position: Vector2i = agent.blackboard.get_property(uid_property("target_position"))
 	
@@ -89,5 +92,6 @@ func post_perform_action(agent: GdPAIAgent) -> Action.Status:
 	agent.blackboard.erase_property(uid_property("target_position"))
 	return Action.Status.SUCCESS
 
+# Override
 func get_title() -> String:
 	return "Wander"

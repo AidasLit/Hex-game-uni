@@ -12,4 +12,8 @@ func _data_init(_tilemap_position : Vector2i) -> void:
 func chopped():
 	var tree_count = Globals.world_blackboard.get_property("tree_count")
 	Globals.world_blackboard.set_property("tree_count", tree_count - 1)
-	SignalBus.kill_me.emit(self)
+	
+	## TODO WHY WONT YOU DIE
+	Globals.unregister_unit(self)
+	SignalBus.unit_killed.emit(self)
+	self.queue_free()

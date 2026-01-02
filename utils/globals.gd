@@ -5,6 +5,29 @@ var grid_system : GridNavigationSystem
 var hud : HUD
 var camera : Camera2D
 
+#region unit map
+var map_of_units : Dictionary
+
+func register_unit(unit):
+	map_of_units[unit.tilemap_position] = unit
+	grid_system.set_tile_disabled(unit.tilemap_position, true)
+
+func unregister_unit(unit):
+	map_of_units.erase(unit.tilemap_position)
+	grid_system.set_tile_disabled(unit.tilemap_position, false)
+	
+	if unit is PlayableUnit:
+		play_loop.unit_list.erase(unit)
+		play_loop.action_queue.erase(unit)
+
+func relocate_unit(unit, to : Vector2i):
+	map_of_units.erase(unit.tilemap_position)
+	grid_system.set_tile_disabled(unit.tilemap_position, false)
+	
+	map_of_units[to] = unit
+	grid_system.set_tile_disabled(to, true)
+#endregion
+
 var world_blackboard : GdPAIBlackboard
 
 const transparent_tile_coords : Dictionary = {

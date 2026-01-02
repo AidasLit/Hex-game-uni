@@ -37,7 +37,7 @@ var movement_range : int
 func _ready() -> void:
 	assert(agent, "agent isn't set")
 	
-	health_component.zero_hp.connect(_on_zero_hp)
+	#health_component.zero_hp.connect(_on_zero_hp)
 	health_component._max_hp = max_hp
 	health_component.reset_hp()
 	
@@ -71,8 +71,7 @@ func _ready() -> void:
 	#state_changed.emit()
 
 func move(move_to : Vector2i, stop_next_to : bool) -> void:
-	#remove old positions
-	Globals.play_loop.map_of_units.erase(tilemap_position)
+	SignalBus.action_initiated.emit()
 	
 	#get path
 	var path = Globals.grid_system.get_navigation_path(tilemap_position, move_to, stop_next_to)
@@ -81,24 +80,23 @@ func move(move_to : Vector2i, stop_next_to : bool) -> void:
 	#traverse
 	await _travel_path(Globals.grid_system.path_to_global_path(path))
 	
-	#add new positions
-	Globals.play_loop.map_of_units[tilemap_position] = self
-	
 	SignalBus.action_done.emit()
 
-func cut_tree(target_position : Vector2i):
-	var tree : TreeObject = Globals.play_loop.map_of_units[target_position]
+func cut_tree(tree : TreeObject):
+	SignalBus.action_initiated.emit()
+	
+	await _nudge_attack(tree.tilemap_position)
 	
 	tree.chopped()
-	
-	await _nudge_attack(target_position)
-	
-	Globals.grid_system.set_tile_disabled(target_position, false)
+	# waiting for tree exited, otherwise the AI could use it on the same frame
+	# after it already got freed
+	await tree.tree_exited
+	#await get_tree().process_frame
 	
 	SignalBus.action_done.emit()
 
-func _on_zero_hp() -> void:
-	SignalBus.kill_me.emit(self)
+#func _on_zero_hp() -> void:
+	#SignalBus.unit_killed.emit(self)
 
 func _sprite_flip(next_step : Vector2):
 	if next_step.x > global_position.x:
@@ -110,8 +108,9 @@ func _sprite_flip(next_step : Vector2):
 #region coroutines
 func _travel_path(path : Array[Vector2]):
 	for step : Vector2 in path:
-		Globals.grid_system.set_tile_disabled(tilemap_position, false)
-		Globals.grid_system.set_tile_disabled(Globals.grid_system._local_to_map(step), true)
+		#Globals.grid_system.set_tile_disabled(tilemap_position, false)
+		#Globals.grid_system.set_tile_disabled(Globals.grid_system._local_to_map(step), true)
+		Globals.relocate_unit(self, Globals.grid_system._local_to_map(step))
 		
 		_sprite_flip(step)
 		
@@ -124,7 +123,9 @@ func _travel_path(path : Array[Vector2]):
 		await get_tree().create_timer(0.05).timeout
 		
 		tilemap_position = Globals.grid_system._local_to_map(step)
-		Globals.camera.to_active()
+		
+		#SignalBus.action_done.emit()
+		#return
 
 func _nudge_attack(target : Vector2):
 	var return_pos = global_position
