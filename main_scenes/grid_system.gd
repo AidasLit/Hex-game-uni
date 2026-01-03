@@ -148,13 +148,13 @@ func get_navigable_neighbors(from : Vector2i) -> Array[Vector2i]:
 
 ## return a random enabled tile
 func get_random_tile() -> Vector2i:
-	var count = 0
+	var available_points = []
 	
 	for i in range(0, astargrid.get_point_count()):
 		if not astargrid.is_point_disabled(i):
-			count += 1
+			available_points.append(i)
 	
-	var rand_id = randi_range(0, count - 1)
+	var rand_id = available_points.pick_random()
 	
 	return Vector2i(astargrid.get_point_position(rand_id))
 

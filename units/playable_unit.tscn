@@ -36,8 +36,8 @@ material = SubResource("ShaderMaterial_d4qi8")
 scale = Vector2(0.35, 0.35)
 texture = ExtResource("4_jkouh")
 
-[node name="HealthComponent" parent="." node_paths=PackedStringArray("agent") instance=ExtResource("3_aytyn")]
-agent = NodePath("../GdPAIAgent")
+[node name="HealthComponent" parent="." node_paths=PackedStringArray("object") instance=ExtResource("3_aytyn")]
+object = NodePath("..")
 
 [node name="HealthBar" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("4_xmxup")]
 position = Vector2(0, -47)
@@ -49,3 +49,6 @@ health_component = NodePath("../HealthComponent")
 script = ExtResource("6_jkouh")
 entity = NodePath("..")
 config = ExtResource("7_kn8t3")
+
+[node name="HeldItem" type="Sprite2D" parent="."]
+position = Vector2(0, -73)

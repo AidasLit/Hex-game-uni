@@ -16,6 +16,8 @@ func get_validity_checks() -> Array[Precondition]:
 		return not available_neighbors.is_empty()
 	checks.append(is_not_surrounded)
 	
+	checks.append(Precondition.world_state_property_greater_than("fire_strength", 90))
+	
 	return checks
 
 

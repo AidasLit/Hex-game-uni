@@ -6,6 +6,7 @@ extends Node2D
 
 const playable_unit_scene = preload("res://units/playable_unit.tscn")
 const tree_scene = preload("uid://blmdyywmffl20")
+const bonfire_scene = preload("uid://bivqb5bqkwvfl")
 
 @onready var units_node = $units
 
@@ -28,6 +29,8 @@ var action_queue : Array[PlayableUnit]
 var active_unit : PlayableUnit
 var action_lock : bool = true
 
+var bonfire : BonfireObject = null
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	Globals.play_loop = self
@@ -37,20 +40,18 @@ func _ready() -> void:
 	Globals.world_blackboard = gd_pai_world_node.world_state
 	
 	SignalBus.action_done.connect(action_done)
+	SignalBus.game_over.connect(func():
+		action_lock = true
+		SceneManager.change_scene("res://main_scenes/menus/main_menu.tscn")
+	)
 	
 	camera.setup()
 	
-	generate_tree()
-	generate_tree()
-	generate_tree()
-	generate_tree()
-	generate_tree()
-	generate_tree()
-	generate_tree()
-	generate_tree()
-	generate_tree()
-	generate_tree()
-	generate_tree()
+	place_bonfire()
+	
+	generate_unit(tree_scene)
+	generate_unit(tree_scene)
+	generate_unit(tree_scene)
 	
 	await SignalBus.deployment_finished
 	
@@ -70,11 +71,16 @@ func _process(_delta: float) -> void:
 		SceneManager.change_scene("res://main_scenes/menus/main_menu.tscn")
 
 func action_done():
+	if action_lock:
+		return
+	
 	# handle old unit
 	action_queue.push_back(active_unit)
 	active_unit.is_active = false
 	
 	#await get_tree().create_timer(0.2).timeout
+	
+	bonfire.tick()
 	
 	# init new unit
 	active_unit = action_queue.pop_front()
@@ -111,7 +117,7 @@ func try_place_unit(at_position : Vector2):
 	unit.global_position = Globals.grid_system._map_to_local(unit.tilemap_position)
 	
 	unit.agent.world_node = GdPAIUTILS.get_child_of_type(get_tree().root, GdPAIWorldNode)
-	unit.agent.goals.append(ChopTreesGoal.new())
+	unit.agent.goals.append(MaintainFireGoal.new())
 	
 	Globals.register_unit(unit)
 	
@@ -120,17 +126,25 @@ func try_place_unit(at_position : Vector2):
 	
 	call_unit_placed(true)
 
-func generate_tree():
+func generate_unit(scene : PackedScene):
 	var tilemap_position = grid_system.get_random_tile()
 	
-	var tree : TreeObject = tree_scene.instantiate()
-	units_node.add_child(tree)
+	var unit = scene.instantiate()
+	units_node.add_child(unit)
 	
-	tree._data_init(tilemap_position)
-	tree.global_position = grid_system._map_to_local(tilemap_position)
+	unit._data_init(tilemap_position)
+	unit.global_position = grid_system._map_to_local(tilemap_position)
 	
-	Globals.register_unit(tree)
+	Globals.register_unit(unit)
+
+func place_bonfire():
+	var tilemap_position = Vector2i(10, 5)
 	
-	var tree_count = Globals.world_blackboard.get_property("tree_count")
-	Globals.world_blackboard.set_property("tree_count", tree_count + 1)
+	bonfire = bonfire_scene.instantiate()
+	units_node.add_child(bonfire)
+	
+	bonfire._data_init(tilemap_position)
+	bonfire.global_position = grid_system._map_to_local(tilemap_position)
+	
+	Globals.register_unit(bonfire)
 #endregion

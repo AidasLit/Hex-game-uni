@@ -18,7 +18,8 @@ func display_values(unit_name : String, max_hp : int, damage : int, slowness : i
 	$"move-range".text = "Movement range: " + str(movement_range)
 
 func display_planning(unit: PlayableUnit):
-	$name.text = unit.agent.get_current_goal().get_title()
+	if unit.agent.get_current_goal():
+		$name.text = unit.agent.get_current_goal().get_title()
 	#$name.text = str(unit.agent.get_current_plan().get_plan()[unit.agent.get_current_plan_step()].get_title())
 
 

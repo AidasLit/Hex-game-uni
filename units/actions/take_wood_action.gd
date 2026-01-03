@@ -1,10 +1,10 @@
-class_name ChopTreeAction
+class_name TakeWoodAction
 extends Action
 
-var tree : TreeObject
+var wood : WoodObject
 
-func _init(_tree : TreeObject):
-	tree = _tree
+func _init(_wood : WoodObject):
+	wood = _wood
 
 
 # Override
@@ -13,7 +13,7 @@ func get_validity_checks() -> Array[Precondition]:
 	
 	checks.append(Precondition.agent_has_property("entity"))
 	checks.append(Precondition.agent_has_property("tilemap_position"))
-	checks.append(Precondition.check_is_object_valid(tree))
+	checks.append(Precondition.check_is_object_valid(wood))
 	
 	return checks
 
@@ -32,10 +32,13 @@ func get_preconditions() -> Array[Precondition]:
 	standing_next_to.eval_func = func(blackboard: GdPAIBlackboard, _world_state: GdPAIBlackboard):
 		var blackboard_agent_position = blackboard.get_property("tilemap_position")
 		
-		var available_neighbors = Globals.grid_system.get_neighbors(tree.tilemap_position)
+		var available_neighbors = Globals.grid_system.get_neighbors(wood.tilemap_position)
 		
 		return available_neighbors.has(blackboard_agent_position)
-	return [standing_next_to]
+	
+	var agent_not_holding_item = Precondition.agent_property_equal_to("holding_item", false)
+	
+	return [standing_next_to, agent_not_holding_item]
 
 
 # Override
@@ -43,14 +46,9 @@ func simulate_effect(
 		agent_blackboard: GdPAIBlackboard, 
 		world_state: GdPAIBlackboard
 ):
-	var tree_count = world_state.get_property("tree_count")
-	world_state.set_property("tree_count", tree_count - 1)
-	
 	var wood_count = world_state.get_property("wood_count")
-	world_state.set_property("wood_count", wood_count + 1)
+	world_state.set_property("wood_count", wood_count - 1)
 	
-	# we simulate the agent picking up the wood too, as we can't otherwise
-	# create a path before the wood object is created
 	agent_blackboard.set_property("holding_item", true)
 
 
@@ -59,11 +57,8 @@ func reverse_simulate_effect(
 		agent_blackboard: GdPAIBlackboard, 
 		world_state: GdPAIBlackboard
 ):
-	var tree_count = world_state.get_property("tree_count")
-	world_state.set_property("tree_count", tree_count + 1)
-	
 	var wood_count = world_state.get_property("wood_count")
-	world_state.set_property("wood_count", wood_count - 1)
+	world_state.set_property("wood_count", wood_count + 1)
 	
 	agent_blackboard.set_property("holding_item", false)
 
@@ -88,7 +83,7 @@ func perform_action(
 	if not started_status:
 		agent.blackboard.set_property(uid_property("action_started"), true)
 		
-		agent.entity.cut_tree(tree)
+		agent.entity.take_wood(wood)
 	
 	return Action.Status.RUNNING if agent.entity.is_active else Action.Status.SUCCESS
 

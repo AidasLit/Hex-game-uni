@@ -1,10 +1,18 @@
-[gd_scene load_steps=3 format=3 uid="uid://df8jbe3t74bsj"]
+[gd_scene load_steps=4 format=3 uid="uid://df8jbe3t74bsj"]
 
-[ext_resource type="Texture2D" uid="uid://dnnsa10bi2w08" path="res://assets/wood/Transparent .PNG Files/wood_8.png" id="1_jh8kj"]
+[ext_resource type="Script" uid="uid://dfaqso6id76b" path="res://main_scenes/objects/wood_object_data.gd" id="1_jh8kj"]
 [ext_resource type="Script" uid="uid://bsvv5i4fabk2g" path="res://main_scenes/objects/wood.gd" id="1_w0331"]
+[ext_resource type="Texture2D" uid="uid://dnnsa10bi2w08" path="res://assets/wood/Transparent .PNG Files/wood_8.png" id="2_65sol"]
 
 [node name="Wood" type="Node2D"]
+y_sort_enabled = true
 script = ExtResource("1_w0331")
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_jh8kj")
+texture = ExtResource("2_65sol")
+
+[node name="WoodObjectData" type="Node" parent="."]
+script = ExtResource("1_jh8kj")
+metadata/_custom_type_script = "uid://6p4h6as3qbo1"

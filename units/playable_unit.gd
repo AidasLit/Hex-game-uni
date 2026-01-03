@@ -12,6 +12,7 @@ class_name PlayableUnit
 
 @onready var health_component: HealthComponent = $HealthComponent
 @onready var base_texture: Sprite2D = $Sprite2D
+@onready var held_item_sprite: Sprite2D = $HeldItem
 
 ## Reference to the GdPAI agent.
 @export var agent: GdPAIAgent
@@ -24,6 +25,13 @@ class_name PlayableUnit
 @export var max_movement_range : int
 
 #var state : States = States.IDLE
+
+var held_item : Texture2D = null :
+	set(value):
+		agent.blackboard.set_property("holding_item", value != null)
+		held_item_sprite.texture = value
+		held_item = value
+
 var is_active = false
 
 #signal state_changed
@@ -92,6 +100,29 @@ func cut_tree(tree : TreeObject):
 	# after it already got freed
 	await tree.tree_exited
 	#await get_tree().process_frame
+	
+	SignalBus.action_done.emit()
+
+func take_wood(wood : WoodObject):
+	SignalBus.action_initiated.emit()
+	
+	await _nudge_attack(wood.tilemap_position)
+	
+	held_item = wood.sprite.texture
+	wood.taken()
+	await wood.tree_exited
+	
+	SignalBus.action_done.emit()
+
+func throw_wood(bonfire : BonfireObject):
+	assert(held_item != null, "No wood held when throwing it")
+	SignalBus.action_initiated.emit()
+	
+	print(held_item)
+	await _nudge_attack(bonfire.tilemap_position)
+	
+	held_item = null
+	bonfire.feed()
 	
 	SignalBus.action_done.emit()
 

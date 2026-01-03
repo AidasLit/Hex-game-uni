@@ -14,7 +14,9 @@
 [sub_resource type="Resource" id="Resource_ddvv1"]
 script = ExtResource("3_xh2fc")
 blackboard_backend = {
-"tree_count": 0
+"fire_strength": 100,
+"tree_count": 0,
+"wood_count": 0
 }
 metadata/_custom_type_script = "uid://cvie3m6t7c0hd"
 
