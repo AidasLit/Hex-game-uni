@@ -15,6 +15,9 @@ func get_validity_checks() -> Array[Precondition]:
 	checks.append(Precondition.agent_has_property("tilemap_position"))
 	checks.append(Precondition.check_is_object_valid(bonfire))
 	
+	#var agent_holding_item = Precondition.agent_property_equal_to("holding_item", true)
+	#checks.append(agent_holding_item)
+	
 	return checks
 
 

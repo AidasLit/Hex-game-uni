@@ -3,7 +3,7 @@ extends Goal
 
 # Override
 func compute_reward(_agent: GdPAIAgent) -> float:
-	return 100 - Globals.world_blackboard.get_property("fire_strength")
+	return clamp(100 - Globals.world_blackboard.get_property("fire_strength"), 0, 100)
 
 # Override
 func get_desired_state(_agent: GdPAIAgent) -> Array[Precondition]:
