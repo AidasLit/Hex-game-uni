@@ -1,7 +1,0 @@
-[gd_resource type="Resource" load_steps=2 format=3 uid="uid://fg1i4swcre26"]
-
-[ext_resource type="Script" uid="uid://1avkrw5nyq2p" path="res://units/behaviour_configs/idle_behaviour.gd" id="1_qf3b2"]
-
-[resource]
-script = ExtResource("1_qf3b2")
-metadata/_custom_type_script = "uid://bprnw0w0wdswr"

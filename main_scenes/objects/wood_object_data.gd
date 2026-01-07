@@ -11,13 +11,10 @@ func get_group_labels():
 
 # Override
 func get_provided_actions() -> Array[Action]:
-	var move_to_action: MoveToAction = MoveToAction.new(
-		tilemap_position
-	)
 	var collect_wood_action : TakeWoodAction = TakeWoodAction.new(
 		get_parent()
 	)
-	return [move_to_action, collect_wood_action]
+	return [collect_wood_action]
 
 
 # Override

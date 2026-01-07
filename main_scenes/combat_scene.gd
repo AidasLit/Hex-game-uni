@@ -40,6 +40,9 @@ func _ready() -> void:
 	Globals.world_blackboard = gd_pai_world_node.world_state
 	
 	SignalBus.action_done.connect(action_done)
+	SignalBus.action_initiated.connect(func():
+		active_unit.is_active = false
+	)
 	SignalBus.game_over.connect(func():
 		action_lock = true
 		SceneManager.change_scene("res://main_scenes/menus/main_menu.tscn")
@@ -117,7 +120,9 @@ func try_place_unit(at_position : Vector2):
 	unit.global_position = Globals.grid_system._map_to_local(unit.tilemap_position)
 	
 	unit.agent.world_node = GdPAIUTILS.get_child_of_type(get_tree().root, GdPAIWorldNode)
+	unit.agent.goals.append(WanderGoal.new())
 	unit.agent.goals.append(MaintainFireGoal.new())
+	unit.agent.self_actions.append(WanderAction.new())
 	
 	Globals.register_unit(unit)
 	
