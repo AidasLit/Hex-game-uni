@@ -1,7 +1,6 @@
-[gd_resource type="Resource" script_class="GdPAIAgentConfig" load_steps=6 format=3 uid="uid://rcu11i7jywo2"]
+[gd_resource type="Resource" script_class="GdPAIAgentConfig" load_steps=5 format=3 uid="uid://rcu11i7jywo2"]
 
 [ext_resource type="Script" uid="uid://bprnw0w0wdswr" path="res://addons/GdPlanningAI/scripts/resources/gdpai_behavior_config.gd" id="1_rpdfd"]
-[ext_resource type="Resource" uid="uid://fg1i4swcre26" path="res://units/behaviour_configs/idle_behaviour.tres" id="2_0rk6p"]
 [ext_resource type="Script" uid="uid://b8bjqnbsl1gr7" path="res://addons/GdPlanningAI/scripts/resources/gdpai_agent_config.gd" id="2_16r3l"]
 [ext_resource type="Script" uid="uid://cvie3m6t7c0hd" path="res://addons/GdPlanningAI/scripts/gdpai_blackboard_plan.gd" id="3_0rk6p"]
 
@@ -17,5 +16,4 @@ script = ExtResource("2_16r3l")
 planning_strategy = 2
 max_recursion = 8
 blackboard_plan = SubResource("Resource_l386j")
-behavior_configs = Array[ExtResource("1_rpdfd")]([ExtResource("2_0rk6p")])
 metadata/_custom_type_script = "uid://b8bjqnbsl1gr7"
