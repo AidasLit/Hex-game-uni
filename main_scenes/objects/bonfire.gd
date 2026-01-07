@@ -18,6 +18,7 @@ func _ready() -> void:
 
 func _data_init(_tilemap_position : Vector2i) -> void:
 	tilemap_position = _tilemap_position
+	Globals.bonfire_position = _tilemap_position
 	bonfire_object_data.tilemap_position = _tilemap_position
 
 func tick():

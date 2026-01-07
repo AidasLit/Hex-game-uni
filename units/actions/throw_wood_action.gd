@@ -60,10 +60,11 @@ func reverse_simulate_effect(
 		agent_blackboard: GdPAIBlackboard, 
 		world_state: GdPAIBlackboard
 ):
-	var fire_strength = world_state.get_property("fire_strength")
-	world_state.set_property("fire_strength", fire_strength - 20)
-	
-	agent_blackboard.set_property("holding_item", true)
+	#var fire_strength = world_state.get_property("fire_strength")
+	#world_state.set_property("fire_strength", fire_strength - 20)
+	#
+	#agent_blackboard.set_property("holding_item", true)
+	pass
 
 
 # Override

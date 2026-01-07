@@ -8,6 +8,8 @@ var camera : Camera2D
 #region unit map
 var map_of_units : Dictionary
 
+var bonfire_position : Vector2i
+
 func register_unit(unit):
 	map_of_units[unit.tilemap_position] = unit
 	grid_system.set_tile_disabled(unit.tilemap_position, true)
