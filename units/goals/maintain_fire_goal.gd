@@ -3,6 +3,9 @@ extends Goal
 
 # Override
 func compute_reward(_agent: GdPAIAgent) -> float:
+	if Globals.world_blackboard.get_property("tree_count") == 0 and\
+		Globals.world_blackboard.get_property("wood_count") == 0:
+		return 0
 	return clamp(100 - Globals.world_blackboard.get_property("fire_strength"), 0, 100)
 
 # Override

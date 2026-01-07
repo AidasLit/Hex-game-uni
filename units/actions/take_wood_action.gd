@@ -57,10 +57,11 @@ func reverse_simulate_effect(
 		agent_blackboard: GdPAIBlackboard, 
 		world_state: GdPAIBlackboard
 ):
-	var wood_count = world_state.get_property("wood_count")
-	world_state.set_property("wood_count", wood_count + 1)
-	
-	agent_blackboard.set_property("holding_item", false)
+	#var wood_count = world_state.get_property("wood_count")
+	#world_state.set_property("wood_count", wood_count + 1)
+	#
+	#agent_blackboard.set_property("holding_item", false)
+	pass
 
 
 # Override

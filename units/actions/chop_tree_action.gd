@@ -66,6 +66,7 @@ func reverse_simulate_effect(
 	world_state.set_property("wood_count", wood_count - 1)
 	
 	agent_blackboard.set_property("holding_item", false)
+	pass
 
 
 # Override

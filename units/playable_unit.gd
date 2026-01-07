@@ -118,7 +118,6 @@ func throw_wood(bonfire : BonfireObject):
 	assert(held_item != null, "No wood held when throwing it")
 	SignalBus.action_initiated.emit()
 	
-	print(held_item)
 	await _nudge_attack(bonfire.tilemap_position)
 	
 	held_item = null

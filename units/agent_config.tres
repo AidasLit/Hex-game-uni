@@ -15,7 +15,7 @@ metadata/_custom_type_script = "uid://cvie3m6t7c0hd"
 [resource]
 script = ExtResource("2_16r3l")
 planning_strategy = 2
-max_recursion = 100
+max_recursion = 8
 blackboard_plan = SubResource("Resource_l386j")
 behavior_configs = Array[ExtResource("1_rpdfd")]([ExtResource("2_0rk6p")])
 metadata/_custom_type_script = "uid://b8bjqnbsl1gr7"
