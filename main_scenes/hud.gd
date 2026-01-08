@@ -2,9 +2,7 @@ extends CanvasLayer
 class_name HUD
 
 @onready var begin_button: Button = $"begin-button"
-@onready var current_owner: Label = $"current-owner"
 @onready var game_over: Label = $"game-over"
-@onready var unit_stats: StatsDisplay = $"PanelContainer/MarginContainer/unit-stats"
 
 @onready var deployable_units_container: VBoxContainer = $MarginContainer/Panel/VBoxContainer
 @onready var selected_unit_label: Label = $MarginContainer/Panel/VBoxContainer/Label
@@ -18,7 +16,6 @@ func _ready() -> void:
 	begin_button.pressed.connect(_on_begin_pressed)
 	begin_button.disabled = true
 	game_over.modulate.a = 0
-	unit_stats.hide_me()
 	
 	self.show()
 	
@@ -54,6 +51,3 @@ func try_place_unit(target_pos : Vector2):
 		unit_count -= 1
 		selected_unit_label.text = str(unit_count)
 		begin_button.disabled = false
-	
-	if unit_count <= 0:
-		unit_stats.hide_me()

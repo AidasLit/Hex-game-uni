@@ -42,29 +42,24 @@ func _ready() -> void:
 	
 	agent.blackboard.set_property("max_hp", health_component._max_hp)
 
-func move(move_to : Vector2i, stop_next_to : bool) -> void:
-	#SignalBus.action_initiated.emit()
-	
-	#get path
-	var path = Globals.grid_system.get_navigation_path(tilemap_position, move_to, stop_next_to)
-	path.pop_front()
-	
-	#traverse
-	await _travel_path(Globals.grid_system.path_to_global_path(path))
-	
-	#SignalBus.action_done.emit()
+#region Actions
+#func move(move_to : Vector2i, stop_next_to : bool) -> void:
+	##get path
+	#var path = Globals.grid_system.get_navigation_path(tilemap_position, move_to, stop_next_to)
+	#path.pop_front()
+	#
+	##traverse
+	#await _travel_path(Globals.grid_system.path_to_global_path(path))
 
-func wander(target_position):
+func step(move_to : Vector2i) -> void:
 	SignalBus.action_initiated.emit()
 	
-	await move(target_position, false)
+	await _step(move_to)
 	
 	SignalBus.action_done.emit()
 
 func cut_tree(tree : TreeObject):
 	SignalBus.action_initiated.emit()
-	
-	await move(tree.tilemap_position, true)
 	
 	await _nudge_attack(tree.tilemap_position)
 	
@@ -78,8 +73,6 @@ func cut_tree(tree : TreeObject):
 func take_wood(wood : WoodObject):
 	SignalBus.action_initiated.emit()
 	
-	await move(wood.tilemap_position, true)
-	
 	await _nudge_attack(wood.tilemap_position)
 	
 	held_item = wood.sprite.texture
@@ -92,14 +85,16 @@ func throw_wood(bonfire : BonfireObject):
 	assert(held_item != null, "No wood held when throwing it")
 	SignalBus.action_initiated.emit()
 	
-	await move(bonfire.tilemap_position, true)
-	
 	await _nudge_attack(bonfire.tilemap_position)
 	
 	held_item = null
 	bonfire.feed()
 	
+	var total_wood_count = Globals.world_blackboard.get_property("total_wood_count")
+	Globals.world_blackboard.set_property("total_wood_count", total_wood_count - 1)
+	
 	SignalBus.action_done.emit()
+#endregion
 
 
 func _sprite_flip(next_step : Vector2):
@@ -110,19 +105,21 @@ func _sprite_flip(next_step : Vector2):
 
 # these have to be awaited
 #region coroutines
-func _travel_path(path : Array[Vector2]):
-	for step : Vector2 in path:
-		Globals.relocate_unit(self, Globals.grid_system._local_to_map(step))
-		
-		_sprite_flip(step)
-		
-		var tween = get_tree().create_tween()
-		tween.tween_property(self, "global_position", step, 0.2)
-		await tween.finished
-		
-		await get_tree().create_timer(0.05).timeout
-		
-		tilemap_position = Globals.grid_system._local_to_map(step)
+func _step(target_position : Vector2i):
+	#get path
+	var path = Globals.grid_system.get_navigation_path(tilemap_position, target_position)
+	path.pop_front()
+	
+	#traverse
+	Globals.relocate_unit(self, path[0])
+	
+	_sprite_flip(Globals.grid_system._map_to_local(path[0]))
+	
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "global_position", Globals.grid_system._map_to_local(path[0]), 0.2)
+	await tween.finished
+	
+	tilemap_position = path[0]
 
 func _nudge_attack(target : Vector2):
 	var return_pos = global_position

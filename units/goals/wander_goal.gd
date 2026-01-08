@@ -3,7 +3,7 @@ extends Goal
 
 # Override
 func compute_reward(_agent: GdPAIAgent) -> float:
-	return 10
+	return 20
 
 # Override
 func get_desired_state(agent: GdPAIAgent) -> Array[Precondition]:

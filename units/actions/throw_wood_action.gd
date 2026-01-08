@@ -27,9 +27,9 @@ func get_action_cost(
 ) -> float:
 	var agent_position: Vector2i = agent_blackboard.get_property("tilemap_position")
 	
-	var path = Globals.grid_system.get_navigation_path(agent_position, bonfire.tilemap_position, true)
+	var path = Globals.grid_system.get_navigation_path(agent_position, bonfire.tilemap_position)
 	
-	return 3 + path.size()
+	return 2 + path.size() - 1
 
 
 # Override
@@ -47,10 +47,14 @@ func simulate_effect(
 		world_state: GdPAIBlackboard
 ):
 	var path = Globals.grid_system.get_navigation_path( \
-		agent_blackboard.get_property("tilemap_position"), bonfire.tilemap_position, true)
+		agent_blackboard.get_property("tilemap_position"), bonfire.tilemap_position)
 	
 	if not path.is_empty():
+		path.pop_back()
 		agent_blackboard.set_property("tilemap_position", path.back())
+	
+	var total_wood_count = world_state.get_property("total_wood_count")
+	world_state.set_property("total_wood_count", total_wood_count - 1)
 	
 	var fire_strength = world_state.get_property("fire_strength")
 	world_state.set_property("fire_strength", fire_strength + 20)
@@ -60,13 +64,9 @@ func simulate_effect(
 
 # Override
 func reverse_simulate_effect(
-		agent_blackboard: GdPAIBlackboard, 
-		world_state: GdPAIBlackboard
+		_agent_blackboard: GdPAIBlackboard, 
+		_world_state: GdPAIBlackboard
 ):
-	#var fire_strength = world_state.get_property("fire_strength")
-	#world_state.set_property("fire_strength", fire_strength - 20)
-	#
-	#agent_blackboard.set_property("holding_item", true)
 	pass
 
 
@@ -83,9 +83,14 @@ func perform_action(
 	if not agent.entity.is_active:
 		return Action.Status.RUNNING
 	
-	agent.entity.throw_wood(bonfire)
+	var standing_next_to = Globals.get_standing_next_to_check(bonfire)
 	
-	return Action.Status.SUCCESS
+	if standing_next_to.evaluate(agent.blackboard, Globals.world_blackboard):
+		agent.entity.throw_wood(bonfire)
+		return Action.Status.SUCCESS
+	else:
+		agent.entity.step(bonfire.tilemap_position)
+		return Action.Status.RUNNING
 
 
 # Override

@@ -27,9 +27,9 @@ func get_action_cost(
 ) -> float:
 	var agent_position: Vector2i = agent_blackboard.get_property("tilemap_position")
 	
-	var path = Globals.grid_system.get_navigation_path(agent_position, tree.tilemap_position, true)
+	var path = Globals.grid_system.get_navigation_path(agent_position, tree.tilemap_position)
 	
-	return 3 + path.size()
+	return 2 + path.size() - 1
 
 
 # Override
@@ -44,16 +44,20 @@ func simulate_effect(
 		world_state: GdPAIBlackboard
 ):
 	var path = Globals.grid_system.get_navigation_path( \
-		agent_blackboard.get_property("tilemap_position"), tree.tilemap_position, true)
+		agent_blackboard.get_property("tilemap_position"), tree.tilemap_position)
 	
 	if not path.is_empty():
+		path.pop_back()
 		agent_blackboard.set_property("tilemap_position", path.back())
 	
 	var tree_count = world_state.get_property("tree_count")
 	world_state.set_property("tree_count", tree_count - 1)
 	
-	var wood_count = world_state.get_property("wood_count")
-	world_state.set_property("wood_count", wood_count + 1)
+	var total_wood_count = world_state.get_property("total_wood_count")
+	world_state.set_property("total_wood_count", total_wood_count + 1)
+	
+	var free_wood_count = world_state.get_property("free_wood_count")
+	world_state.set_property("free_wood_count", free_wood_count + 1)
 	
 	# we simulate the agent picking up the wood too, as we can't otherwise
 	# create a path before the wood object is created
@@ -62,16 +66,9 @@ func simulate_effect(
 
 # Override
 func reverse_simulate_effect(
-		agent_blackboard: GdPAIBlackboard, 
-		world_state: GdPAIBlackboard
+		_agent_blackboard: GdPAIBlackboard, 
+		_world_state: GdPAIBlackboard
 ):
-	#var tree_count = world_state.get_property("tree_count")
-	#world_state.set_property("tree_count", tree_count + 1)
-	#
-	#var wood_count = world_state.get_property("wood_count")
-	#world_state.set_property("wood_count", wood_count - 1)
-	#
-	#agent_blackboard.set_property("holding_item", false)
 	pass
 
 
@@ -88,9 +85,14 @@ func perform_action(
 	if not agent.entity.is_active:
 		return Action.Status.RUNNING
 	
-	agent.entity.cut_tree(tree)
+	var standing_next_to = Globals.get_standing_next_to_check(tree)
 	
-	return Action.Status.SUCCESS
+	if standing_next_to.evaluate(agent.blackboard, Globals.world_blackboard):
+		agent.entity.cut_tree(tree)
+		return Action.Status.SUCCESS
+	else:
+		agent.entity.step(tree.tilemap_position)
+		return Action.Status.RUNNING
 
 # Override
 func post_perform_action(_agent: GdPAIAgent) -> Action.Status:
