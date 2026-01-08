@@ -7,16 +7,19 @@ extends Node2D
 var tilemap_position: Vector2i
 
 func _init() -> void:
-	var wood_count = Globals.world_blackboard.get_property("wood_count")
-	Globals.world_blackboard.set_property("wood_count", wood_count + 1)
+	var free_wood_count = Globals.world_blackboard.get_property("free_wood_count")
+	Globals.world_blackboard.set_property("free_wood_count", free_wood_count + 1)
+	
+	var total_wood_count = Globals.world_blackboard.get_property("total_wood_count")
+	Globals.world_blackboard.set_property("total_wood_count", total_wood_count + 1)
 
 func _data_init(_tilemap_position : Vector2i) -> void:
 	tilemap_position = _tilemap_position
 	wood_object_data.tilemap_position = _tilemap_position
 
 func taken():
-	var wood_count = Globals.world_blackboard.get_property("wood_count")
-	Globals.world_blackboard.set_property("wood_count", wood_count - 1)
+	var free_wood_count = Globals.world_blackboard.get_property("free_wood_count")
+	Globals.world_blackboard.set_property("free_wood_count", free_wood_count - 1)
 	
 	## TODO WHY WONT YOU DIE
 	Globals.unregister_unit(self)

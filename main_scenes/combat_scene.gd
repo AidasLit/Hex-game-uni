@@ -13,7 +13,6 @@ const bonfire_scene = preload("uid://bivqb5bqkwvfl")
 @export var gd_pai_world_node: GdPAIWorldNode
 @export var grid_system: GridNavigationSystem
 @export var hud: HUD
-@export var unit_stat_display: StatsDisplay
 @export var camera : Camera2D
 
 func call_unit_placed(successful : bool):
@@ -63,9 +62,6 @@ func _ready() -> void:
 	
 	active_unit.agent.manually_start_plan()
 	
-	unit_stat_display.display_planning(active_unit)
-	unit_stat_display.show_me()
-	
 	action_lock = false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -81,7 +77,7 @@ func action_done():
 	action_queue.push_back(active_unit)
 	active_unit.is_active = false
 	
-	#await get_tree().create_timer(0.2).timeout
+	#await get_tree().create_timer(0.05).timeout
 	
 	bonfire.tick()
 	
@@ -90,9 +86,6 @@ func action_done():
 	active_unit.is_active = true
 	
 	active_unit.agent.manually_start_plan()
-	
-	# handle visuals for new unit
-	unit_stat_display.display_planning(active_unit)
 
 func game_over():
 	await get_tree().create_timer(1).timeout

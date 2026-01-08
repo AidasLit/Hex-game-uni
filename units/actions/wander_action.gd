@@ -16,8 +16,6 @@ func get_validity_checks() -> Array[Precondition]:
 		return not available_neighbors.is_empty()
 	checks.append(is_not_surrounded)
 	
-	checks.append(Precondition.world_state_property_greater_than("fire_strength", 90))
-	
 	return checks
 
 
@@ -77,7 +75,7 @@ func perform_action(
 	
 	var target_position: Vector2i = agent.blackboard.get_property(uid_property("target_position"))
 	
-	agent.entity.wander(target_position)
+	agent.entity.step(target_position)
 	
 	return Action.Status.SUCCESS
 

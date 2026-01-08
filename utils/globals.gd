@@ -35,7 +35,7 @@ func get_navigable_check(target: Node2D) -> Precondition:
 	can_get_to.eval_func = func(blackboard: GdPAIBlackboard, _world_state: GdPAIBlackboard):
 		var agent_position: Vector2i = blackboard.get_property("tilemap_position")
 		
-		var path = Globals.grid_system.get_navigation_path(agent_position, target.tilemap_position, true)
+		var path = Globals.grid_system.get_navigation_path(agent_position, target.tilemap_position)
 		
 		return not path.is_empty()
 	return can_get_to

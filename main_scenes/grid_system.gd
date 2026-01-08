@@ -78,7 +78,7 @@ func navigation_check(target_cell : Vector2i) -> bool:
 	
 	return false
 
-func get_navigation_path(from : Vector2i, to : Vector2i, stop_next_to : bool) -> Array[Vector2i]:
+func old_get_navigation_path(from : Vector2i, to : Vector2i, stop_next_to : bool) -> Array[Vector2i]:
 	# return empty path if the destination is invalid
 	if not cells.has(to):
 		print("no cell to navigate to")
@@ -111,6 +111,43 @@ func get_navigation_path(from : Vector2i, to : Vector2i, stop_next_to : bool) ->
 		return []
 	
 	var path = astargrid.get_id_path(cells[from], cells[to], allow_partial)
+	
+	var position_path : Array[Vector2i] = []
+	
+	for step : int in path:
+		position_path.append(Vector2i(astargrid.get_point_position(step)))
+	
+	set_tile_disabled(from, from_original)
+	set_tile_disabled(to, to_original)
+	
+	return position_path
+
+func get_navigation_path(from : Vector2i, to : Vector2i) -> Array[Vector2i]:
+	# return empty path if the destination is invalid
+	if not cells.has(from):
+		print("no cell to navigate from (???????)", from, to)
+		return []
+	
+	if not cells.has(to):
+		print("no cell to navigate to", from, to)
+		return []
+	
+	if from == to:
+		print("trying to navigate from one position to itself", from, to)
+		return []
+	
+	var from_original = astargrid.is_point_disabled(cells.get(from))
+	var to_original = astargrid.is_point_disabled(cells.get(to))
+	
+	set_tile_disabled(from, false)
+	set_tile_disabled(to, false)
+	
+	if not navigation_check(to):
+		print("cell ", to , " to navigate to not navigable, from ", from)
+		return []
+	
+	var path = astargrid.get_id_path(cells[from], cells[to])
+	
 	var position_path : Array[Vector2i] = []
 	
 	for step : int in path:

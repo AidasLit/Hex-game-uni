@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=4 uid="uid://ch5xo586e1oca"]
+[gd_scene load_steps=13 format=4 uid="uid://ch5xo586e1oca"]
 
 [ext_resource type="Script" uid="uid://ttv8na1f4oqn" path="res://main_scenes/combat_scene.gd" id="1_4yhsa"]
 [ext_resource type="Script" uid="uid://df3vr268nsx0k" path="res://main_scenes/camera_controls.gd" id="2_2fxi3"]
@@ -8,29 +8,17 @@
 [ext_resource type="Script" uid="uid://cvie3m6t7c0hd" path="res://addons/GdPlanningAI/scripts/gdpai_blackboard_plan.gd" id="3_xh2fc"]
 [ext_resource type="Script" uid="uid://b5sis1r2nwsdk" path="res://main_scenes/hover_layer.gd" id="4_ycdx0"]
 [ext_resource type="Script" uid="uid://c8j7oucodfrno" path="res://main_scenes/hud.gd" id="7_dhsgw"]
-[ext_resource type="Script" uid="uid://dvrb5515gq4j8" path="res://main_scenes/unit_stats.gd" id="11_0i6lg"]
 [ext_resource type="Texture2D" uid="uid://bl1sx3b6jo0lu" path="res://assets/game_characters/Elf_Knight_Sword.png" id="11_xh2fc"]
 
 [sub_resource type="Resource" id="Resource_ddvv1"]
 script = ExtResource("3_xh2fc")
 blackboard_backend = {
 "fire_strength": 100,
-"tree_count": 0,
-"wood_count": 0
+"free_wood_count": 0,
+"total_wood_count": 0,
+"tree_count": 0
 }
 metadata/_custom_type_script = "uid://cvie3m6t7c0hd"
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4mudp"]
-bg_color = Color(0, 0.5, 0.0166667, 1)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 5
-border_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rer1k"]
 bg_color = Color(0, 0, 0, 0.705882)
@@ -39,12 +27,11 @@ bg_color = Color(0, 0, 0, 0.705882)
 font_size = 100
 outline_size = 20
 
-[node name="combat-scene" type="Node2D" node_paths=PackedStringArray("gd_pai_world_node", "grid_system", "hud", "unit_stat_display", "camera")]
+[node name="combat-scene" type="Node2D" node_paths=PackedStringArray("gd_pai_world_node", "grid_system", "hud", "camera")]
 script = ExtResource("1_4yhsa")
 gd_pai_world_node = NodePath("GdPAIWorldNode")
 grid_system = NodePath("grid-system")
 hud = NodePath("HUD")
-unit_stat_display = NodePath("HUD/PanelContainer/MarginContainer/unit-stats")
 camera = NodePath("Camera2D")
 metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
@@ -81,7 +68,6 @@ metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
 
 [node name="HUD" type="CanvasLayer" parent="."]
-visible = false
 script = ExtResource("7_dhsgw")
 metadata/_edit_lock_ = true
 
@@ -132,64 +118,6 @@ offset_right = -10.0
 grow_horizontal = 0
 theme_override_font_sizes/font_size = 30
 text = "Place units"
-
-[node name="current-owner" type="Label" parent="HUD"]
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 299.0
-offset_bottom = 133.0
-theme_override_font_sizes/font_size = 40
-theme_override_styles/normal = SubResource("StyleBoxFlat_4mudp")
-text = "BLANK"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="PanelContainer" type="PanelContainer" parent="HUD"]
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 10.0
-offset_top = -123.0
-offset_right = 85.0
-offset_bottom = 123.0
-grow_vertical = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="HUD/PanelContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="unit-stats" type="VBoxContainer" parent="HUD/PanelContainer/MarginContainer"]
-layout_mode = 2
-script = ExtResource("11_0i6lg")
-
-[node name="name" type="Label" parent="HUD/PanelContainer/MarginContainer/unit-stats"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 30
-text = "test"
-
-[node name="hp" type="Label" parent="HUD/PanelContainer/MarginContainer/unit-stats"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 30
-text = "test"
-
-[node name="damage" type="Label" parent="HUD/PanelContainer/MarginContainer/unit-stats"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 30
-text = "test"
-
-[node name="slowness" type="Label" parent="HUD/PanelContainer/MarginContainer/unit-stats"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 30
-text = "test"
-
-[node name="move-range" type="Label" parent="HUD/PanelContainer/MarginContainer/unit-stats"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 30
-text = "test"
 
 [node name="game-over" type="Label" parent="HUD"]
 anchors_preset = 15
