@@ -29,32 +29,31 @@ var is_active = false
 var tilemap_position : Vector2i :
 	set(value):
 		agent.blackboard.set_property("tilemap_position", value)
+		agent.blackboard.set_property("real_tilemap_position", value)
 		tilemap_position = value
 var movement_range : int
+
+var action_time : float = 0.05
 
 func _ready() -> void:
 	assert(agent, "agent isn't set")
 	
 	health_component._max_hp = max_hp
 	health_component.reset_hp()
+	health_component.zero_hp.connect(die)
 	
 	base_texture.texture = sprite
 	
 	agent.blackboard.set_property("max_hp", health_component._max_hp)
 
 #region Actions
-#func move(move_to : Vector2i, stop_next_to : bool) -> void:
-	##get path
-	#var path = Globals.grid_system.get_navigation_path(tilemap_position, move_to, stop_next_to)
-	#path.pop_front()
-	#
-	##traverse
-	#await _travel_path(Globals.grid_system.path_to_global_path(path))
-
 func step(move_to : Vector2i) -> void:
 	SignalBus.action_initiated.emit()
 	
 	await _step(move_to)
+	
+	if Globals.map_of_spaces.has(tilemap_position):
+		Globals.map_of_spaces[tilemap_position].effect(self)
 	
 	SignalBus.action_done.emit()
 
@@ -90,12 +89,19 @@ func throw_wood(bonfire : BonfireObject):
 	held_item = null
 	bonfire.feed()
 	
+	health_component.receive_damage(15)
+	
 	var total_wood_count = Globals.world_blackboard.get_property("total_wood_count")
 	Globals.world_blackboard.set_property("total_wood_count", total_wood_count - 1)
 	
 	SignalBus.action_done.emit()
 #endregion
 
+func die():
+	Globals.unregister_unit(self)
+	SignalBus.unit_killed.emit(self)
+	
+	self.queue_free()
 
 func _sprite_flip(next_step : Vector2):
 	if next_step.x > global_position.x:
@@ -110,13 +116,16 @@ func _step(target_position : Vector2i):
 	var path = Globals.grid_system.get_navigation_path(tilemap_position, target_position)
 	path.pop_front()
 	
+	for item in path:
+		Globals.grid_system.debug_layer.set_cell(item, 0, Globals.transparent_tile_coords["yellow"])
+	
 	#traverse
 	Globals.relocate_unit(self, path[0])
 	
 	_sprite_flip(Globals.grid_system._map_to_local(path[0]))
 	
 	var tween = get_tree().create_tween()
-	tween.tween_property(self, "global_position", Globals.grid_system._map_to_local(path[0]), 0.2)
+	tween.tween_property(self, "global_position", Globals.grid_system._map_to_local(path[0]), action_time)
 	await tween.finished
 	
 	tilemap_position = path[0]
@@ -128,7 +137,7 @@ func _nudge_attack(target : Vector2):
 	_sprite_flip(target)
 	
 	var tween = get_tree().create_tween()
-	tween.tween_property(self, "global_position", return_pos + direction * 50, 0.1)
-	tween.tween_property(self, "global_position", return_pos, 0.2)
+	tween.tween_property(self, "global_position", return_pos + direction * 50, action_time / 3)
+	tween.tween_property(self, "global_position", return_pos, action_time / 3 * 2)
 	await tween.finished
 #endregion

@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://cpl2nvc2valfa"]
+
+[ext_resource type="Script" uid="uid://t1iuiem5p60t" path="res://main_scenes/spaces/health_space.gd" id="1_5dor4"]
+[ext_resource type="Script" uid="uid://fdmi64qqu8g2" path="res://main_scenes/spaces/health_space_data.gd" id="1_betww"]
+[ext_resource type="Texture2D" uid="uid://c4n8da224ru0i" path="res://assets/heal_space.png" id="2_r8wf5"]
+
+[node name="HealthSpace" type="Node2D"]
+script = ExtResource("1_5dor4")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_r8wf5")
+
+[node name="HealthSpaceData" type="Node" parent="."]
+script = ExtResource("1_betww")

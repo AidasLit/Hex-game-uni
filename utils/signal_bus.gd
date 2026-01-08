@@ -7,4 +7,6 @@ signal deployment_finished
 signal unit_placed(successful : bool)
 signal unit_killed(ref)
 
+signal generate_tree
+
 signal game_over

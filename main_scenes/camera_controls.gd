@@ -22,19 +22,31 @@ func _physics_process(_delta):
 
 func setup():
 	var dimensions = Globals.grid_system.dimensions
-	limit_left = Globals.grid_system._map_to_local(Vector2i(0, 0)).x as int
-	limit_top = Globals.grid_system._map_to_local(Vector2i(0, 0)).y as int
-	limit_right = Globals.grid_system._map_to_local(Vector2i(dimensions.x, dimensions.y)).x as int
-	limit_bottom = Globals.grid_system._map_to_local(Vector2i(dimensions.x, dimensions.y)).y as int
+	var horizontal_start = dimensions.x.x
+	var horizontal_end = dimensions.x.y
+	var vertical_start = dimensions.y.x
+	var vertical_end = dimensions.y.y
+	var start_pos = Vector2(horizontal_start, vertical_start)
+	var end_pos = Vector2(horizontal_end, vertical_end)
+	
+	limit_left = Globals.grid_system._map_to_local(Vector2i(start_pos)).x as int
+	limit_top = Globals.grid_system._map_to_local(Vector2i(start_pos)).y as int
+	
+	limit_right = Globals.grid_system._map_to_local(Vector2i(end_pos)).x as int
+	limit_bottom = Globals.grid_system._map_to_local(Vector2i(end_pos)).y as int
+	
+	position.x = limit_left + (limit_right - limit_left) * 0.5
+	position.y = limit_top + (limit_bottom - limit_top) * 0.5
 
 func update_zoom():
 	var new_zoom = get_zoom()
 	
 	if Input.is_action_just_released('wheel_down'):
-		new_zoom -= Vector2(0.05, 0.05)
+		new_zoom -= Vector2(0.1, 0.1)
 	if Input.is_action_just_released('wheel_up'):
-		new_zoom += Vector2(0.05, 0.05)
+		new_zoom += Vector2(0.1, 0.1)
 	
-	new_zoom = new_zoom.clamp(Vector2.ONE * 1, Vector2.ONE * 3)
+	var max_zoom = (get_viewport().size as Vector2) / Vector2(limit_right - limit_left, limit_bottom - limit_top)
+	new_zoom = new_zoom.clamp(Vector2.ONE * max(max_zoom.x, max_zoom.y), Vector2.ONE * 2)
 	SPEED = 15 / new_zoom.x
 	set_zoom(new_zoom)

@@ -7,8 +7,11 @@ extends Node2D
 const playable_unit_scene = preload("res://units/playable_unit.tscn")
 const tree_scene = preload("uid://blmdyywmffl20")
 const bonfire_scene = preload("uid://bivqb5bqkwvfl")
+const health_space = preload("uid://cpl2nvc2valfa")
+const thorns_space = preload("uid://cdnk21ui7wsbq")
 
 @onready var units_node = $units
+@onready var spaces_node = $spaces
 
 @export var gd_pai_world_node: GdPAIWorldNode
 @export var grid_system: GridNavigationSystem
@@ -16,7 +19,7 @@ const bonfire_scene = preload("uid://bivqb5bqkwvfl")
 @export var camera : Camera2D
 
 func call_unit_placed(successful : bool):
-	# BUG for some reason signal doesnt get caught the first time it's used
+	# HACK for some reason signal doesnt get caught the first time it's used
 	# unless it's being called in a deferred mode. lookup more of
 	# https://www.reddit.com/r/godot/comments/p6jm0s/are_signals_called_inline_or_are_they_deferred_in/
 	#unit_placed.emit(successful)
@@ -42,18 +45,22 @@ func _ready() -> void:
 	SignalBus.action_initiated.connect(func():
 		active_unit.is_active = false
 	)
-	SignalBus.game_over.connect(func():
-		action_lock = true
-		SceneManager.change_scene("res://main_scenes/menus/main_menu.tscn")
-	)
+	SignalBus.game_over.connect(game_over)
+	SignalBus.generate_tree.connect(generate_unit.bind(tree_scene))
 	
+	grid_system.debug_layer.hide()
 	camera.setup()
 	
 	place_bonfire()
 	
-	generate_unit(tree_scene)
-	generate_unit(tree_scene)
-	generate_unit(tree_scene)
+	for i in range(0, 2):
+		generate_space(health_space)
+	
+	for i in range(0, 3):
+		generate_space(thorns_space)
+	
+	for i in range(0, 5):
+		generate_unit(tree_scene)
 	
 	await SignalBus.deployment_finished
 	
@@ -62,18 +69,18 @@ func _ready() -> void:
 	
 	active_unit.agent.manually_start_plan()
 	
+	
 	action_lock = false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("ui_cancel"):
-		SceneManager.change_scene("res://main_scenes/menus/main_menu.tscn")
+		get_tree().quit()
 
 func action_done():
 	if action_lock:
 		return
 	
-	# handle old unit
 	action_queue.push_back(active_unit)
 	active_unit.is_active = false
 	
@@ -82,15 +89,19 @@ func action_done():
 	bonfire.tick()
 	
 	# init new unit
+	if action_queue.front() == null:
+		action_queue.pop_front()
+	
 	active_unit = action_queue.pop_front()
 	active_unit.is_active = true
 	
 	active_unit.agent.manually_start_plan()
 
 func game_over():
+	action_lock = true
 	await get_tree().create_timer(1).timeout
 	
-	hud.game_over.text = "Done"
+	hud.game_over.text = "Bonfire stopped burning"
 	
 	var tween = get_tree().create_tween()
 	tween.tween_property(hud.game_over, "modulate:a", 1, 1)
@@ -115,6 +126,7 @@ func try_place_unit(at_position : Vector2):
 	unit.agent.world_node = GdPAIUTILS.get_child_of_type(get_tree().root, GdPAIWorldNode)
 	unit.agent.goals.append(WanderGoal.new())
 	unit.agent.goals.append(MaintainFireGoal.new())
+	unit.agent.goals.append(HealUpGoal.new())
 	unit.agent.self_actions.append(WanderAction.new())
 	
 	Globals.register_unit(unit)
@@ -123,17 +135,6 @@ func try_place_unit(at_position : Vector2):
 	action_queue.push_back(unit)
 	
 	call_unit_placed(true)
-
-func generate_unit(scene : PackedScene):
-	var tilemap_position = grid_system.get_random_tile()
-	
-	var unit = scene.instantiate()
-	units_node.add_child(unit)
-	
-	unit._data_init(tilemap_position)
-	unit.global_position = grid_system._map_to_local(tilemap_position)
-	
-	Globals.register_unit(unit)
 
 func place_bonfire():
 	var tilemap_position = Vector2i(10, 5)
@@ -145,4 +146,29 @@ func place_bonfire():
 	bonfire.global_position = grid_system._map_to_local(tilemap_position)
 	
 	Globals.register_unit(bonfire)
+
+func generate_space(scene : PackedScene):
+	var tilemap_position = grid_system.get_random_tile()
+	
+	while Globals.map_of_spaces.has(tilemap_position):
+		tilemap_position = grid_system.get_random_tile()
+	
+	var space = scene.instantiate()
+	units_node.add_child(space)
+	
+	space._data_init(tilemap_position)
+	space.global_position = grid_system._map_to_local(tilemap_position)
+	
+	Globals.register_space(space)
+
+func generate_unit(scene : PackedScene):
+	var tilemap_position = grid_system.get_random_tile()
+	
+	var unit = scene.instantiate()
+	units_node.add_child(unit)
+	
+	unit._data_init(tilemap_position)
+	unit.global_position = grid_system._map_to_local(tilemap_position)
+	
+	Globals.register_unit(unit)
 #endregion

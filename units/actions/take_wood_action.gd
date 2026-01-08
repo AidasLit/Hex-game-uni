@@ -29,7 +29,7 @@ func get_action_cost(
 	
 	var path = Globals.grid_system.get_navigation_path(agent_position, wood.tilemap_position)
 	
-	return 2 + path.size() - 1
+	return 0 + path.size() - 1
 
 
 # Override
@@ -47,7 +47,9 @@ func simulate_effect(
 		world_state: GdPAIBlackboard
 ):
 	var path = Globals.grid_system.get_navigation_path( \
-		agent_blackboard.get_property("tilemap_position"), wood.tilemap_position)
+		agent_blackboard.get_property("tilemap_position"), 
+		wood.tilemap_position,
+		agent_blackboard.get_property("real_tilemap_position"))
 	
 	if not path.is_empty():
 		path.pop_back()

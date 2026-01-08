@@ -1,10 +1,10 @@
-class_name ThrowWoodAction
+class_name EnterHealingAction
 extends Action
 
-var bonfire : BonfireObject
+var health_space : HealthSpace
 
-func _init(_bonfire : BonfireObject):
-	bonfire = _bonfire
+func _init(_health_space : HealthSpace):
+	health_space = _health_space
 
 
 # Override
@@ -13,9 +13,9 @@ func get_validity_checks() -> Array[Precondition]:
 	
 	checks.append(Precondition.agent_has_property("entity"))
 	checks.append(Precondition.agent_has_property("tilemap_position"))
-	checks.append(Precondition.check_is_object_valid(bonfire))
+	checks.append(Precondition.check_is_object_valid(health_space))
 	
-	checks.append(Globals.get_navigable_check(bonfire))
+	checks.append(Globals.get_navigable_check(health_space))
 	
 	return checks
 
@@ -27,44 +27,33 @@ func get_action_cost(
 ) -> float:
 	var agent_position: Vector2i = agent_blackboard.get_property("tilemap_position")
 	
-	var path = Globals.grid_system.get_navigation_path(agent_position, bonfire.tilemap_position)
+	var path = Globals.grid_system.get_navigation_path(agent_position, health_space.tilemap_position)
 	
 	return 0 + path.size() - 1
 
 
 # Override
 func get_preconditions() -> Array[Precondition]:
-	var standing_next_to = Globals.get_standing_next_to_check(bonfire)
+	var standing_on = Globals.get_standing_on_check(health_space)
 	
-	var agent_holding_item = Precondition.agent_property_equal_to("holding_item", true)
-	
-	return [standing_next_to, agent_holding_item]
+	return [standing_on]
 
 
 # Override
 func simulate_effect(
 		agent_blackboard: GdPAIBlackboard, 
-		world_state: GdPAIBlackboard
+		_world_state: GdPAIBlackboard
 ):
 	var path = Globals.grid_system.get_navigation_path( \
 		agent_blackboard.get_property("tilemap_position"), 
-		bonfire.tilemap_position,
+		health_space.tilemap_position,
 		agent_blackboard.get_property("real_tilemap_position"))
 	
 	if not path.is_empty():
-		path.pop_back()
 		agent_blackboard.set_property("tilemap_position", path.back())
 	
-	var total_wood_count = world_state.get_property("total_wood_count")
-	world_state.set_property("total_wood_count", total_wood_count - 1)
-	
-	var fire_strength = world_state.get_property("fire_strength")
-	world_state.set_property("fire_strength", fire_strength + 20)
-	
 	var agent_health = agent_blackboard.get_property("health")
-	agent_blackboard.set_property("health", agent_health - 15)
-	
-	agent_blackboard.set_property("holding_item", false)
+	agent_blackboard.set_property("health", agent_health + 80)
 
 
 # Override
@@ -88,14 +77,12 @@ func perform_action(
 	if not agent.entity.is_active:
 		return Action.Status.RUNNING
 	
+	var standing_on = Globals.get_standing_on_check(health_space)
 	
-	var standing_next_to = Globals.get_standing_next_to_check(bonfire)
-	
-	if standing_next_to.evaluate(agent.blackboard, Globals.world_blackboard):
-		agent.entity.throw_wood(bonfire)
+	if standing_on.evaluate(agent.blackboard, Globals.world_blackboard):
 		return Action.Status.SUCCESS
 	else:
-		agent.entity.step(bonfire.tilemap_position)
+		agent.entity.step(health_space.tilemap_position)
 		return Action.Status.RUNNING
 
 

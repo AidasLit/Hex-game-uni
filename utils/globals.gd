@@ -6,11 +6,15 @@ var hud : HUD
 var camera : Camera2D
 
 #region unit map
-var map_of_units : Dictionary
+var map_of_units : Dictionary = {}
+var map_of_spaces : Dictionary = {}
 
 func register_unit(unit):
 	map_of_units[unit.tilemap_position] = unit
 	grid_system.set_tile_disabled(unit.tilemap_position, true)
+
+func register_space(space):
+	map_of_spaces[space.tilemap_position] = space
 
 func unregister_unit(unit):
 	map_of_units.erase(unit.tilemap_position)
@@ -18,7 +22,9 @@ func unregister_unit(unit):
 	
 	if unit is PlayableUnit:
 		play_loop.unit_list.erase(unit)
-		play_loop.action_queue.erase(unit)
+
+func unregister_space(space):
+	map_of_spaces.erase(space.tilemap_position)
 
 func relocate_unit(unit, to : Vector2i):
 	map_of_units.erase(unit.tilemap_position)
@@ -49,6 +55,14 @@ func get_standing_next_to_check(target: Node2D) -> Precondition:
 		
 		return available_neighbors.has(blackboard_agent_position)
 	return standing_next_to
+
+func get_standing_on_check(target: Node2D) -> Precondition:
+	var standing_on: Precondition = Precondition.new()
+	standing_on.eval_func = func(blackboard: GdPAIBlackboard, _world_state: GdPAIBlackboard):
+		var blackboard_agent_position = blackboard.get_property("tilemap_position")
+		
+		return blackboard_agent_position == target.tilemap_position
+	return standing_on
 
 const transparent_tile_coords : Dictionary = {
 	"green": Vector2i(0, 0),

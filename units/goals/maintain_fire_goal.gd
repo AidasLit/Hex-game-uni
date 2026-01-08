@@ -7,6 +7,7 @@ func compute_reward(agent: GdPAIAgent) -> float:
 		Globals.world_blackboard.get_property("free_wood_count") == 0 and\
 		not agent.blackboard.get_property("holding_item"):
 		return 0
+	
 	return clamp(100 - Globals.world_blackboard.get_property("fire_strength"), 0, 100)
 
 # Override

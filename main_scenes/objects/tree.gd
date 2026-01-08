@@ -27,6 +27,6 @@ func chopped():
 	Globals.unregister_unit(self)
 	Globals.register_unit(wood_obj)
 	
-	## TODO WHY WONT YOU DIE
 	SignalBus.unit_killed.emit(self)
+	SignalBus.generate_tree.emit()
 	self.queue_free()

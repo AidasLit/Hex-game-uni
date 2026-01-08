@@ -25,11 +25,13 @@ func get_action_cost(
 		agent_blackboard: GdPAIBlackboard, 
 		_world_state: GdPAIBlackboard
 ) -> float:
+	var real_agent_position: Vector2i = agent_blackboard.get_property("real_tilemap_position")
 	var agent_position: Vector2i = agent_blackboard.get_property("tilemap_position")
 	
-	var path = Globals.grid_system.get_navigation_path(agent_position, tree.tilemap_position)
+	var path = Globals.grid_system.get_navigation_path(agent_position, tree.tilemap_position, real_agent_position)
+	if path.is_empty(): return INF
 	
-	return 2 + path.size() - 1
+	return 10 + path.size() - 1
 
 
 # Override
@@ -43,8 +45,15 @@ func simulate_effect(
 		agent_blackboard: GdPAIBlackboard, 
 		world_state: GdPAIBlackboard
 ):
+	# TODO if multiple agents have to get through one tile space
+	# the first one blocks the latter one, blocking a plan from being formed
+	# Could be an addon problem, could be my problem
+	# in theory, in this case a plan doesnt compute and goes to the next goal
+	# in our case, the goals dont swap and agent gets stuck running the previous action
 	var path = Globals.grid_system.get_navigation_path( \
-		agent_blackboard.get_property("tilemap_position"), tree.tilemap_position)
+		agent_blackboard.get_property("tilemap_position"), 
+		tree.tilemap_position,
+		agent_blackboard.get_property("real_tilemap_position"))
 	
 	if not path.is_empty():
 		path.pop_back()

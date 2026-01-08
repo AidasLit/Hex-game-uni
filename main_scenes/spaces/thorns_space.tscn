@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://cdnk21ui7wsbq"]
+
+[ext_resource type="Script" uid="uid://b2cjjs327kk4q" path="res://main_scenes/spaces/thorns_space.gd" id="1_bl10g"]
+[ext_resource type="Texture2D" uid="uid://bftwvpjt586yv" path="res://assets/thornbush/thorns.png" id="2_gomll"]
+
+[node name="ThornsSpace" type="Node2D"]
+script = ExtResource("1_bl10g")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -32)
+texture = ExtResource("2_gomll")

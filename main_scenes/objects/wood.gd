@@ -21,7 +21,6 @@ func taken():
 	var free_wood_count = Globals.world_blackboard.get_property("free_wood_count")
 	Globals.world_blackboard.set_property("free_wood_count", free_wood_count - 1)
 	
-	## TODO WHY WONT YOU DIE
 	Globals.unregister_unit(self)
 	SignalBus.unit_killed.emit(self)
 	self.queue_free()

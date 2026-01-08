@@ -27,8 +27,9 @@ func feed():
 	health_component.receive_damage(-20)
 
 func stop_burning():
-	## TODO WHY WONT YOU DIE
 	Globals.unregister_unit(self)
 	SignalBus.unit_killed.emit(self)
 	SignalBus.game_over.emit()
+	
+	await get_tree().create_timer(0.2).timeout
 	self.queue_free()
