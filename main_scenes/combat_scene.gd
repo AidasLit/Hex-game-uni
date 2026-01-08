@@ -166,6 +166,9 @@ func generate_space(scene : PackedScene):
 func generate_unit(scene : PackedScene):
 	var tilemap_position = grid_system.get_random_tile()
 	
+	while Globals.map_of_spaces.has(tilemap_position):
+		tilemap_position = grid_system.get_random_tile()
+	
 	var unit = scene.instantiate()
 	units_node.add_child(unit)
 	
