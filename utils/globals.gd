@@ -5,7 +5,9 @@ var grid_system : GridNavigationSystem
 var hud : HUD
 var camera : Camera2D
 
-#region unit map
+var world_blackboard : GdPAIBlackboard
+
+#region object maps
 var map_of_units : Dictionary = {}
 var map_of_spaces : Dictionary = {}
 
@@ -34,8 +36,7 @@ func relocate_unit(unit, to : Vector2i):
 	grid_system.set_tile_disabled(to, true)
 #endregion
 
-var world_blackboard : GdPAIBlackboard
-
+#region preconditions
 func get_navigable_check(target: Node2D) -> Precondition:
 	var can_get_to: Precondition = Precondition.new()
 	can_get_to.eval_func = func(blackboard: GdPAIBlackboard, _world_state: GdPAIBlackboard):
@@ -63,6 +64,13 @@ func get_standing_on_check(target: Node2D) -> Precondition:
 		
 		return blackboard_agent_position == target.tilemap_position
 	return standing_on
+#endregion
+
+const agent_action_time = 0.1
+
+const tree_count = 10
+const heal_count = 2
+const thorn_count = 3
 
 const transparent_tile_coords : Dictionary = {
 	"green": Vector2i(0, 0),
@@ -84,6 +92,11 @@ const solids_tile_coords : Dictionary = {
 	"mountain": Vector2i(1, 1),
 	"snow": Vector2i(2, 1),
 	"magma": Vector2i(3, 1)
+}
+
+const init_layer_meanings : Dictionary = {
+	transparent_tile_coords["green"]: "start",
+	transparent_tile_coords["red"]: "bonfire"
 }
 
 enum ActionType {

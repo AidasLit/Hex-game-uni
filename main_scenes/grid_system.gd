@@ -23,6 +23,7 @@ var _queue_cells : Array[Vector2i]
 @onready var base_layer: TileMapLayer = $"base-layer"
 @onready var hover_layer: TileMapLayer = $"hover-layer"
 @onready var debug_layer: TileMapLayer = $"debug-layer"
+@onready var init_layer: TileMapLayer = $"init-layer"
 
 var astargrid = AStar2D.new()
 # Dictionary - Key: Vector2i, Value : int
@@ -31,6 +32,12 @@ var _start_cell = Vector2i(1, 1)
 var dimensions : Transform2D = Transform2D(_start_cell, _start_cell, Vector2.ZERO)
 
 func _ready() -> void:
+	for cell in init_layer.get_used_cells():
+		var atlas_coords = init_layer.get_cell_atlas_coords(cell)
+		match Globals.init_layer_meanings[atlas_coords]:
+			"start":
+				_start_cell = cell
+	
 	await _setup_astar()
 	
 	for cell in base_layer.get_used_cells():

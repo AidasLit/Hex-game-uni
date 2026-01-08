@@ -33,7 +33,7 @@ var tilemap_position : Vector2i :
 		tilemap_position = value
 var movement_range : int
 
-var action_time : float = 0.05
+var action_time : float = Globals.agent_action_time
 
 func _ready() -> void:
 	assert(agent, "agent isn't set")

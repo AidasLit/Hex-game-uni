@@ -49,17 +49,22 @@ func _ready() -> void:
 	SignalBus.generate_tree.connect(generate_unit.bind(tree_scene))
 	
 	grid_system.debug_layer.hide()
+	grid_system.init_layer.hide()
 	camera.setup()
 	
-	place_bonfire()
+	for cell in grid_system.init_layer.get_used_cells():
+		var atlas_coords = grid_system.init_layer.get_cell_atlas_coords(cell)
+		match Globals.init_layer_meanings[atlas_coords]:
+			"bonfire":
+				place_bonfire(cell)
 	
-	for i in range(0, 2):
+	for i in range(0, Globals.heal_count):
 		generate_space(health_space)
 	
-	for i in range(0, 3):
+	for i in range(0, Globals.thorn_count):
 		generate_space(thorns_space)
 	
-	for i in range(0, 5):
+	for i in range(0, Globals.tree_count):
 		generate_unit(tree_scene)
 	
 	await SignalBus.deployment_finished
@@ -68,7 +73,6 @@ func _ready() -> void:
 	active_unit.is_active = true
 	
 	active_unit.agent.manually_start_plan()
-	
 	
 	action_lock = false
 
@@ -136,9 +140,7 @@ func try_place_unit(at_position : Vector2):
 	
 	call_unit_placed(true)
 
-func place_bonfire():
-	var tilemap_position = Vector2i(10, 5)
-	
+func place_bonfire(tilemap_position : Vector2i):
 	bonfire = bonfire_scene.instantiate()
 	units_node.add_child(bonfire)
 	
