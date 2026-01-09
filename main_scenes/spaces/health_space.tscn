@@ -6,6 +6,8 @@
 
 [node name="HealthSpace" type="Node2D"]
 script = ExtResource("1_5dor4")
+metadata/_edit_lock_ = true
+metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_r8wf5")

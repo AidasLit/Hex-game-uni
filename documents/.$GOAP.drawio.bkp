@@ -85,7 +85,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="7o0wC2ZMVKhYhFR4EElC-1" value="Medicine field" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="497.5" y="120" width="195" height="90" as="geometry" />
+          <mxGeometry x="487" y="120" width="195" height="90" as="geometry" />
         </mxCell>
         <mxCell id="7o0wC2ZMVKhYhFR4EElC-2" value="&lt;div&gt;Provided actions:&lt;/div&gt;&lt;div&gt;enter_healing_action(heal_space)&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="7o0wC2ZMVKhYhFR4EElC-1" vertex="1">
           <mxGeometry y="30" width="195" height="60" as="geometry" />

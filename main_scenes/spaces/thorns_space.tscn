@@ -5,6 +5,8 @@
 
 [node name="ThornsSpace" type="Node2D"]
 script = ExtResource("1_bl10g")
+metadata/_edit_lock_ = true
+metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -32)

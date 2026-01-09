@@ -71,7 +71,6 @@ func perform_action(
 		_delta: float
 ) -> Action.Status:
 	if not agent.entity.is_active:
-		print("not active")
 		return Action.Status.RUNNING
 	
 	var target_position: Vector2i = agent.blackboard.get_property(uid_property("target_position"))
